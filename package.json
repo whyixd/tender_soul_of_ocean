@@ -1,0 +1,24 @@
+{
+  "name": "tender_soul_of_ocean_klong",
+  "version": "1.0.0",
+  "description": "```mermaid\r ---\r title: Comunication Structure\r ---\r flowchart TB\r     WHYIXD_Controller ---> |OSC| KKK_Device\r     WHYIXD_Controller --> |DMX| Light",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack serve --mode development",
+    "build": "webpack --mode production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "html-webpack-plugin": "^5.6.3",
+    "webpack": "^5.100.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "dependencies": {
+    "lil-gui": "^0.20.0",
+    "p5": "^2.0.3"
+  }
+}
