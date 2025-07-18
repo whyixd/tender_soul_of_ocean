@@ -10,5 +10,6 @@ dependencies = [
     "lap>=0.5.12",
     "python-osc>=1.9.3",
     "pytubefix>=8.13.1",
+    "stupidartnet>=1.6.0",
     "ultralytics>=8.3.139",
 ]
