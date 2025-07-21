@@ -16,7 +16,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
 artnet.block_shape = (8, 4)
-artnet.block_order = [[1, 4], [2, 3]]  #
+artnet.block_order = [[1, 3], [2, 4]]  #
 artnet.start()
 # --- Socket.IO 事件處理 ---
 
@@ -55,7 +55,7 @@ def send_test_sequence():
     socketio.emit("dmx_data", {"value": matrix})  # 初始發
 
     while True:
-        matrix[count] = 255 * off
+        matrix[count] = 25 * off
         count = (count + 1) % 128
         socketio.emit("dmx_data", {"value": matrix})
         if count == 0:
@@ -72,6 +72,12 @@ def send_test_sequence():
 def index():
     """主路由，回傳 Webpack 打包好的 index.html"""
     return send_from_directory(app.static_folder, "index.html")
+
+
+@app.route("/show-case")
+def show_case():
+    """展示案例頁面"""
+    return send_from_directory(app.static_folder, "show_case.html")
 
 
 def run_server():

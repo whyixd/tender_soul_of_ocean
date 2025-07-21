@@ -209,7 +209,6 @@ const sketch = (p) => {
         let lightValue = lightValues[i][j];
 
         lightValue = settings.useEase ? easeOutExpo(lightValue) : lightValue;
-        console.log(lightValue);
         // 使用 light
         p.fill(
           lightValue * lightColor[0],
