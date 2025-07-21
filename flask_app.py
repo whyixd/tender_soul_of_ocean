@@ -14,8 +14,8 @@ app = Flask(__name__, static_folder="static")
 # In a real production app, you'd want to restrict cors_allowed_origins
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-artnet = ArtNetSender("127.0.0.1", universe=0, channels=256)
-artnet.block_shape = (8, 16)
+artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
+artnet.block_shape = (8, 4)
 artnet.block_order = [[1, 4], [2, 3]]  #
 artnet.start()
 # --- Socket.IO 事件處理 ---
@@ -45,22 +45,22 @@ def handle_client_message(json_data):
 
 def send_test_sequence():
     matrix = []
-    for i in range(0, 256):
+    for i in range(0, 128):
         matrix.append(0)
     count = 0
     off = 1
     print("🚀 Starting test sequence...")
-    artnet.packet = bytearray(matrix)  # 初始化 packet
+    artnet.set_packet(matrix)  # 設定初始數據包
     artnet.send(remap=True)  # 初始發送一次
     socketio.emit("dmx_data", {"value": matrix})  # 初始發
-    print(matrix)
+
     while True:
-        matrix[count] = 25 * off
+        matrix[count] = 255 * off
         count = (count + 1) % 128
         socketio.emit("dmx_data", {"value": matrix})
         if count == 0:
             off = 1 - off
-        artnet.packet = bytearray(matrix)
+        artnet.set_packet(matrix)
         artnet.send(remap=True)
         sleep(0.1)
 

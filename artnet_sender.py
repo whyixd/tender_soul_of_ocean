@@ -1,9 +1,19 @@
 from stupidArtnet import StupidArtnet
 from time import sleep
+import random
 
 
 class ArtNetSender:
-    def __init__(self, ip, universe, channels, fps=30, even_packet_size=True):
+    def __init__(
+        self,
+        ip,
+        universe,
+        channels,
+        fps=30,
+        even_packet_size=True,
+        block_order=[[1, 2], [3, 4]],
+        block_shape=(8, 4),
+    ):
         self.artnet = StupidArtnet(
             ip,
             universe,
@@ -13,11 +23,12 @@ class ArtNetSender:
         )
         self.packet_size = channels
         self.packet = bytearray(channels)
-        self.block_order = [[1, 3], [2, 4]]
-        self.block_shape = (8, 4)  # →↓
+        self.block_order = block_order
+        self.block_shape = block_shape
         self.block_channels_count = self.block_shape[0] * self.block_shape[1]
         self.__print_block_order_graph()
-        print(self.artnet.packet_size)
+        self.channel_order = [i for i in range(0, len(self.packet))]
+        self.__caculate_remap_order()
 
     def start(self):
         self.artnet.start()
@@ -27,8 +38,12 @@ class ArtNetSender:
             self.__packet_remap()
         self.artnet.send(self.packet)
 
+    def set_packet(self, packet):
+        for i in range(len(packet)):
+            self.packet[i] = clamp(packet[i], 0, 255)
+
     def set_channel(self, channel, value):
-        if 0 <= channel < len(self.packet):
+        if 0 <= channel < self.packet_size:
             self.packet[channel] = value
         else:
             raise IndexError("Channel index out of range")
@@ -40,35 +55,21 @@ class ArtNetSender:
         self.artnet.blackout()
         self.artnet.stop()
 
-    def __packet_remap(self):
-        channels_row = []
-        for order in range(0, len(self.packet), self.block_shape[0]):
-            channels_row.append(self.packet[order : order + self.block_shape[0]])
-            int_values = [x for x in channels_row[-1]]
-            print(f"Block {len(channels_row)}: {int_values}")
+    def __caculate_remap_order(self):
+        temp_channel_order = list(split_list(self.channel_order, self.block_shape[0]))
+        self.channel_order = []
+        for block_row_idx, block_row in enumerate(self.block_order):
+            for block_repeat in range(self.block_shape[1]):
+                for block in block_row:
+                    self.channel_order += temp_channel_order[
+                        (block - 1) * self.block_shape[1] + block_repeat
+                    ]
+        # print(self.channel_order)
 
-        # concat the blocks in the order of block_order
-        block_order_flat = [item for sublist in self.block_order for item in sublist]
-        print(f"Block order flat: {block_order_flat}")
+    def __packet_remap(self):
         packet_copy = bytearray(self.packet)
-        self.packet = bytearray()
-        for block_row in range(len(self.block_order)):
-            for sub_row in range(self.block_shape[1]):
-                for block in self.block_order[block_row]:
-                    self.packet.extend(
-                        packet_copy[
-                            (block - 1) * self.block_channels_count
-                            + (sub_row * self.block_shape[0]) : (block - 1)
-                            * self.block_channels_count
-                            + (sub_row * self.block_shape[0])
-                            + self.block_shape[0]
-                        ]
-                    )
-        # fill the rest of the packet with zeros if needed
-        # if len(self.packet) < self.packet_size:
-        #     self.packet.extend(bytearray(self.packet_size - len(self.packet)))
-        int_values = [x for x in self.packet]
-        print(f"Remapped packet: {int_values}")
+        for idx, order in enumerate(self.channel_order):
+            self.packet[order] = packet_copy[idx]
 
     def __print_block_order_graph(self):
         print(
@@ -94,19 +95,29 @@ def clamp(n, min_val, max_val):
     return max(min_val, min(n, max_val))
 
 
-artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
-artnet.block_channels_count = 32
-artnet.start()
+def split_list(list, n):
+    """將list分為n個元素組成的子列表"""
+    for idx in range(0, len(list), n):
+        yield list[idx : idx + n]
 
-for i in range(128):
-    artnet.set_channel(i, i)
-int_values = [x for x in artnet.packet]
-print(int_values)
-artnet.send(remap=True)
-try:
-    while True:
-        sleep(0.1)
-except KeyboardInterrupt:
-    print("Stopping ArtNet sender...")
-    artnet.stop()
-    print("ArtNet sender stopped.")
+
+# artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
+
+# artnet.start()
+
+# matrix = []
+# for i in range(0, 128):
+#     matrix.append(i)
+# artnet.set_packet(matrix)  # 設定初始數據包
+# # print(int_values)
+# artnet.send(remap=True)
+# try:
+#     while True:
+#         sleep(0.1)
+#         matrix[random.randint(0, 127)] = random.randint(0, 255)
+#         artnet.set_packet(matrix)  # 設定初始數據包
+#         artnet.send(remap=True)
+# except KeyboardInterrupt:
+#     print("Stopping ArtNet sender...")
+#     artnet.stop()
+#     print("ArtNet sender stopped.")
