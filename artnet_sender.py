@@ -1,6 +1,7 @@
 from stupidArtnet import StupidArtnet
 from time import sleep
 import random
+import threading
 
 
 class ArtNetSender:
@@ -17,14 +18,15 @@ class ArtNetSender:
         self.artnet = StupidArtnet(
             ip,
             universe,
-            channels,
+            512,
             fps=fps,
             even_packet_size=even_packet_size,
         )
         self.packet_size = channels
-        self.packet = bytearray(channels)
+        self.packet = bytearray(512)
         self.block_order = block_order
         self.block_shape = block_shape
+        self.block_count = len([x for sublist in self.block_order for x in sublist])
         self.block_channels_count = self.block_shape[0] * self.block_shape[1]
         self.__print_block_order_graph()
         self.channel_order = [i for i in range(0, len(self.packet))]
@@ -33,14 +35,19 @@ class ArtNetSender:
     def start(self):
         self.artnet.start()
 
-    def send(self, remap=False):
-        if remap:
-            self.__packet_remap()
-        self.artnet.send(self.packet)
+    def stop(self):
+        self.artnet.blackout()
+        self.artnet.stop()
+        self.artnet.close()
+
+    def blackout(self):
+        self.artnet.blackout()
 
     def set_packet(self, packet):
         for i in range(len(packet)):
             self.packet[i] = clamp(packet[i], 0, 255)
+        self.packet = self.__packet_remap(self.packet)
+        self.artnet.set(self.packet)
 
     def set_channel(self, channel, value):
         if 0 <= channel < self.packet_size:
@@ -48,28 +55,68 @@ class ArtNetSender:
         else:
             raise IndexError("Channel index out of range")
 
-    def blackout(self):
-        self.artnet.blackout()
-
-    def stop(self):
-        self.artnet.blackout()
-        self.artnet.stop()
-
     def __caculate_remap_order(self):
-        temp_channel_order = list(split_list(self.channel_order, self.block_shape[0]))
-        self.channel_order = []
-        for block_row_idx, block_row in enumerate(self.block_order):
-            for block_repeat in range(self.block_shape[1]):
-                for block in block_row:
-                    self.channel_order += temp_channel_order[
-                        (block - 1) * self.block_shape[1] + block_repeat
-                    ]
+
+        self.channel_order += [
+            i for i in range(self.packet_size, 36 * self.block_count)
+        ]  # 填充至DMX解碼器全頻道 (36CH * 解碼器數量)
+        temp_channel_order = list(
+            split_list(self.channel_order, 4)
+        )  # 4 為解碼器每個區塊的通道數
+
+        for i in range(0, self.block_count):
+            temp_channel_order.pop(i * 8)
+        # 把 temp_channel_order 轉為四個 item 一組的二維列表
+        temp_channel_order = list(split_list(temp_channel_order, self.block_shape[1]))
+        temp_channel_order_copy = temp_channel_order.copy()
+        temp_channel_order = []
+        for i in range(0, len(temp_channel_order_copy), 2):
+            for j in range(len(temp_channel_order_copy[i])):
+                combined = (
+                    temp_channel_order_copy[i][j] + temp_channel_order_copy[i + 1][j]
+                )  # 合併兩個區塊的通道
+                temp_channel_order.append(combined)
+        temp_channel_order_copy = temp_channel_order.copy()
+        temp_channel_order = []
+        for i in range(0, len(temp_channel_order_copy), self.block_shape[1]):
+            temp_channel_order.append(
+                temp_channel_order_copy[i : i + self.block_shape[1]]
+            )
+        flattend_block_order = [
+            item for sublist in self.block_order for item in sublist
+        ]
+        print(f"flattend_block_order: {flattend_block_order}")
+        temp_channel_order = [temp_channel_order[i - 1] for i in flattend_block_order]
+        temp_channel_order_copy = temp_channel_order.copy()
+        temp_channel_order = []
+        for i in range(0, len(temp_channel_order_copy), 2):
+            for j in range(0, len(temp_channel_order_copy[i])):
+                combined = (
+                    temp_channel_order_copy[i][j] + temp_channel_order_copy[i + 1][j]
+                )
+                temp_channel_order.extend(combined)
+        self.channel_order = temp_channel_order.copy()
+        print(f"channel_order: {self.channel_order} len: {len(self.channel_order)}")
+        # self.channel_order = []
+        # for block_row_idx, block_row in enumerate(self.block_order):
+        #     for block_repeat in range(self.block_shape[1]):
+        #         for block in block_row:
+        #             self.channel_order.extend(
+        #                 temp_channel_order[
+        #                     (block - 1) * self.block_shape[1] + block_repeat
+        #                 ]
+        #             )
         # print(self.channel_order)
 
-    def __packet_remap(self):
-        packet_copy = bytearray(self.packet)
+    def __packet_remap(self, packet):
+        packet_copy = bytearray(packet)
+        packet = bytearray(512)
         for idx, order in enumerate(self.channel_order):
-            self.packet[order] = packet_copy[idx]
+            packet[order] = packet_copy[idx]
+        # fill the rest of the packet with zeros if needed
+        if len(packet) < 512:
+            packet.extend(bytearray(512 - len(packet)))
+        return packet
 
     def __print_block_order_graph(self):
         print(
@@ -88,6 +135,9 @@ class ArtNetSender:
             third_line = "|___________|" * len(row) + "\n"
             print(first_line + second_line + third_line)
 
+    # def __del__(self):
+    #     self.stop()
+
     # →
 
 
@@ -101,23 +151,36 @@ def split_list(list, n):
         yield list[idx : idx + n]
 
 
-# artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
+artnet = ArtNetSender(
+    "127.0.0.1",
+    universe=0,
+    channels=128,
+    block_order=[[1, 2], [3, 4]],
+    block_shape=(8, 4),
+)
 
-# artnet.start()
+artnet.start()
 
-# matrix = []
-# for i in range(0, 128):
-#     matrix.append(i)
-# artnet.set_packet(matrix)  # 設定初始數據包
-# # print(int_values)
-# artnet.send(remap=True)
-# try:
-#     while True:
-#         sleep(0.1)
-#         matrix[random.randint(0, 127)] = random.randint(0, 255)
-#         artnet.set_packet(matrix)  # 設定初始數據包
-#         artnet.send(remap=True)
-# except KeyboardInterrupt:
-#     print("Stopping ArtNet sender...")
-#     artnet.stop()
-#     print("ArtNet sender stopped.")
+matrix = []
+for i in range(0, 128):
+    matrix.append(0)
+artnet.set_packet(matrix)  # 設定初始數據包
+count = 0
+
+try:
+    while True:
+        # matrix[random.randint(0, 127)] = random.randint(0, 255)
+        if matrix[count] == 0:
+            matrix[count] = 255
+        else:
+            matrix[count] = 0
+        artnet.set_packet(matrix)
+        count += 1
+        if count >= 128:
+            count = 0
+        sleep(0.1)
+
+except KeyboardInterrupt:
+    print("Stopping ArtNet sender...")
+    artnet.stop()
+    print("ArtNet sender stopped.")

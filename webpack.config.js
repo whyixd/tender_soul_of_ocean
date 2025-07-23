@@ -47,19 +47,20 @@ module.exports = (env, argv) => {
     ],
     // 開發伺服器設定
     devServer: {
-      static: [
-        { directory: path.resolve(__dirname, "static") },
-        { directory: path.resolve(__dirname, "public") },
-      ],
+      static: [{ directory: path.resolve(__dirname, "public") }],
       hot: true,
       proxy: [
         {
-          context: ["/socket.io"],
+          context: ["/socket.io", "/static"],
           target: "http://127.0.0.1:5000",
           ws: true,
         },
       ],
       historyApiFallback: true,
+      // Prevent attempting to serve the same files twice
+      devMiddleware: {
+        writeToDisk: false,
+      },
     },
   };
 };

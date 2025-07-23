@@ -9,10 +9,11 @@ from artnet_sender import ArtNetSender
 
 # 建立 Flask app
 app = Flask(__name__, static_folder="static")
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0  # Disable caching for development
 
 # 【關鍵】設定 Socket.IO，並允許所有來源的跨域請求，這在開發時非常重要
 # In a real production app, you'd want to restrict cors_allowed_origins
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 
 artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
 artnet.block_shape = (8, 4)
@@ -51,7 +52,7 @@ def send_test_sequence():
     off = 1
     print("🚀 Starting test sequence...")
     artnet.set_packet(matrix)  # 設定初始數據包
-    artnet.send(remap=True)  # 初始發送一次
+    # artnet.send(remap=True)  # 初始發送一次
     socketio.emit("dmx_data", {"value": matrix})  # 初始發
 
     while True:
@@ -61,7 +62,7 @@ def send_test_sequence():
         if count == 0:
             off = 1 - off
         artnet.set_packet(matrix)
-        artnet.send(remap=True)
+        # artnet.send(remap=True)
         sleep(0.1)
 
 
@@ -71,18 +72,40 @@ def send_test_sequence():
 @app.route("/")
 def index():
     """主路由，回傳 Webpack 打包好的 index.html"""
-    return send_from_directory(app.static_folder, "index.html")
+    try:
+        return send_from_directory(app.static_folder, "index.html")
+    except FileNotFoundError:
+        # During development, webpack-dev-server serves the file
+        # so it's normal that we don't find it
+        return "Development mode: Please access through webpack-dev-server", 200
+    except Exception as e:
+        print(f"Error serving index.html: {e}")
+        return "Error serving the page", 500
 
 
 @app.route("/show-case")
 def show_case():
     """展示案例頁面"""
-    return send_from_directory(app.static_folder, "show_case.html")
+    try:
+        return send_from_directory(app.static_folder, "show_case.html")
+    except Exception as e:
+        print(f"Error serving show_case.html: {e}")
+        return "Error serving the page", 500
+
+
+# Add a proper static file handler
+@app.route("/static/<path:path>")
+def serve_static(path):
+    try:
+        return send_from_directory(app.static_folder, path)
+    except Exception as e:
+        print(f"Error serving static file {path}: {e}")
+        return "File not found", 404
 
 
 def run_server():
     print("🚀 Flask + Socket.IO server starting on http://127.0.0.1:5000")
-    socketio.run(app, host="0.0.0.0", port=5000, use_reloader=False)
+    socketio.run(app, host="0.0.0.0", port=5000, use_reloader=False, debug=False)
 
 
 if __name__ == "__main__":
