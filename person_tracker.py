@@ -3,7 +3,6 @@ import cv2
 import logging
 import time
 import torch
-from pythonosc import udp_client
 import numpy as np
 import threading
 from queue import Queue
@@ -15,8 +14,6 @@ class PersonTracker(threading.Thread):
     def __init__(
         self,
         video_source="people_top.mp4",
-        osc_ip="127.0.0.1",
-        osc_port=5005,
         width=1280,
         height=720,
     ):
@@ -28,9 +25,6 @@ class PersonTracker(threading.Thread):
         self.video_source = video_source
         self.desired_width = width
         self.desired_height = height
-
-        # OSC settings
-        self.client = udp_client.SimpleUDPClient(osc_ip, osc_port)
 
         # YOLO model
         self.model = YOLO("yolo11n-seg.pt")
@@ -373,9 +367,6 @@ class PersonTracker(threading.Thread):
                     thickness=1,
                 )
 
-                # Send OSC message
-                self.client.send_message("/person", (track_id, center_x, center_y))
-
                 # Draw bottom center point
                 cv2.circle(
                     frame,
@@ -447,8 +438,6 @@ if __name__ == "__main__":
     # Create tracker instance
     tracker = PersonTracker(
         video_source="people_top.mp4",  # or 0 for webcam
-        osc_ip="127.0.0.1",
-        osc_port=5005,
         width=1280,
         height=720,
     )
