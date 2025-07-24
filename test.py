@@ -27,11 +27,11 @@ display_fps = 0
 target_fps = 30
 # frame_duration = 1.0 / target_fps  # Target duration for each frame in seconds # Not used
 # --- Webcam and Resolution Setup ---
-CAP_INDEX = 0  # Default webcam
+CAP_INDEX = 1  # Default webcam
 DESIRED_WIDTH = 1280
 DESIRED_HEIGHT = 720
-# cap = cv2.VideoCapture(CAP_INDEX)
-cap = cv2.VideoCapture("people_top.mp4")
+cap = cv2.VideoCapture(CAP_INDEX)
+# cap = cv2.VideoCapture("people_top.mp4")
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, DESIRED_WIDTH)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, DESIRED_HEIGHT)
 
@@ -47,20 +47,23 @@ enable_reset_timeout = 5  # seconds without detections before resetting inside c
 last_detection_time = time.time()
 # --- End Temporal Filtering Parameters ---
 
-corners = [
-    (100, 100),
-    (200, 100),
-    (200, 200),
-    (100, 200),
-]  # Example corners for a polygon
+area_edit_mode = False  # Flag to indicate if area edit mode is active
+areas = [
+    [(100, 100), (200, 100), (200, 200), (100, 200)],  # Example area polygon
+    [(300, 300), (400, 300), (400, 400), (300, 400)],  # Another example area polygon
+]
 current_setting_corners = 0
+current_setting_area = 0
+
+inside_area_counts = [0] * len(areas)  # Initialize counts for each area
 
 
 def set_corner(event, x, y, flags, param):
-    global corners
-    global current_setting_corners
+    global areas, current_setting_corners, current_setting_area, area_edit_mode
+    if not area_edit_mode:
+        return
     if event == cv2.EVENT_LBUTTONDOWN:
-        corners[current_setting_corners] = (x, y)
+        areas[current_setting_area][current_setting_corners] = (x, y)
 
 
 cv2.namedWindow("Live Stream")
@@ -99,11 +102,21 @@ while cap.isOpened():
         cv2.putText(
             frame,
             f"FPS: {int(display_fps)}",
-            (10, 30),  # Position at the top-left corner
+            (5, 15),  # Position at the top-left corner
             cv2.FONT_HERSHEY_SIMPLEX,
             0.5,  # Font scale
             (0, 255, 0),  # Green color
-            2,  # Thickness
+            1,  # Thickness
+            cv2.LINE_AA,
+        )
+        cv2.putText(
+            frame,
+            f"Area Edit Mode: {'ON' if area_edit_mode else 'OFF'}",
+            (5, 30),  # Position below FPS
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.5,
+            (255, 0, 0),  # Blue color
+            1,
             cv2.LINE_AA,
         )
 
@@ -112,7 +125,9 @@ while cap.isOpened():
         if result.boxes is not None and result.boxes.data.numel() > 0:
             for detection_tensor in result.boxes.data:
                 # Expected format with tracking: [x1, y1, x2, y2, track_id, confidence, class_id]
-                if len(detection_tensor) == 7:
+                if (
+                    len(detection_tensor) == 7
+                ):  # Ensure the tensor has the expected length
                     x1, y1, x2, y2, track_id_val, conf_val, cls_val = detection_tensor
 
                     track_id = int(track_id_val)
@@ -148,26 +163,37 @@ while cap.isOpened():
                 # Handle cases with unexpected tensor length if necessary,
                 # but tracking should provide 7 elements.
                 # print(f"Skipping detection with unexpected length: {len(detection_tensor)}")
+
         keycode = cv2.waitKey(1)
-        if keycode == 113:
+        if keycode == 101:  # e
+            area_edit_mode = not area_edit_mode
+        if keycode == 113:  # q
             current_setting_corners = 0
-        elif keycode == 119:  # 'w' key to set next corner
+        elif keycode == 119:  # w
             current_setting_corners = 1
-        elif keycode == 97:
+        elif keycode == 97:  # a
             current_setting_corners = 3
-        elif keycode == 115:
+        elif keycode == 115:  # s
             current_setting_corners = 2
+        if keycode in range(49, 57):  # 1-9
+            current_setting_area = keycode - 49
         overlay = frame.copy()  # Create a copy of the frame for overlay
-        cv2.fillPoly(
-            frame,
-            [np.array(corners, dtype=np.int32)],
-            color=(255, 0, 0, 30),  # Green color for polygon
-        )
+        for idx, area in enumerate(areas):
+            color = (0, 0, 255) if idx == current_setting_area else (255, 0, 0)
+            cv2.fillPoly(
+                frame,
+                [np.array(area, dtype=np.int32)],
+                color=(
+                    255 * idx % 2,
+                    255 * (1 - idx % 2),
+                    0,
+                ),  # Green color for polygon
+            )
+            for corner in area:
+                cv2.circle(frame, corner, 5, color, -1)
         # Apply transparency (alpha blending)
-        alpha = 0.3  # Transparency factor: 0 = fully transparent, 1 = fully opaque
+        alpha = 0.8  # Transparency factor: 0 = fully transparent, 1 = fully opaque
         cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
-        for corner in corners:
-            cv2.circle(frame, corner, 5, (0, 0, 255), -1)
         # Update misses for tracks not seen in this frame and remove old tracks
         tracks_to_remove = []
         for tid, track_info in active_tracks.items():
@@ -184,38 +210,29 @@ while cap.isOpened():
 
         # Now, draw only confirmed tracks that meet the hit threshold
         midline = frame.shape[0] // 2  # Middle y-coordinate for entry/exit line
+        inside_area_counts = [0] * len(areas)  # Reset counts for each area
         for track_id, track_info in active_tracks.items():
             if track_info["hits"] >= MIN_CONSECUTIVE_HITS:
                 data = track_info["details"]
                 x1, y1, x2, y2 = data["x1"], data["y1"], data["x2"], data["y2"]
                 center_x = int((x1 + x2) / 2)
                 center_y = int((y1 + y2) / 2)
-                # initialize counting side for new track
-                # if "counted" not in track_info:
-                #     track_info["side"] = "below" if center_y > midline else "above"
-                #     track_info["counted"] = False
-                # # count crossing
-                # elif not track_info["counted"]:
-                #     current_side = "below" if center_y > midline else "above"
-                #     if track_info["side"] == "above" and current_side == "below":
-                #         total_entered += 1
-                #         track_info["counted"] = True
-                #     elif track_info["side"] == "below" and current_side == "above":
-                #         total_exited += 1
-                #         track_info["counted"] = True
+                bottom_y = int(y2)
                 # drawing code follows
                 draw_color = (0, 255, 0)  # Default Green color for drawing
-                inside = cv2.pointPolygonTest(
-                    np.array(corners, dtype=np.int32), (center_x, center_y), False
-                )
+                inside = -1
+                for area in areas:
+                    result = cv2.pointPolygonTest(
+                        np.array(area, dtype=np.int32),
+                        (center_x, bottom_y),
+                        False,
+                    )
+                    if result >= 0:
+                        inside = 1
+                        inside_area_counts[areas.index(area)] += 1
+                        break
                 if inside >= 0:
                     draw_color = (0, 0, 255)
-                # if center_y > frame.shape[0] / 2:
-                #     draw_color = (
-                #         3,
-                #         78,
-                #         252,
-                #     )  # Red if person's center is in the lower half
 
                 # Draw the bounding box on the frame
                 cv2.rectangle(
@@ -227,38 +244,57 @@ while cap.isOpened():
                         78,
                         252,
                     ),  # Darker green for bounding box
-                    thickness=2,
+                    thickness=1,
                 )
 
                 client.send_message("/person", (track_id, center_x, center_y))
 
-                # Draw the bounding box center on the frame
+                # # Draw the bounding box center on the frame
+                # cv2.circle(
+                #     frame,
+                #     (center_x, center_y),
+                #     radius=3,
+                #     color=draw_color,
+                #     thickness=-1,
+                # )
+                # Draw the bounding box bottom on the frame
                 cv2.circle(
                     frame,
-                    (center_x, center_y),
-                    radius=5,
+                    (center_x, bottom_y),
+                    radius=3,
                     color=draw_color,
                     thickness=-1,
                 )
-                # Draw a horizontal line at the person's center_y
-                # cv2.line(
-                #     frame,
-                #     (0, center_y),
-                #     (frame.shape[1], center_y),
-                #     color=draw_color,
-                #     thickness=1,
-                # )
                 cv2.putText(
                     frame,
                     f"ID:{track_id} Conf:{data['confidence']:.2f} C:({center_x},{center_y})",
                     (int(x1), int(y1) - 10),  # Position text above the box
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    0.5,
-                    draw_color,
+                    0.3,
+                    (0, 0, 255),
                     1,
                     cv2.LINE_AA,
                 )
+        for idx, count in enumerate(inside_area_counts):
+            total_entered += count
 
+            # Calculate midpoint between top-left and top-right corners for text placement
+            area = areas[idx]
+            top_left = area[0]  # First point in the area
+            top_right = area[1]  # Second point in the area
+            text_x = int((top_left[0] + top_right[0]) / 2)
+            text_y = int(top_left[1] - 10)  # Slightly above the top edge
+            # Draw area label above the area
+            cv2.putText(
+                frame,
+                f"Area {idx + 1}: {count}",
+                (text_x, text_y),  # Position at the middle-top of the area
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                (255, 255, 255),  # White text
+                1,
+                cv2.LINE_AA,
+            )
         # Display net people inside the frame
         # reset inside count if no detections for a while
         inside_count = total_entered - total_exited
