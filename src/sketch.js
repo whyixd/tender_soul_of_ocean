@@ -175,8 +175,9 @@ const sketch = (p) => {
       1000
     );
     p.rotateX(p.PI / 2);
-    p.rotateZ(-p.PI / 2);
+    // p.rotateZ(-p.PI / 2);
     if (shape) {
+      p.scale(1, -1, 1);
       p.model(shape);
     }
 
@@ -186,7 +187,7 @@ const sketch = (p) => {
     p.rotateX(p.PI / 2);
     for (let i = 0; i < startPosition.length; i++) {
       p.translate(startPosition[i].x, startPosition[i].y, startPosition[i].z);
-      let firstColumnValus = lightValues[i][0];
+      let firstColumnValus = lightValues[startPosition.length - 1 - i][0];
       firstColumnValus = settings.useEase
         ? easeOutExpo(firstColumnValus)
         : firstColumnValus;
@@ -206,7 +207,7 @@ const sketch = (p) => {
             sinParams[i].sinYOffset,
           11.12
         );
-        let lightValue = lightValues[i][j];
+        let lightValue = lightValues[startPosition.length - 1 - i][j];
 
         lightValue = settings.useEase ? easeOutExpo(lightValue) : lightValue;
         // 使用 light

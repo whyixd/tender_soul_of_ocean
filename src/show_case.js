@@ -144,7 +144,7 @@ const sketch = (p) => {
     p.rotateY(p.frameCount * 0.001);
     for (let i = 0; i < startPosition.length; i++) {
       p.translate(startPosition[i].x, startPosition[i].y, startPosition[i].z);
-      p.box((dmx_data[i * 16] / 255) * 50);
+      p.box((dmx_data[i * 16] / 255) * 5);
       for (let j = 1; j < 16; j++) {
         // 使用 sinParams[i]
         p.translate(
@@ -155,7 +155,7 @@ const sketch = (p) => {
             p.random(0.05),
           11.12
         );
-        p.box((dmx_data[i * 16 + j] / 255) * 50);
+        p.box((dmx_data[i * 16 + j] / 255) * 5);
       }
     }
   };

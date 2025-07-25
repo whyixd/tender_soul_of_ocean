@@ -80,10 +80,9 @@ class PersonTracker(threading.Thread):
         self.running = False
         self.result_queue = Queue(maxsize=10)  # Buffer for processed results
 
-        # Initialize display window if visualization is enabled
-        if self.show_visualization:
-            cv2.namedWindow("Live Stream")
-            cv2.setMouseCallback("Live Stream", self.set_corner)
+        # NOTE: Window initialization is now deferred to the display_loop method
+        # or _ui_thread_function when running in background
+        # This ensures the window is created in the correct thread
 
     def set_corner(self, event, x, y, flags, param):
         """Mouse callback for setting area corners."""
@@ -433,37 +432,71 @@ class PersonTracker(threading.Thread):
             return self.result_queue.get()
         return None
 
+    def display_loop(self):
+        """Start the display loop in the current thread."""
+        try:
+            # Main display loop that won't block even if tracking is slow
+            while self.running:
+                # Get the latest processed frame
+                frame = self.get_latest_frame()
 
-if __name__ == "__main__":
-    # Create tracker instance
-    tracker = PersonTracker(
-        video_source="people_top.mp4",  # or 0 for webcam
-        width=1280,
-        height=720,
-    )
+                if frame is not None:
+                    # Display the frame
+                    cv2.imshow("Live Stream", frame)
 
-    # Start tracking in a separate thread
-    tracker.start()
+                # Process keyboard input - this is critical for OpenCV to process window events
+                key = cv2.waitKey(1) & 0xFF
 
-    try:
-        # Main display loop that won't block even if tracking is slow
-        while True:
-            # Get the latest processed frame
-            frame = tracker.get_latest_frame()
+                if key == ord("q"):  # Press 'q' to quit
+                    break
+                elif key != 255:  # If any other key is pressed
+                    self.process_key(key)
+        finally:
+            # Cleanup
+            cv2.destroyAllWindows()
 
-            if frame is not None:
-                # Display the frame
-                cv2.imshow("Live Stream", frame)
+    def start_and_display(self):
+        """Start the tracking thread and then run the display loop."""
+        self.start()  # Start tracking in a separate thread
+        self.display_loop()  # Run display loop in the current thread
 
-            # Process keyboard input
-            key = cv2.waitKey(1) & 0xFF
+    def start_all_in_background(self):
+        """Start both tracking and display in background threads.
+        NOTE: This uses a trick to make OpenCV GUI work in a separate thread,
+        but it's not guaranteed to work on all systems."""
+        import threading
 
-            if key == ord("q"):  # Press 'q' to quit
-                break
-            elif key != 255:  # If any other key is pressed
-                tracker.process_key(key)
+        # Start tracking thread
+        self.start()  # This is already a thread
 
-    finally:
-        # Cleanup
-        tracker.stop()
-        cv2.destroyAllWindows()
+        # Create a special UI thread for OpenCV
+        self.ui_thread = threading.Thread(target=self._ui_thread_function)
+        self.ui_thread.daemon = True
+        self.ui_thread.start()
+
+    def _ui_thread_function(self):
+        """Function to run in the UI thread that handles OpenCV window events."""
+        # Create a named window with normal flags in this thread
+        cv2.namedWindow("Live Stream", cv2.WINDOW_NORMAL)
+        cv2.setMouseCallback("Live Stream", self.set_corner)
+
+        # Run the display loop in this thread
+        self.display_loop()
+
+    def stop(self):
+        """Stop the tracking thread."""
+        self.running = False
+
+
+# if __name__ == "__main__":
+#     # Create tracker instance
+#     tracker = PersonTracker(
+#         video_source="people_top.mp4",  # or 0 for webcam
+#         width=1280,
+#         height=720,
+#     )
+
+#     # Start tracking and display
+#     tracker.start_and_display()
+
+# No need for try/finally here as it's handled in display_loop

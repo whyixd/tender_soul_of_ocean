@@ -159,28 +159,28 @@ artnet = ArtNetSender(
     block_shape=(8, 4),
 )
 
-artnet.start()
+# artnet.start()
 
-matrix = []
-for i in range(0, 128):
-    matrix.append(0)
-artnet.set_packet(matrix)  # 設定初始數據包
-count = 0
+# matrix = []
+# for i in range(0, 128):
+#     matrix.append(0)
+# artnet.set_packet(matrix)  # 設定初始數據包
+# count = 0
 
-try:
-    while True:
-        # matrix[random.randint(0, 127)] = random.randint(0, 255)
-        if matrix[count] == 0:
-            matrix[count] = 255
-        else:
-            matrix[count] = 0
-        artnet.set_packet(matrix)
-        count += 1
-        if count >= 128:
-            count = 0
-        sleep(0.1)
+# try:
+#     while True:
+#         # matrix[random.randint(0, 127)] = random.randint(0, 255)
+#         if matrix[count] == 0:
+#             matrix[count] = 255
+#         else:
+#             matrix[count] = 0
+#         artnet.set_packet(matrix)
+#         count += 1
+#         if count >= 128:
+#             count = 0
+#         sleep(0.1)
 
-except KeyboardInterrupt:
-    print("Stopping ArtNet sender...")
-    artnet.stop()
-    print("ArtNet sender stopped.")
+# except KeyboardInterrupt:
+#     print("Stopping ArtNet sender...")
+#     artnet.stop()
+#     print("ArtNet sender stopped.")

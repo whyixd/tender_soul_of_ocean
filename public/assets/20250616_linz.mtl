@@ -7,8 +7,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat1
@@ -18,8 +18,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat2
@@ -29,8 +29,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat3
@@ -40,8 +40,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat4
@@ -51,8 +51,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat5
@@ -62,8 +62,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat6
@@ -73,8 +73,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat7
@@ -84,8 +84,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat8
@@ -95,8 +95,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat9
@@ -106,8 +106,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat10
@@ -117,8 +117,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat11
@@ -128,8 +128,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat12
@@ -139,8 +139,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat13
@@ -150,8 +150,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat14
@@ -161,8 +161,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat15
@@ -172,8 +172,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat16
@@ -183,8 +183,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat17
@@ -194,8 +194,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat18
@@ -205,8 +205,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat19
@@ -216,8 +216,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat20
@@ -227,8 +227,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat21
@@ -238,8 +238,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat22
@@ -249,8 +249,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat23
@@ -260,8 +260,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat24
@@ -271,8 +271,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat25
@@ -282,8 +282,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat26
@@ -293,8 +293,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat27
@@ -304,8 +304,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat28
@@ -315,8 +315,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat29
@@ -326,8 +326,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat30
@@ -337,8 +337,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat31
@@ -348,8 +348,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat32
@@ -359,8 +359,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat33
@@ -370,8 +370,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat34
@@ -381,8 +381,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat35
@@ -392,8 +392,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat36
@@ -403,8 +403,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat37
@@ -414,8 +414,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat38
@@ -425,8 +425,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat39
@@ -436,8 +436,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat40
@@ -447,8 +447,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat41
@@ -458,8 +458,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat42
@@ -469,8 +469,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat43
@@ -480,8 +480,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat44
@@ -491,8 +491,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat45
@@ -502,8 +502,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat46
@@ -513,8 +513,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat47
@@ -524,8 +524,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat48
@@ -535,8 +535,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat49
@@ -546,8 +546,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat50
@@ -557,8 +557,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat51
@@ -568,8 +568,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat52
@@ -579,8 +579,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat53
@@ -590,8 +590,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat54
@@ -601,8 +601,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat55
@@ -612,8 +612,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat56
@@ -623,8 +623,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat57
@@ -634,8 +634,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat58
@@ -645,8 +645,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat59
@@ -656,8 +656,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat60
@@ -667,8 +667,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat61
@@ -678,8 +678,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat62
@@ -689,8 +689,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat63
@@ -700,8 +700,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat64
@@ -711,8 +711,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat65
@@ -722,8 +722,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat66
@@ -733,8 +733,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat67
@@ -744,8 +744,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat68
@@ -755,8 +755,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat69
@@ -766,8 +766,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat70
@@ -777,8 +777,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat71
@@ -788,8 +788,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat72
@@ -799,8 +799,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat73
@@ -810,8 +810,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat74
@@ -821,8 +821,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat75
@@ -832,8 +832,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat76
@@ -843,8 +843,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat77
@@ -854,8 +854,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat78
@@ -865,8 +865,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat79
@@ -876,8 +876,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat80
@@ -887,8 +887,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat81
@@ -898,8 +898,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat82
@@ -909,8 +909,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat83
@@ -920,8 +920,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat84
@@ -931,8 +931,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat85
@@ -942,8 +942,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat86
@@ -953,8 +953,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat87
@@ -964,8 +964,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat88
@@ -975,8 +975,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat89
@@ -986,8 +986,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat90
@@ -997,8 +997,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat91
@@ -1008,8 +1008,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat92
@@ -1019,8 +1019,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat93
@@ -1030,8 +1030,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat94
@@ -1041,8 +1041,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat95
@@ -1052,8 +1052,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat96
@@ -1063,8 +1063,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat97
@@ -1074,8 +1074,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat98
@@ -1085,8 +1085,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat99
@@ -1096,8 +1096,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat100
@@ -1107,8 +1107,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat101
@@ -1118,8 +1118,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat102
@@ -1129,8 +1129,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat103
@@ -1140,8 +1140,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat104
@@ -1151,8 +1151,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat105
@@ -1162,8 +1162,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat106
@@ -1173,8 +1173,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat107
@@ -1184,8 +1184,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat108
@@ -1195,8 +1195,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat109
@@ -1206,8 +1206,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat110
@@ -1217,8 +1217,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat111
@@ -1228,8 +1228,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat112
@@ -1239,8 +1239,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat113
@@ -1250,8 +1250,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat114
@@ -1261,8 +1261,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat115
@@ -1272,8 +1272,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat116
@@ -1283,8 +1283,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat117
@@ -1294,8 +1294,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat118
@@ -1305,8 +1305,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat119
@@ -1316,8 +1316,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat120
@@ -1327,8 +1327,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat121
@@ -1338,8 +1338,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat122
@@ -1349,8 +1349,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat123
@@ -1360,8 +1360,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat124
@@ -1371,8 +1371,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat125
@@ -1382,8 +1382,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat126
@@ -1393,8 +1393,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat127
@@ -1404,8 +1404,8 @@ Kd 1 0.521 0
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat128
@@ -1415,8 +1415,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat129
@@ -1426,8 +1426,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat130
@@ -1437,8 +1437,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat131
@@ -1448,8 +1448,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat132
@@ -1459,8 +1459,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat133
@@ -1470,8 +1470,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat134
@@ -1481,8 +1481,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat135
@@ -1492,8 +1492,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat136
@@ -1503,8 +1503,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat137
@@ -1514,8 +1514,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat138
@@ -1525,8 +1525,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat139
@@ -1536,8 +1536,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat140
@@ -1547,8 +1547,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat141
@@ -1558,8 +1558,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat142
@@ -1569,8 +1569,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat143
@@ -1580,8 +1580,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat144
@@ -1591,8 +1591,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat145
@@ -1602,8 +1602,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat146
@@ -1613,8 +1613,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat147
@@ -1624,8 +1624,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat148
@@ -1635,8 +1635,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat149
@@ -1646,8 +1646,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat150
@@ -1657,8 +1657,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat151
@@ -1668,8 +1668,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat152
@@ -1679,8 +1679,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat153
@@ -1690,8 +1690,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat154
@@ -1701,8 +1701,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat155
@@ -1712,8 +1712,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat156
@@ -1723,8 +1723,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat157
@@ -1734,8 +1734,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat158
@@ -1745,8 +1745,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat159
@@ -1756,8 +1756,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat160
@@ -1767,8 +1767,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat161
@@ -1778,8 +1778,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat162
@@ -1789,8 +1789,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat163
@@ -1800,8 +1800,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat164
@@ -1811,8 +1811,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat165
@@ -1822,8 +1822,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat166
@@ -1833,8 +1833,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat167
@@ -1844,8 +1844,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat168
@@ -1855,8 +1855,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat169
@@ -1866,8 +1866,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat170
@@ -1877,8 +1877,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat171
@@ -1888,8 +1888,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat172
@@ -1899,8 +1899,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat173
@@ -1910,8 +1910,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat174
@@ -1921,8 +1921,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat175
@@ -1932,8 +1932,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat176
@@ -1943,8 +1943,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat177
@@ -1954,8 +1954,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat178
@@ -1965,8 +1965,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat179
@@ -1976,8 +1976,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat180
@@ -1987,8 +1987,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat181
@@ -1998,8 +1998,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat182
@@ -2009,8 +2009,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat183
@@ -2020,8 +2020,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat184
@@ -2031,8 +2031,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat185
@@ -2042,8 +2042,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat186
@@ -2053,8 +2053,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat187
@@ -2064,8 +2064,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat188
@@ -2075,8 +2075,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat189
@@ -2086,8 +2086,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat190
@@ -2097,8 +2097,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat191
@@ -2108,8 +2108,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat192
@@ -2119,8 +2119,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat193
@@ -2130,8 +2130,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat194
@@ -2141,8 +2141,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat195
@@ -2152,8 +2152,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat196
@@ -2163,8 +2163,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat197
@@ -2174,8 +2174,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat198
@@ -2185,8 +2185,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat199
@@ -2196,8 +2196,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat200
@@ -2207,8 +2207,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat201
@@ -2218,8 +2218,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat202
@@ -2229,8 +2229,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat203
@@ -2240,8 +2240,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat204
@@ -2251,8 +2251,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat205
@@ -2262,8 +2262,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat206
@@ -2273,8 +2273,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat207
@@ -2284,8 +2284,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat208
@@ -2295,8 +2295,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat209
@@ -2306,8 +2306,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat210
@@ -2317,8 +2317,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat211
@@ -2328,8 +2328,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat212
@@ -2339,8 +2339,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat213
@@ -2350,8 +2350,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat214
@@ -2361,8 +2361,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat215
@@ -2372,8 +2372,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat216
@@ -2383,8 +2383,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat217
@@ -2394,8 +2394,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat218
@@ -2405,8 +2405,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat219
@@ -2416,8 +2416,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat220
@@ -2427,8 +2427,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat221
@@ -2438,8 +2438,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat222
@@ -2449,8 +2449,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat223
@@ -2460,8 +2460,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat224
@@ -2471,8 +2471,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat225
@@ -2482,8 +2482,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat226
@@ -2493,8 +2493,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat227
@@ -2504,8 +2504,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat228
@@ -2515,8 +2515,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat229
@@ -2526,8 +2526,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat230
@@ -2537,8 +2537,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat231
@@ -2548,8 +2548,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat232
@@ -2559,8 +2559,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat233
@@ -2570,8 +2570,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat234
@@ -2581,8 +2581,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat235
@@ -2592,8 +2592,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat236
@@ -2603,8 +2603,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat237
@@ -2614,8 +2614,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat238
@@ -2625,8 +2625,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat239
@@ -2636,8 +2636,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat240
@@ -2647,8 +2647,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat241
@@ -2658,8 +2658,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat242
@@ -2669,8 +2669,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat243
@@ -2680,8 +2680,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat244
@@ -2691,8 +2691,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat245
@@ -2702,8 +2702,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat246
@@ -2713,8 +2713,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat247
@@ -2724,8 +2724,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat248
@@ -2735,8 +2735,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat249
@@ -2746,8 +2746,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat250
@@ -2757,8 +2757,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat251
@@ -2768,8 +2768,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat252
@@ -2779,8 +2779,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat253
@@ -2790,8 +2790,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat254
@@ -2801,8 +2801,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat255
@@ -2812,8 +2812,8 @@ Kd 0.6038 0.6038 0.6038
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat256
@@ -2823,8 +2823,8 @@ Kd 0.1413 0.1413 0.1413
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat257
@@ -2834,8 +2834,8 @@ Kd 0.1413 0.1413 0.1413
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat258
@@ -2845,8 +2845,8 @@ Kd 0.1413 0.1413 0.1413
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat259
@@ -2856,8 +2856,8 @@ Kd 0.1413 0.1413 0.1413
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat260
@@ -2867,8 +2867,8 @@ Kd 0.1413 0.1413 0.1413
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat261
@@ -2878,8 +2878,8 @@ Kd 0.1413 0.1413 0.1413
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat262
@@ -2889,8 +2889,8 @@ Kd 0.1413 0.1413 0.1413
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat263
@@ -2900,8 +2900,8 @@ Kd 0.1413 0.1413 0.1413
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat264
@@ -2911,8 +2911,8 @@ Kd 0.1413 0.1413 0.1413
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat265
@@ -2922,8 +2922,8 @@ Kd 0.1413 0.1413 0.1413
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat266
@@ -2933,8 +2933,8 @@ Kd 0.1413 0.1413 0.1413
 Ks 0 0 0
 Ke 0 0 0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 
 newmtl mat267
@@ -2944,7 +2944,7 @@ Kd 0.85 0.85 0.85
 Ks 0 0 0
 Ke 0.0 0.0 0.0
 Ni 1.0
-d 0.3
-Tr 0.3
+d 1
+Tr 1
 illum 1
 

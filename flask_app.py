@@ -15,7 +15,7 @@ app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0  # Disable caching for development
 # In a real production app, you'd want to restrict cors_allowed_origins
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 
-artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
+artnet = ArtNetSender("2.56.31.102", universe=0, channels=128)
 artnet.block_shape = (8, 4)
 artnet.block_order = [[1, 3], [2, 4]]  #
 artnet.start()
@@ -56,11 +56,14 @@ def send_test_sequence():
     socketio.emit("dmx_data", {"value": matrix})  # 初始發
 
     while True:
-        matrix[count] = 25 * off
+        matrix[count] = 200 * off
         count = (count + 1) % 128
+        # matrix[0] = 200
+
         socketio.emit("dmx_data", {"value": matrix})
         if count == 0:
             off = 1 - off
+
         artnet.set_packet(matrix)
         # artnet.send(remap=True)
         sleep(0.1)

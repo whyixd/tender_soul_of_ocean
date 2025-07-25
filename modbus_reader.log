@@ -1,0 +1,1 @@
+2025-07-24 16:21:54 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
