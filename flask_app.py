@@ -7,18 +7,20 @@ from time import sleep
 
 from artnet_sender import ArtNetSender
 
-# 建立 Flask app
+from param_processer import TSOOParamProcesser
+
 app = Flask(__name__, static_folder="static")
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0  # Disable caching for development
 
-# 【關鍵】設定 Socket.IO，並允許所有來源的跨域請求，這在開發時非常重要
-# In a real production app, you'd want to restrict cors_allowed_origins
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 
-artnet = ArtNetSender("2.56.31.102", universe=0, channels=128)
+artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
+# artnet = ArtNetSender("2.56.31.102", universe=0, channels=128)
 artnet.block_shape = (8, 4)
 artnet.block_order = [[1, 3], [2, 4]]  #
 artnet.start()
+
+
 # --- Socket.IO 事件處理 ---
 
 
@@ -49,24 +51,31 @@ def send_test_sequence():
     for i in range(0, 128):
         matrix.append(0)
     count = 0
+    time = 0
     off = 1
     print("🚀 Starting test sequence...")
     artnet.set_packet(matrix)  # 設定初始數據包
     # artnet.send(remap=True)  # 初始發送一次
     socketio.emit("dmx_data", {"value": matrix})  # 初始發
-
+    tsoo_param_processor = TSOOParamProcesser()
+    tsoo_param_processor.tsoo_param["area_people_count"] = [0, 0, 1, 1]
+    tsoo_param_processor.tsoo_param["wind_speed"] = 2.5
+    print(tsoo_param_processor.get_tsoo_param())
+    basic = tsoo_param_processor.shifting_basic(16, 8, scale=15, z=0.0)
+    print(basic)
     while True:
-        matrix[count] = 200 * off
+        basic = tsoo_param_processor.shifting_basic(16, 8, scale=15, z=time)
+        matrix = basic.flatten().tolist()
         count = (count + 1) % 128
         # matrix[0] = 200
-
+        time += 0.002
         socketio.emit("dmx_data", {"value": matrix})
         if count == 0:
             off = 1 - off
 
-        artnet.set_packet(matrix)
+        artnet.set_packet(matrix, 0.3)
         # artnet.send(remap=True)
-        sleep(0.1)
+        sleep(0.03)
 
 
 # --- Flask 路由 ---
@@ -74,7 +83,6 @@ def send_test_sequence():
 
 @app.route("/")
 def index():
-    """主路由，回傳 Webpack 打包好的 index.html"""
     try:
         return send_from_directory(app.static_folder, "index.html")
     except FileNotFoundError:
@@ -88,7 +96,6 @@ def index():
 
 @app.route("/show-case")
 def show_case():
-    """展示案例頁面"""
     try:
         return send_from_directory(app.static_folder, "show_case.html")
     except Exception as e:

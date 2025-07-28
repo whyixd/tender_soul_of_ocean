@@ -1,4 +1,6 @@
 import math
+import numpy as np
+from noise import snoise2, snoise3
 
 
 class TSOOParamProcesser:
@@ -13,6 +15,7 @@ class TSOOParamProcesser:
             "wind_speed_max": 5.0,  # get from https://www.timeanddate.com/weather/austria/linz/climate
             "wind_angle": 0.0,
             "effect_angle": 0.0,  # 風向角度
+            "effect_vector": (0.0, 0.0),  # 風向向量
         }
 
     def caculate_param(self):
@@ -37,6 +40,7 @@ class TSOOParamProcesser:
         vector = calculate_balanced_vector(
             self.tsoo_param["area_people_count"], normalize=True
         )
+        self.tsoo_param["effect_vector"] = vector
         print(f"計算出的向量: {vector}")
         self.tsoo_param["effect_angle"] = vector_to_angle(*vector)
 
@@ -55,6 +59,33 @@ class TSOOParamProcesser:
     def get_tsoo_param(self):
         self.caculate_param()
         return self.tsoo_param
+
+    def shifting_basic(self, width, height, scale=10.0, z=0.0):
+        """生成 3D Perlin 噪聲並進行平移，z 參數控制噪聲的時間維度"""
+        x = np.linspace(0, width / scale, width)
+        y = np.linspace(0, height / scale, height)
+        X, Y = np.meshgrid(x, y)
+
+        v = self.tsoo_param["effect_vector"]
+        ws = self.tsoo_param["wind_speed"]
+        offset = (3 * z * v[0] * ws, 0.1 * z * v[1] * ws)
+        # 使用固定的 z 值或傳入的 z 值來生成第三維度
+        Z = np.zeros((height, width))
+        for i in range(height):
+            for j in range(width):
+                Z[i, j] = snoise3(
+                    X[i, j] + offset[0],
+                    Y[i, j] + offset[1],
+                    z,
+                    octaves=6,
+                    persistence=0.05,
+                    lacunarity=2.0,
+                )
+        Z = (Z - np.min(Z)) / (np.max(Z) - np.min(Z))
+        Z = 0.5 - Z
+        Z = np.interp(Z, (0, 1), (0, 255)).astype(np.uint8)
+
+        return Z
 
 
 def normalize(value, min_value, max_value):
@@ -92,15 +123,15 @@ def vector_to_angle(vx, vy):
     """將向量轉換為角度"""
     if vx == 0 and vy == 0:
         return 0.0
-    radians = math.atan2(vy, vx)  # 返回弧度
+    radians = math.atan2(vx, vy)  # 返回弧度
     degrees = math.degrees(radians)  # 轉換為角度
     return (degrees + 360) % 360  # 確保角度在 [0, 360) 範圍內
 
 
-tsoo_param_processor = TSOOParamProcesser()
-tsoo_param_processor.tsoo_param["area_people_count"] = [10, 10, 0, 0]
-tsoo_param_processor.tsoo_param["wind_speed"] = 2.5
+# tsoo_param_processor = TSOOParamProcesser()
+# tsoo_param_processor.tsoo_param["area_people_count"] = [5, 0, 0, 0]
+# tsoo_param_processor.tsoo_param["wind_speed"] = 2.5
 
-tsoo_param_processor.caculate_param()
-print(f"Initial TSOO parameters: {tsoo_param_processor.get_tsoo_param()}")
-# print(tsoo_param_processor.get_tsoo_param())
+# tsoo_param_processor.caculate_param()
+# print(f"Initial TSOO parameters: {tsoo_param_processor.get_tsoo_param()}")
+# # print(tsoo_param_processor.get_tsoo_param())

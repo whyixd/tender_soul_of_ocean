@@ -43,10 +43,11 @@ class ArtNetSender:
     def blackout(self):
         self.artnet.blackout()
 
-    def set_packet(self, packet):
+    def set_packet(self, packet, intensity=1.0):
         for i in range(len(packet)):
-            self.packet[i] = clamp(packet[i], 0, 255)
-        self.packet = self.__packet_remap(self.packet)
+            self.packet[i] = clamp(round(packet[i] * intensity), 0, 255)
+        for i in range(len(self.packet)):
+            self.packet[i] = round(self.packet[i])
         self.artnet.set(self.packet)
 
     def set_channel(self, channel, value):
