@@ -14,8 +14,8 @@ app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0  # Disable caching for development
 
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 
-artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
-# artnet = ArtNetSender("2.56.31.102", universe=0, channels=128)
+# artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
+artnet = ArtNetSender("2.56.31.102", universe=0, channels=128)
 artnet.block_shape = (8, 4)
 artnet.block_order = [[1, 3], [2, 4]]  #
 artnet.start()
@@ -58,23 +58,33 @@ def send_test_sequence():
     # artnet.send(remap=True)  # 初始發送一次
     socketio.emit("dmx_data", {"value": matrix})  # 初始發
     tsoo_param_processor = TSOOParamProcesser()
-    tsoo_param_processor.tsoo_param["area_people_count"] = [0, 0, 1, 1]
-    tsoo_param_processor.tsoo_param["wind_speed"] = 2.5
+    tsoo_param_processor.tsoo_param["area_people_count"] = [5, 0, 5, 0]
+    tsoo_param_processor.tsoo_param["wind_speed"] = 1.5
     print(tsoo_param_processor.get_tsoo_param())
     basic = tsoo_param_processor.shifting_basic(16, 8, scale=15, z=0.0)
     print(basic)
     while True:
-        basic = tsoo_param_processor.shifting_basic(16, 8, scale=15, z=time)
+        basic = tsoo_param_processor.shifting_basic(
+            16,
+            8,
+            scale=15,
+            z=time,
+            gradient_vector=(
+                tsoo_param_processor.tsoo_param["effect_vector"][0] * 5,
+                tsoo_param_processor.tsoo_param["effect_vector"][1] * 5,
+            ),
+        )
         matrix = basic.flatten().tolist()
+        # matrix[count] = 200 if off else 0
         count = (count + 1) % 128
-        # matrix[0] = 200
         time += 0.002
         socketio.emit("dmx_data", {"value": matrix})
         if count == 0:
             off = 1 - off
 
-        artnet.set_packet(matrix, 0.3)
+        artnet.set_packet(matrix, 0.5)
         # artnet.send(remap=True)
+        # sleep(0.5)
         sleep(0.03)
 
 

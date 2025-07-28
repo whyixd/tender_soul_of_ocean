@@ -60,8 +60,19 @@ class TSOOParamProcesser:
         self.caculate_param()
         return self.tsoo_param
 
-    def shifting_basic(self, width, height, scale=10.0, z=0.0):
-        """生成 3D Perlin 噪聲並進行平移，z 參數控制噪聲的時間維度"""
+    def shifting_basic(
+        self,
+        width,
+        height,
+        scale=10.0,
+        z=0.0,
+        gradient_vector=(1, 0),
+    ):
+        """
+        生成 3D Perlin 噪聲並進行平移，z 參數控制噪聲的時間維度
+        gradient_vector: 梯度向量，格式為 (x, y)，用於指定梯度的方向和強度
+                         向量的方向決定梯度方向，向量的長度影響梯度強度
+        """
         x = np.linspace(0, width / scale, width)
         y = np.linspace(0, height / scale, height)
         X, Y = np.meshgrid(x, y)
@@ -83,6 +94,37 @@ class TSOOParamProcesser:
                 )
         Z = (Z - np.min(Z)) / (np.max(Z) - np.min(Z))
         Z = 0.5 - Z
+
+        # 創建梯度遮罩
+        gradient_mask = np.ones((height, width))
+
+        # 使用向量來創建梯度
+        vec_x, vec_y = gradient_vector
+        # 創建歸一化的座標網格
+        norm_x = np.linspace(0, 1, width)
+        norm_y = np.linspace(0, 1, height)
+        norm_X, norm_Y = np.meshgrid(norm_x, norm_y)
+
+        # 計算向量的方向上的投影 (點積)
+        # 假設向量的原點在 (0,0)，目標是產生從原點向著向量方向的梯度
+        vec_len = np.sqrt(vec_x**2 + vec_y**2)
+        if vec_len > 0:
+            unit_vec_x, unit_vec_y = vec_x / vec_len, vec_y / vec_len
+            # 計算每個點到直線的投影距離
+            projection = norm_X * unit_vec_x + norm_Y * unit_vec_y
+
+            # 標準化投影值到 [0,1] 範圍
+            min_proj = np.min(projection)
+            max_proj = np.max(projection)
+            if max_proj > min_proj:
+                gradient_mask = (projection - min_proj) / (max_proj - min_proj)
+
+            # 調整梯度強度 (向量長度作為強度)
+            gradient_mask = np.power(gradient_mask, vec_len)
+
+        # 應用梯度遮罩到噪聲
+        Z = Z * gradient_mask
+
         Z = np.interp(Z, (0, 1), (0, 255)).astype(np.uint8)
 
         return Z

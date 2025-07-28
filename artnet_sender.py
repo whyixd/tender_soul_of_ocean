@@ -46,8 +46,9 @@ class ArtNetSender:
     def set_packet(self, packet, intensity=1.0):
         for i in range(len(packet)):
             self.packet[i] = clamp(round(packet[i] * intensity), 0, 255)
-        for i in range(len(self.packet)):
-            self.packet[i] = round(self.packet[i])
+        self.packet = self.__packet_remap(self.packet)
+        # for i in range(len(self.packet)):
+        #     self.packet[i] = round(self.packet[i])
         self.artnet.set(self.packet)
 
     def set_channel(self, channel, value):
