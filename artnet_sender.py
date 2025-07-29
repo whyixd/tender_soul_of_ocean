@@ -98,7 +98,7 @@ class ArtNetSender:
                 )
                 temp_channel_order.extend(combined)
         self.channel_order = temp_channel_order.copy()
-        print(f"channel_order: {self.channel_order} len: {len(self.channel_order)}")
+        # print(f"channel_order: {self.channel_order} len: {len(self.channel_order)}")
         # self.channel_order = []
         # for block_row_idx, block_row in enumerate(self.block_order):
         #     for block_repeat in range(self.block_shape[1]):

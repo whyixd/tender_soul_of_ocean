@@ -28,10 +28,10 @@ class PersonTracker(threading.Thread):
 
         # YOLO model
         self.model = YOLO("yolo11n-seg.pt")
-        if torch.cuda.is_available():
-            self.model.to("cuda")
-            print(f"Using GPU: {torch.cuda.get_device_name()}")
-            print(f"Model device: {self.model.device}")
+        # if torch.cuda.is_available():
+        #     self.model.to("cuda")
+        #     print(f"Using GPU: {torch.cuda.get_device_name()}")
+        #     print(f"Model device: {self.model.device}")
 
         # FPS calculation
         self.prev_fps_calc_time = time.time()

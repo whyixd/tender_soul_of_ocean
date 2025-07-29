@@ -1,4 +1,4 @@
-import p5 from "p5";
+import p5, { toggleClass } from "p5";
 import { GUI } from "lil-gui";
 import { io } from "socket.io-client";
 // FES 禁用程式碼可以保留，以備生產環境之需
@@ -32,6 +32,8 @@ const sketch = (p) => {
     { sinOffset: 4.43, sinLength: 0.36, sinScale: 7.21, sinYOffset: 1.99 },
     { sinOffset: 4.7, sinLength: 0.33, sinScale: 8.05, sinYOffset: 1.53 },
   ];
+
+  let lightCornerPos = [-38.9, -83.4];
   let lightColor = [255, 150, 6];
   let lightValues = [];
   let lightRawData = { matrix: [] };
@@ -51,9 +53,22 @@ const sketch = (p) => {
     sinScale: 7.03,
     sinYOffset: 0,
     useEase: true,
+    showControlPoints: false,
   };
   let pos = { x: 0, y: 0, z: 0 };
   let posIncrement = 0.1;
+  let tsooParam = {
+    people_count_max: 100,
+    wind_speed: 0,
+    wind_speed_max: 10,
+    area_people_count: 0,
+    people_natrual_weight: 0,
+    people_natrual_weight_level: 0,
+    people_natrual_weight_level_threshold: 0.5,
+    wind_angle: 0,
+    effect_vector: 0,
+    effect_angle: 0,
+  };
   // let sinOffset = 0;
   // let sinLength = 1;
   // let sinScale = 1;
@@ -67,6 +82,7 @@ const sketch = (p) => {
     p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
     p.angleMode(p.RADIANS);
     const gui = new GUI();
+
     gui.addColor(settings, "background").name("背景顏色");
     gui
       .add(settings, "sinOffset", 0, 10)
@@ -97,6 +113,7 @@ const sketch = (p) => {
         sinYOffset = value;
       });
     gui.add(settings, "useEase").name("使用Ease函數利於顯示");
+    gui.add(settings, "showControlPoints").name("顯示控制點");
     const matrixFolder = gui.addFolder("8x16 Matrix (Display Only)");
     for (let i = 0; i < 8; i++) {
       const rowFolder = matrixFolder.addFolder(`Row ${i}`);
@@ -114,6 +131,58 @@ const sketch = (p) => {
         controller.disable();
       }
     }
+    const tsooParamGui = new GUI({
+      container: document.body,
+      width: 300,
+    });
+
+    // 設置 GUI 標題
+    tsooParamGui.title("Tsoo Param");
+
+    // 設置 GUI 位置到左上角
+    tsooParamGui.domElement.style.position = "absolute";
+    tsooParamGui.domElement.style.top = "10px";
+    tsooParamGui.domElement.style.left = "10px";
+
+    tsooParamGui
+      .add(tsooParam, "people_count_max")
+      .name("人數計數最大值")
+      .listen();
+    tsooParamGui
+      .add(tsooParam, "wind_speed", 0, 10)
+      .name("風速")
+      .step(0.01)
+      .listen();
+    tsooParamGui
+      .add(tsooParam, "wind_speed_max", 0, 10)
+      .name("風速最大值")
+      .step(0.01)
+      .listen();
+    tsooParamGui
+      .add(tsooParam, "area_people_count")
+      .name("區域人數計數")
+
+      .listen();
+    tsooParamGui
+      .add(tsooParam, "people_natrual_weight", 0, 1)
+      .name("人數自然權重")
+      .step(0.01)
+      .listen();
+    tsooParamGui
+      .add(tsooParam, "people_natrual_weight_level", {
+        Low: 0,
+        Medium: 1,
+        High: 2,
+      })
+      .name("人數自然權重級別")
+      .listen();
+    tsooParamGui
+      .add(tsooParam, "people_natrual_weight_level_threshold")
+      .name("人數自然閾值")
+      .listen();
+    tsooParamGui.add(tsooParam, "wind_angle").name("風向角度").listen();
+    tsooParamGui.add(tsooParam, "effect_vector").name("效果向量").listen();
+    tsooParamGui.add(tsooParam, "effect_angle").name("效果角度").listen();
 
     if (process.env.NODE_ENV === "production") {
       socket = io();
@@ -128,6 +197,25 @@ const sketch = (p) => {
     socket.on("disconnect", () => {
       console.log("❌ Disconnected from Socket.IO server!");
       settings.isConnected = false;
+    });
+    socket.on("tsoo_param", (data) => {
+      // console.log("Received tsoo_param:", data);
+      tsooParam["people_count_max"] = data.people_count_max;
+      tsooParam["wind_speed"] = data.wind_speed;
+      tsooParam["area_people_count"] = data.area_people_count;
+      tsooParam["people_natrual_weight"] = data.people_natrual_weight;
+      tsooParam["people_natrual_weight_level"] =
+        data.people_natrual_weight_level;
+      tsooParam["people_natrual_weight_level_threshold"] =
+        data.people_natrual_weight_level_threshold;
+      tsooParam["wind_angle"] = roundToTwoDecimalPlaces(data.wind_angle);
+      tsooParam["effect_vector"] = [
+        roundToTwoDecimalPlaces(data.effect_vector[0]),
+        roundToTwoDecimalPlaces(data.effect_vector[1]),
+      ];
+      // tsooParam["effect_vector"] = data.effect_vector;
+      tsooParam["effect_angle"] = data.effect_angle;
+      // console.log("Received tsoo_param:", tsooParam);
     });
 
     socket.on("server_message", (data) => {
@@ -180,8 +268,18 @@ const sketch = (p) => {
       p.scale(1, -1, 1);
       p.model(shape);
     }
-
-    // create light cylinder
+    if (settings.showControlPoints) {
+      p.push();
+      p.translate(
+        lightCornerPos[0] * tsooParam["effect_vector"][1] * -1,
+        lightCornerPos[1] * tsooParam["effect_vector"][0],
+        0
+      );
+      p.fill(255, 0, 0);
+      p.sphere(1);
+      p.pop();
+      // create light cylinder
+    }
     p.push();
     p.fill(255, 0, 255);
     p.rotateX(p.PI / 2);
@@ -264,4 +362,7 @@ new p5(sketch);
 
 function easeOutExpo(x) {
   return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+}
+function roundToTwoDecimalPlaces(value) {
+  return Math.round(value * 100) / 100;
 }

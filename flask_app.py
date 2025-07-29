@@ -8,14 +8,15 @@ from time import sleep
 from artnet_sender import ArtNetSender
 
 from param_processer import TSOOParamProcesser
+from natural_tracker import NaturalTracker
 
 app = Flask(__name__, static_folder="static")
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0  # Disable caching for development
 
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 
-# artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
-artnet = ArtNetSender("2.56.31.102", universe=0, channels=128)
+artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
+# artnet = ArtNetSender("2.56.31.102", universe=0, channels=128)
 artnet.block_shape = (8, 4)
 artnet.block_order = [[1, 3], [2, 4]]  #
 artnet.start()
@@ -46,7 +47,7 @@ def handle_client_message(json_data):
     socketio.emit("server_message", response_data)
 
 
-def send_test_sequence():
+def send_test_effect():
     matrix = []
     for i in range(0, 128):
         matrix.append(0)
@@ -58,27 +59,42 @@ def send_test_sequence():
     # artnet.send(remap=True)  # 初始發送一次
     socketio.emit("dmx_data", {"value": matrix})  # 初始發
     tsoo_param_processor = TSOOParamProcesser()
-    tsoo_param_processor.tsoo_param["area_people_count"] = [5, 0, 5, 0]
-    tsoo_param_processor.tsoo_param["wind_speed"] = 1.5
+    tsoo_param_processor.target_tsoo_param["area_people_count"] = [1, 1, 0, 0]
+    tsoo_param_processor.target_tsoo_param["wind_speed"] = 5
+    tsoo_param_processor.target_tsoo_param["wind_angle"] = 60
     print(tsoo_param_processor.get_tsoo_param())
-    basic = tsoo_param_processor.shifting_basic(16, 8, scale=15, z=0.0)
-    print(basic)
+    basic = tsoo_param_processor.shifting_basic(16, 8, scale=5, z=0.0)
+
+    natural_tracker = NaturalTracker()
+    natural_tracker.update()  # 確保有初始數據
+    previous_natural_update_time = 0
     while True:
         basic = tsoo_param_processor.shifting_basic(
             16,
             8,
-            scale=15,
+            scale=5,
             z=time,
             gradient_vector=(
-                tsoo_param_processor.tsoo_param["effect_vector"][0] * 5,
-                tsoo_param_processor.tsoo_param["effect_vector"][1] * 5,
+                tsoo_param_processor.target_tsoo_param["effect_vector"][0] * 5,
+                tsoo_param_processor.target_tsoo_param["effect_vector"][1] * 5,
             ),
         )
         matrix = basic.flatten().tolist()
         # matrix[count] = 200 if off else 0
         count = (count + 1) % 128
         time += 0.002
+        if time - previous_natural_update_time >= 0.2:
+            previous_natural_update_time = time
+            # if sum(matrix) > 30:
+            #     print("Skipping natural tracker update due to active matrix")
+            #     continue
+            natural_tracker.update()
+            print(f"Natural data: {natural_tracker.get_data()}")
+            print(tsoo_param_processor.get_tsoo_param())
+        tsoo_param_processor.update_wind_angle(natural_tracker.get_data()[2])
+        tsoo_param_processor.caculate_param()
         socketio.emit("dmx_data", {"value": matrix})
+        socketio.emit("tsoo_param", tsoo_param_processor.interper_tsoo_param)
         if count == 0:
             off = 1 - off
 
@@ -133,7 +149,7 @@ if __name__ == "__main__":
     server_thread.start()
 
     try:
-        send_test_sequence()  # 啟動測試序列發送 DMX 數據
+        send_test_effect()  # 啟動測試序列發送 DMX 數據
 
         # 您也可以在主線程中，主動向所有客戶端廣播訊息
         # socketio.emit('server_broadcast', {'data': f'This is a broadcast from main thread, count: {count}'})
