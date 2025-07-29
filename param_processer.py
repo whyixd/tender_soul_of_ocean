@@ -5,7 +5,7 @@ from scipy.ndimage import gaussian_filter
 
 
 class TSOOParamProcesser:
-    def __init__(self, interpolation_speed=0.05):
+    def __init__(self, interpolation_speed=0.005):
         self.target_tsoo_param = {
             "people_natrual_weight": 0.5,
             "people_natrual_weight_level": 0,
@@ -36,7 +36,7 @@ class TSOOParamProcesser:
 
     def caculate_param(self):
         # 保存当前参数为上一次参数
-        self.previous_tsoo_param = self.target_tsoo_param.copy()
+        # self.previous_tsoo_param = self.target_tsoo_param.copy()
 
         total_people = sum(self.target_tsoo_param["area_people_count"])
         people_count_normalized = normalize(
@@ -47,29 +47,30 @@ class TSOOParamProcesser:
             0,
             self.target_tsoo_param["wind_speed_max"],
         )
-        # print(
-        #     f"People count normalized: {people_count_normalized} Wind speed normalized: {wind_speed_normalized}"
-        # )
+        # -----------------------------IMPORTANT-----------------------------------#
         self.target_tsoo_param["people_natrual_weight"] = round(
             combine_normalize(people_count_normalized, wind_speed_normalized), 2
         )
+        # -----------------------------IMPORTANT-----------------------------------#
         threshold = self.target_tsoo_param["people_natrual_weight_level_threshold"]
         for idx, t in enumerate(threshold):
             if self.target_tsoo_param["people_natrual_weight"] <= t:
                 self.target_tsoo_param["people_natrual_weight_level"] = idx
                 break
+
+        # 計算區域人數向量
         people_vector = calculate_balanced_vector(
             self.target_tsoo_param["area_people_count"], normalize=True
         )
         people_vector = (round(people_vector[0], 2), round(people_vector[1], 2))
-        # print(f"People vector: {people_vector}")
-        # 將風向角度轉換為和 people_vector 相同的坐標系（0度為上方，90度為右方）
-        # wind_vector = angle_to_vector_new_coordinate(self.tsoo_param["wind_angle"])
+
+        # 計算風向向量
         wind_vector = angle_to_vector(self.target_tsoo_param["wind_angle"])
         self.target_tsoo_param["wind_vector"] = (
             round(wind_vector[0], 2),
             round(wind_vector[1], 2),
         )
+
         vector_combined = normalize_vector(
             (people_vector[0] + wind_vector[0], people_vector[1] + wind_vector[1])
         )
@@ -111,7 +112,7 @@ class TSOOParamProcesser:
                     self.interper_tsoo_param[key] = self._interpolate_value(
                         prev_value, target_value
                     )
-                    if target_value - self.interper_tsoo_param[key] < 0.01:
+                    if abs(target_value - self.interper_tsoo_param[key]) < 0.01:
                         self.interper_tsoo_param[key] = target_value
                 elif (
                     isinstance(target_value, tuple)
@@ -123,10 +124,11 @@ class TSOOParamProcesser:
                     x = self._interpolate_value(prev_value[0], target_value[0])
                     y = self._interpolate_value(prev_value[1], target_value[1])
                     self.interper_tsoo_param[key] = (x, y)
-                    if target_value[0] - x < 0.01:
+                    if abs(target_value[0] - x) < 0.01:
                         x = target_value[0]
-                    if target_value[1] - y < 0.01:
+                    if abs(target_value[1] - y) < 0.01:
                         y = target_value[1]
+                    self.interper_tsoo_param[key] = (x, y)
 
                 else:
                     # 其他类型直接使用目标值
@@ -170,8 +172,9 @@ class TSOOParamProcesser:
         self.get_interpolated_param()  # 確保使用最新的插值參數
         # 使用插值后的参数而不是目标参数
         # v = self.interper_tsoo_param["effect_vector"]
+        wv = self.interper_tsoo_param["wind_vector"]
         ws = self.interper_tsoo_param["wind_speed"]
-        offset = (3 * z * ws, 0.1 * z * ws)
+        offset = (3 * z * ws * wv[0], 0.1 * z * ws * wv[1])
         # 使用固定的 z 值或傳入的 z 值來生成第三維度
         Z = np.zeros((height, width))
         for i in range(height):
@@ -364,41 +367,3 @@ def angle_to_vector_new_coordinate(angle):
     adjusted_angle = (angle + 90) % 360
     radians = math.radians(adjusted_angle)  # 轉換為弧度
     return (math.sin(radians), math.cos(radians))  # 返回 (vx, vy) 向量
-
-
-# tsoo_param_processor = TSOOParamProcesser()
-# tsoo_param_processor.tsoo_param["area_people_count"] = [5, 0, 0, 0]
-# tsoo_param_processor.tsoo_param["wind_speed"] = 2.5
-
-# tsoo_param_processor.caculate_param()
-# print(f"Initial TSOO parameters: {tsoo_param_processor.get_tsoo_param()}")
-# # print(tsoo_param_processor.get_tsoo_param())
-
-# 使用示例
-# if __name__ == "__main__":
-#     import time
-
-#     # 创建参数处理器
-#     tsoo_param_processor = TSOOParamProcesser(interpolation_speed=0.05)
-#     tsoo_param_processor.target_tsoo_param["area_people_count"] = [5, 0, 0, 0]
-#     tsoo_param_processor.target_tsoo_param["wind_speed"] = 2.5
-
-#     # 初始化参数
-#     params = tsoo_param_processor.get_tsoo_param()
-#     print(f"Initial target parameters: {params}")
-
-#     # 模拟主循环
-#     for i in range(10):
-#         # 获取插值后的参数
-#         interp_params = tsoo_param_processor.get_interpolated_param()
-#         print(
-#             f"Step {i}: Target wind_speed: {params['wind_speed']}, Interpolated: {interp_params['wind_speed']}"
-#         )
-
-#         # 更新目标参数
-#         if i == 5:
-#             tsoo_param_processor.update_wind_speed(4.0)
-#             params = tsoo_param_processor.get_tsoo_param()
-#             print(f"Updated target wind speed to {params['wind_speed']}")
-
-#         time.sleep(0.5)  # 模拟主循环中的其他操作

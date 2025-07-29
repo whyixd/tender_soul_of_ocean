@@ -59,9 +59,9 @@ def send_test_effect():
     # artnet.send(remap=True)  # 初始發送一次
     socketio.emit("dmx_data", {"value": matrix})  # 初始發
     tsoo_param_processor = TSOOParamProcesser()
-    tsoo_param_processor.target_tsoo_param["area_people_count"] = [1, 1, 0, 0]
+    tsoo_param_processor.target_tsoo_param["area_people_count"] = [0, 0, 0, 0]
     tsoo_param_processor.target_tsoo_param["wind_speed"] = 2.5
-    tsoo_param_processor.target_tsoo_param["wind_angle"] = 60
+    tsoo_param_processor.target_tsoo_param["wind_angle"] = 90
     print(tsoo_param_processor.get_tsoo_param())
     basic = tsoo_param_processor.shifting_basic(16, 8, scale=10, z=0.0)
 
@@ -83,7 +83,7 @@ def send_test_effect():
         # matrix[count] = 200 if off else 0
         count = (count + 1) % 128
         time += 0.002
-        if time - previous_natural_update_time >= 0.2:
+        if time - previous_natural_update_time >= 0.3:
             previous_natural_update_time = time
             # if sum(matrix) > 30:
             #     print("Skipping natural tracker update due to active matrix")
