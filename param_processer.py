@@ -1,6 +1,7 @@
 import math
 import numpy as np
 from noise import snoise2, snoise3
+from scipy.ndimage import gaussian_filter
 
 
 class TSOOParamProcesser:
@@ -23,6 +24,15 @@ class TSOOParamProcesser:
 
         # 插值速度控制（值越大，过渡越快）
         self.interpolation_speed = interpolation_speed
+
+        # 儲存之前的梯度遮罩，用於在梯度向量變化時保留之前的效果
+        self.previous_gradient_mask = None
+        # 儲存上一次的梯度向量，用於計算向量變化的幅度和方向
+        self.previous_gradient_vector = None
+        # 記憶因子：控制新舊梯度遮罩的混合比例，值越大表示越傾向於保留舊的梯度效果
+        self.gradient_memory_factor = 0.6
+        # 梯度向量變化的最大允許速度（每幀）
+        self.max_vector_change_rate = 0.15
 
     def caculate_param(self):
         # 保存当前参数为上一次参数
@@ -140,31 +150,6 @@ class TSOOParamProcesser:
         self.calculate_interpolation()
         return self.interper_tsoo_param
 
-    def __init__(self, interpolation_speed=0.05):
-        self.target_tsoo_param = {
-            "people_natrual_weight": 0.5,
-            "people_natrual_weight_level": 0,
-            "people_natrual_weight_level_threshold": [0, 0.3, 0.8, 1],
-            "area_people_count": [],
-            "people_count_max": 30,  # set by guess
-            "wind_speed": 0.0,
-            "wind_speed_max": 5.0,  # get from https://www.timeanddate.com/weather/austria/linz/climate
-            "wind_angle": 0.0,
-            "wind_vector": (0.0, 0.0),  # 風向向量
-            "effect_angle": 0.0,  # 風向角度
-            "effect_vector": (0.0, 0.0),  # 風向向量
-        }
-        self.previous_tsoo_param = self.target_tsoo_param.copy()
-        self.interper_tsoo_param = self.target_tsoo_param.copy()
-
-        # 插值速度控制（值越大，过渡越快）
-        self.interpolation_speed = interpolation_speed
-
-        # 儲存之前的梯度遮罩，用於在梯度向量變化時保留之前的效果
-        self.previous_gradient_mask = None
-        # 記憶因子：控制新舊梯度遮罩的混合比例，值越大表示越傾向於保留舊的梯度效果
-        self.gradient_memory_factor = 0.6
-
     def shifting_basic(
         self,
         width,
@@ -202,6 +187,31 @@ class TSOOParamProcesser:
         Z = (Z - np.min(Z)) / (np.max(Z) - np.min(Z))
         Z = 0.5 - Z
 
+        # 漸進式改變梯度向量，防止突變
+        if self.previous_gradient_vector is not None:
+            prev_x, prev_y = self.previous_gradient_vector
+            target_x, target_y = gradient_vector
+
+            # 計算向量變化的距離
+            vector_diff = math.sqrt((target_x - prev_x) ** 2 + (target_y - prev_y) ** 2)
+
+            # 如果變化太大，則限制變化幅度
+            if vector_diff > self.max_vector_change_rate:
+                # 計算向量變化的方向
+                if vector_diff > 0:
+                    dx = (target_x - prev_x) / vector_diff * self.max_vector_change_rate
+                    dy = (target_y - prev_y) / vector_diff * self.max_vector_change_rate
+                else:
+                    dx, dy = 0, 0
+
+                # 應用有限的變化
+                actual_x = prev_x + dx
+                actual_y = prev_y + dy
+                gradient_vector = (actual_x, actual_y)
+
+        # 保存當前梯度向量，以便下次比較
+        self.previous_gradient_vector = gradient_vector
+
         # 創建當前梯度遮罩
         current_gradient_mask = np.ones((height, width))
 
@@ -228,19 +238,49 @@ class TSOOParamProcesser:
                 current_gradient_mask = (projection - min_proj) / (max_proj - min_proj)
 
             # 調整梯度強度 (向量長度作為強度)
-            current_gradient_mask = np.power(current_gradient_mask, vec_len)
+            # 使用平方根而非直接指數，使變化更溫和
+            current_gradient_mask = np.power(current_gradient_mask, np.sqrt(vec_len))
 
         # 如果存在之前的梯度遮罩，則將其與當前梯度遮罩混合
         gradient_mask = current_gradient_mask
         if self.previous_gradient_mask is not None:
-            # 混合新舊梯度遮罩，保留舊梯度的高值區域
-            # 使用元素級別的最大值來確保高值被保留
-            memory_mask = np.maximum(
-                self.previous_gradient_mask, current_gradient_mask
-            ) * self.gradient_memory_factor + current_gradient_mask * (
-                1 - self.gradient_memory_factor
+            # 混合新舊梯度遮罩，採用更柔和的過渡方式
+            # 使用加權平均而非最大值，並應用高斯模糊使邊緣更平滑
+
+            # 首先進行基本的混合，使用更高的記憶因子使過渡更平滑
+            enhanced_memory_factor = np.clip(self.gradient_memory_factor + 0.1, 0, 0.9)
+            memory_mask = (
+                self.previous_gradient_mask * enhanced_memory_factor
+                + current_gradient_mask * (1 - enhanced_memory_factor)
             )
-            gradient_mask = memory_mask
+
+            # 創建一個差異遮罩，找出變化較大的區域
+            diff_mask = np.abs(self.previous_gradient_mask - current_gradient_mask)
+
+            # 在差異較大的區域應用更多的模糊效果，使過渡更加柔和
+            # 使用高斯濾波進行模糊處理
+            from scipy.ndimage import gaussian_filter
+
+            # 對邊緣區域進行平滑處理，根據差異程度調整模糊強度
+            sigma = 0.3 + diff_mask.mean() * 2  # 動態調整模糊程度
+            smoothed_mask = gaussian_filter(memory_mask, sigma=sigma)
+
+            # 為了防止暴漲，額外對結果進行非線性調整
+            # 使用閾值限制每幀的最大變化幅度
+            max_change_per_frame = 0.1  # 每幀的最大變化幅度
+            change_mask = np.abs(smoothed_mask - self.previous_gradient_mask)
+            # 任何超過閾值的變化都會被限制
+            excess_mask = np.clip(change_mask - max_change_per_frame, 0, 1)
+            # 應用限制，從平滑的遮罩中減去過量的變化
+            if excess_mask.max() > 0:
+                normalized_excess = excess_mask / excess_mask.max()
+                smoothed_mask = smoothed_mask - normalized_excess * excess_mask
+
+            # 根據差異程度融合原始遮罩和平滑遮罩
+            blend_factor = np.clip(diff_mask * 3, 0, 0.8)  # 控制融合比例
+            gradient_mask = (
+                memory_mask * (1 - blend_factor) + smoothed_mask * blend_factor
+            )
 
         # 保存當前梯度遮罩以供下次使用
         self.previous_gradient_mask = gradient_mask.copy()

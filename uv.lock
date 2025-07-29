@@ -960,6 +960,7 @@ dependencies = [
     { name = "pyserial" },
     { name = "python-osc" },
     { name = "pytubefix" },
+    { name = "scipy" },
     { name = "stupidartnet" },
     { name = "ultralytics" },
 ]
@@ -974,6 +975,7 @@ requires-dist = [
     { name = "pyserial", specifier = ">=3.5" },
     { name = "python-osc", specifier = ">=1.9.3" },
     { name = "pytubefix", specifier = ">=8.13.1" },
+    { name = "scipy", specifier = ">=1.15.3" },
     { name = "stupidartnet", specifier = ">=1.6.0" },
     { name = "ultralytics", specifier = ">=8.3.139" },
 ]

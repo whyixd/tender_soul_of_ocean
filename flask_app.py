@@ -60,10 +60,10 @@ def send_test_effect():
     socketio.emit("dmx_data", {"value": matrix})  # 初始發
     tsoo_param_processor = TSOOParamProcesser()
     tsoo_param_processor.target_tsoo_param["area_people_count"] = [1, 1, 0, 0]
-    tsoo_param_processor.target_tsoo_param["wind_speed"] = 5
+    tsoo_param_processor.target_tsoo_param["wind_speed"] = 2.5
     tsoo_param_processor.target_tsoo_param["wind_angle"] = 60
     print(tsoo_param_processor.get_tsoo_param())
-    basic = tsoo_param_processor.shifting_basic(16, 8, scale=5, z=0.0)
+    basic = tsoo_param_processor.shifting_basic(16, 8, scale=10, z=0.0)
 
     natural_tracker = NaturalTracker()
     natural_tracker.update()  # 確保有初始數據
@@ -72,7 +72,7 @@ def send_test_effect():
         basic = tsoo_param_processor.shifting_basic(
             16,
             8,
-            scale=5,
+            scale=10,
             z=time,
             gradient_vector=(
                 tsoo_param_processor.target_tsoo_param["effect_vector"][0] * 5,
