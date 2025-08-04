@@ -62,10 +62,12 @@ const sketch = (p) => {
     wind_speed: 0,
     wind_speed_max: 10,
     area_people_count: 0,
+    people_vector: 0, // 人數向量
     people_natrual_weight: 0,
     people_natrual_weight_level: 0,
     people_natrual_weight_level_threshold: 0.5,
     wind_angle: 0,
+    wind_vector: 0,
     effect_vector: 0,
     effect_angle: 0,
   };
@@ -161,8 +163,8 @@ const sketch = (p) => {
     tsooParamGui
       .add(tsooParam, "area_people_count")
       .name("區域人數計數")
-
       .listen();
+    tsooParamGui.add(tsooParam, "people_vector").name("人數向量(G)").listen();
     tsooParamGui
       .add(tsooParam, "people_natrual_weight", 0, 1)
       .name("人數自然權重")
@@ -181,7 +183,8 @@ const sketch = (p) => {
       .name("人數自然閾值")
       .listen();
     tsooParamGui.add(tsooParam, "wind_angle").name("風向角度").listen();
-    tsooParamGui.add(tsooParam, "effect_vector").name("效果向量").listen();
+    tsooParamGui.add(tsooParam, "wind_vector").name("風向向量(B)").listen();
+    tsooParamGui.add(tsooParam, "effect_vector").name("效果向量(R)").listen();
     tsooParamGui.add(tsooParam, "effect_angle").name("效果角度").listen();
 
     if (process.env.NODE_ENV === "production") {
@@ -199,16 +202,24 @@ const sketch = (p) => {
       settings.isConnected = false;
     });
     socket.on("tsoo_param", (data) => {
-      // console.log("Received tsoo_param:", data);
+      console.log("Received tsoo_param:", data);
       tsooParam["people_count_max"] = data.people_count_max;
       tsooParam["wind_speed"] = data.wind_speed;
       tsooParam["area_people_count"] = data.area_people_count;
+      tsooParam["people_vector"] = [
+        roundToTwoDecimalPlaces(data.people_vector[0]),
+        roundToTwoDecimalPlaces(data.people_vector[1]),
+      ];
       tsooParam["people_natrual_weight"] = data.people_natrual_weight;
       tsooParam["people_natrual_weight_level"] =
         data.people_natrual_weight_level;
       tsooParam["people_natrual_weight_level_threshold"] =
         data.people_natrual_weight_level_threshold;
       tsooParam["wind_angle"] = roundToTwoDecimalPlaces(data.wind_angle);
+      tsooParam["wind_vector"] = [
+        roundToTwoDecimalPlaces(data.wind_vector[0]),
+        roundToTwoDecimalPlaces(data.wind_vector[1]),
+      ];
       tsooParam["effect_vector"] = [
         roundToTwoDecimalPlaces(data.effect_vector[0]),
         roundToTwoDecimalPlaces(data.effect_vector[1]),
@@ -268,18 +279,84 @@ const sketch = (p) => {
       p.scale(1, -1, 1);
       p.model(shape);
     }
+    p.push();
+    let unitSize = 5;
+    let contrast = 2;
+    p.translate(50, -50, -100);
+    for (let i = 0; i < 16; i++) {
+      for (let j = 0; j < 8; j++) {
+        p.fill(lightRawData.matrix[j][i] * contrast);
+        p.square((8 - j) * unitSize, (16 - i) * unitSize, unitSize);
+      }
+    }
+    p.pop();
+    p.push();
+    p.noFill();
+    p.stroke(255);
+    p.strokeWeight(0.1);
+    // p.fill(200, 200, 0);
+    p.translate(0, 0, 150);
+    // angle to radians
+    const tsooParamAngle = p.radians(tsooParam["wind_angle"] + 270);
+    p.rotateZ(tsooParamAngle);
+    p.box(1, 50, 1);
+    p.translate(0, 30, 0);
+    p.cone(3, 10, 5, 1, true);
+    p.pop();
     if (settings.showControlPoints) {
-      p.push();
-      p.translate(
+      let effectPoint = [
         lightCornerPos[0] * tsooParam["effect_vector"][1] * -1,
         lightCornerPos[1] * tsooParam["effect_vector"][0],
+      ];
+      let peoplePoint = [
+        lightCornerPos[0] * tsooParam["people_vector"][1] * -1,
+        lightCornerPos[1] * tsooParam["people_vector"][0],
+      ];
+      let windPoint = [
+        lightCornerPos[0] * tsooParam["wind_vector"][1] * -1,
+        lightCornerPos[1] * tsooParam["wind_vector"][0],
+      ];
+      p.push();
+      p.sphere(1);
+      p.strokeWeight(0.1);
+      p.stroke(0, 150, 255);
+      p.line(effectPoint[0], effectPoint[1], 0, windPoint[0], windPoint[1], 0);
+      p.noStroke();
+      p.translate(windPoint[0], windPoint[1], 0);
+      p.fill(0, 150, 255);
+
+      p.sphere(1);
+      p.pop();
+
+      p.push();
+      p.strokeWeight(0.1);
+      p.stroke(0, 255, 150);
+      p.line(
+        effectPoint[0],
+        effectPoint[1],
+        0,
+        peoplePoint[0],
+        peoplePoint[1],
         0
       );
+      p.noStroke();
+      p.translate(peoplePoint[0], peoplePoint[1], 0);
+
+      p.fill(0, 255, 150);
+      p.sphere(1);
+      p.pop();
+
+      p.push();
+      p.strokeWeight(0.1);
+      p.stroke(255, 0, 0);
+      p.line(0, 0, 0, effectPoint[0], effectPoint[1], 0);
+      p.noStroke();
+      p.translate(effectPoint[0], effectPoint[1], 0);
       p.fill(255, 0, 0);
       p.sphere(1);
       p.pop();
-      // create light cylinder
     }
+    // create light cylinder
     p.push();
     p.fill(255, 0, 255);
     p.rotateX(p.PI / 2);

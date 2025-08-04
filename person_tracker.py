@@ -2,10 +2,11 @@ from ultralytics import YOLO
 import cv2
 import logging
 import time
-import torch
+
 import numpy as np
 import threading
 from queue import Queue
+from config import Config
 
 logging.getLogger("ultralytics").setLevel(logging.ERROR)  # Suppress warnings
 
@@ -21,6 +22,21 @@ class PersonTracker(threading.Thread):
         super(PersonTracker, self).__init__()
         self.daemon = True  # Thread will exit when main program exits
 
+        # Configuration
+        self.config = Config(
+            data_dict={
+                "video_source": video_source,
+                "width": width,
+                "height": height,
+                "area_conrners": [
+                    [(100, 100), (200, 100), (200, 200), (100, 200)],
+                    [(100, 100), (200, 100), (200, 200), (100, 200)],
+                    [(100, 100), (200, 100), (200, 200), (100, 200)],
+                    [(100, 100), (200, 100), (200, 200), (100, 200)],
+                ],
+            },
+            config_file_name="person_tracker_config.json",
+        )
         # Video settings
         self.video_source = video_source
         self.desired_width = width
@@ -53,21 +69,7 @@ class PersonTracker(threading.Thread):
 
         # Area definitions
         self.area_edit_mode = False
-        self.areas = [
-            [(100, 100), (200, 100), (200, 200), (100, 200)],  # Example area polygon
-            [
-                (300, 300),
-                (400, 300),
-                (400, 400),
-                (300, 400),
-            ],  # Another example area polygon
-            [
-                (500, 500),
-                (600, 500),
-                (600, 600),
-                (500, 600),
-            ],  # Another example area polygon
-        ]
+        self.areas = self.config.data_dict.get("area_conrners")
         self.current_setting_corners = 0
         self.current_setting_area = 0
         self.inside_area_counts = [0] * len(self.areas)
@@ -98,6 +100,8 @@ class PersonTracker(threading.Thread):
         self.area_edit_mode = not self.area_edit_mode
         if self.area_edit_mode:
             self.area_polygons = [np.array(area, dtype=np.int32) for area in self.areas]
+        self.config.data_dict["area_conrners"] = self.areas
+        self.config.save()  # Save changes to config file
 
     def set_corner_index(self, index):
         """Set the current corner index (0-3)."""
@@ -455,10 +459,10 @@ class PersonTracker(threading.Thread):
             # Cleanup
             cv2.destroyAllWindows()
 
-    def start_and_display(self):
-        """Start the tracking thread and then run the display loop."""
-        self.start()  # Start tracking in a separate thread
-        self.display_loop()  # Run display loop in the current thread
+    # def start_and_display(self):
+    #     """Start the tracking thread and then run the display loop."""
+    #     self.start()  # Start tracking in a separate thread
+    #     self.display_loop()  # Run display loop in the current thread
 
     def start_all_in_background(self):
         """Start both tracking and display in background threads.
@@ -471,7 +475,7 @@ class PersonTracker(threading.Thread):
 
         # Create a special UI thread for OpenCV
         self.ui_thread = threading.Thread(target=self._ui_thread_function)
-        self.ui_thread.daemon = True
+        # self.ui_thread.daemon = True
         self.ui_thread.start()
 
     def _ui_thread_function(self):

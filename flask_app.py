@@ -10,149 +10,302 @@ from artnet_sender import ArtNetSender
 from param_processer import TSOOParamProcesser
 from natural_tracker import NaturalTracker
 
-app = Flask(__name__, static_folder="static")
-app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0  # Disable caching for development
 
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
-
-artnet = ArtNetSender("127.0.0.1", universe=0, channels=128)
-# artnet = ArtNetSender("2.56.31.102", universe=0, channels=128)
-artnet.block_shape = (8, 4)
-artnet.block_order = [[1, 3], [2, 4]]  #
-artnet.start()
-
-
-# --- Socket.IO 事件處理 ---
-
-
-@socketio.on("connect")
-def handle_connect():
-    """當客戶端成功連接時觸發"""
-    print("✅ Client connected!")
-
-
-@socketio.on("disconnect")
-def handle_disconnect():
-    """當客戶端斷開連接時觸發"""
-    print("❌ Client disconnected!")
-
-
-@socketio.on("client_message")
-def handle_client_message(json_data):
-    """監聽一個名為 'client_message' 的自訂事件"""
-    print(f"📬 Received message from client: {json_data['data']}")
-
-    # 向客戶端發送一個回應事件
-    response_data = {"message": "Hello from Flask!"}
-    socketio.emit("server_message", response_data)
-
-
-def send_test_effect():
-    matrix = []
-    for i in range(0, 128):
-        matrix.append(0)
-    count = 0
-    time = 0
-    off = 1
-    print("🚀 Starting test sequence...")
-    artnet.set_packet(matrix)  # 設定初始數據包
-    # artnet.send(remap=True)  # 初始發送一次
-    socketio.emit("dmx_data", {"value": matrix})  # 初始發
-    tsoo_param_processor = TSOOParamProcesser()
-    tsoo_param_processor.target_tsoo_param["area_people_count"] = [0, 0, 0, 0]
-    tsoo_param_processor.target_tsoo_param["wind_speed"] = 2.5
-    tsoo_param_processor.target_tsoo_param["wind_angle"] = 90
-    print(tsoo_param_processor.get_tsoo_param())
-    basic = tsoo_param_processor.shifting_basic(16, 8, scale=10, z=0.0)
-
-    natural_tracker = NaturalTracker()
-    natural_tracker.update()  # 確保有初始數據
-    previous_natural_update_time = 0
-    while True:
-        basic = tsoo_param_processor.shifting_basic(
-            16,
-            8,
-            scale=10,
-            z=time,
-            gradient_vector=(
-                tsoo_param_processor.target_tsoo_param["effect_vector"][0] * 5,
-                tsoo_param_processor.target_tsoo_param["effect_vector"][1] * 5,
-            ),
+class TSOOFlaskApp:
+    def __init__(
+        self,
+        host="127.0.0.1",
+        port=5000,
+        artnet_host="127.0.0.1",
+        artnet_universe=0,
+        artnet_channels=128,
+        block_shape=(8, 4),
+        block_order=[[1, 3], [2, 4]],
+        static_folder="static",
+    ):
+        # Flask 應用設置
+        self.app = Flask(__name__, static_folder=static_folder)
+        self.app.config["SEND_FILE_MAX_AGE_DEFAULT"] = (
+            0  # Disable caching for development
         )
-        matrix = basic.flatten().tolist()
-        # matrix[count] = 200 if off else 0
-        count = (count + 1) % 128
-        time += 0.002
-        if time - previous_natural_update_time >= 0.3:
-            previous_natural_update_time = time
-            # if sum(matrix) > 30:
-            #     print("Skipping natural tracker update due to active matrix")
-            #     continue
-            natural_tracker.update()
-            print(f"Natural data: {natural_tracker.get_data()}")
-            print(tsoo_param_processor.get_tsoo_param())
-        tsoo_param_processor.update_wind_angle(natural_tracker.get_data()[2])
-        tsoo_param_processor.caculate_param()
-        socketio.emit("dmx_data", {"value": matrix})
-        socketio.emit("tsoo_param", tsoo_param_processor.interper_tsoo_param)
-        if count == 0:
-            off = 1 - off
 
-        artnet.set_packet(matrix, 0.5)
-        # artnet.send(remap=True)
-        # sleep(0.5)
-        sleep(0.03)
+        # Socket.IO 設置
+        self.socketio = SocketIO(
+            self.app, cors_allowed_origins="*", async_mode="threading"
+        )
+
+        # ArtNet 設置
+        self.artnet = ArtNetSender(
+            artnet_host,
+            universe=artnet_universe,
+            channels=artnet_channels,
+            block_shape=block_shape,
+            block_order=block_order,
+        )
+
+        # 服務器配置
+        self.host = host
+        self.port = port
+
+        # 狀態追蹤
+        self.is_running = False
+        self.server_thread = None
+        self.effect_thread = None
+
+        # 參數處理和自然追蹤
+        self.tsoo_param_processor = None
+        self.natural_tracker = None
+
+        # 設置路由和事件處理
+        self._setup_routes()
+        self._setup_socketio_events()
+
+    def _setup_routes(self):
+        """設置 Flask 路由"""
+
+        @self.app.route("/")
+        def index():
+            try:
+                return send_from_directory(self.app.static_folder, "index.html")
+            except FileNotFoundError:
+                # During development, webpack-dev-server serves the file
+                # so it's normal that we don't find it
+                return "Development mode: Please access through webpack-dev-server", 200
+            except Exception as e:
+                print(f"Error serving index.html: {e}")
+                return "Error serving the page", 500
+
+        @self.app.route("/show-case")
+        def show_case():
+            try:
+                return send_from_directory(self.app.static_folder, "show_case.html")
+            except Exception as e:
+                print(f"Error serving show_case.html: {e}")
+                return "Error serving the page", 500
+
+        @self.app.route("/static/<path:path>")
+        def serve_static(path):
+            try:
+                return send_from_directory(self.app.static_folder, path)
+            except Exception as e:
+                print(f"Error serving static file {path}: {e}")
+                return "File not found", 404
+
+    def _setup_socketio_events(self):
+        """設置 Socket.IO 事件處理"""
+
+        @self.socketio.on("connect")
+        def handle_connect():
+            """當客戶端成功連接時觸發"""
+            print("✅ Client connected!")
+
+        @self.socketio.on("disconnect")
+        def handle_disconnect():
+            """當客戶端斷開連接時觸發"""
+            print("❌ Client disconnected!")
+
+        @self.socketio.on("client_message")
+        def handle_client_message(json_data):
+            """監聽一個名為 'client_message' 的自訂事件"""
+            print(f"📬 Received message from client: {json_data['data']}")
+
+            # 向客戶端發送一個回應事件
+            response_data = {"message": "Hello from Flask!"}
+            self.socketio.emit("server_message", response_data)
+
+    def start_server(self):
+        """啟動 Flask 伺服器"""
+        if self.is_running:
+            print("Server is already running")
+            return
+
+        def run_server_thread():
+            print(
+                f"🚀 Flask + Socket.IO server starting on http://{self.host}:{self.port}"
+            )
+            self.socketio.run(
+                self.app,
+                host=self.host,
+                port=self.port,
+                use_reloader=False,
+                debug=False,
+            )
+
+        self.server_thread = threading.Thread(target=run_server_thread, daemon=True)
+        self.server_thread.start()
+        self.is_running = True
+
+        # 啟動 ArtNet
+        self.artnet.start()
+
+    def stop_server(self):
+        """停止 Flask 伺服器"""
+        if not self.is_running:
+            print("Server is not running")
+            return
+
+        # 停止 ArtNet
+        self.artnet.stop()
+
+        # Flask 和 SocketIO 沒有優雅的停止方法，因為我們使用 daemon=True
+        # 所以當主程序結束時，這些線程會自動終止
+        self.is_running = False
+        print("Server has been stopped")
+
+    # def test_channel_check(self):
+    #     """依序點亮所有通道以檢查 ArtNet 設置"""
+    #     if not self.is_running:
+    #         print("Server must be running to test channels")
+    #         return
+    #     off = 1
+    #     count = 0
+
+    #     def test_thread():
+    #         nonlocal count, off
+    #         matrix = [0] * 128
+    #         while True:
+    #             for i in range(128):
+
+    #                 matrix[i] = 255 * off  # 點亮當前通道
+    #                 self.socketio.emit("dmx_data", {"value": matrix})
+    #                 self.artnet.set_packet(matrix, 1)
+    #                 count += 1
+    #                 sleep(0.05)  # 每個通道點亮後等待一段時間
+    #             off = 1 - off  # 切換點亮狀態
+
+    #     test_thread_instance = threading.Thread(target=test_thread, daemon=True)
+    #     test_thread_instance.start()
+
+    # def send_test_effect(self):
+    #     """啟動測試效果序列"""
+    #     if not self.is_running:
+    #         print("Server must be running before starting effects")
+    #         return
+
+    #     def effect_thread():
+    #         matrix = [0] * 128
+    #         count = 0
+    #         time_val = 0
+    #         off = 1
+
+    #         print("🚀 Starting test sequence...")
+    #         self.artnet.set_packet(matrix)  # 設定初始數據包
+    #         self.socketio.emit("dmx_data", {"value": matrix})  # 初始發送
+
+    #         # 初始化參數處理器
+    #         self.tsoo_param_processor = TSOOParamProcesser()
+    #         self.tsoo_param_processor.target_tsoo_param["area_people_count"] = [
+    #             1,
+    #             0,
+    #             0,
+    #             0,
+    #         ]
+    #         self.tsoo_param_processor.target_tsoo_param["wind_speed"] = 5
+    #         self.tsoo_param_processor.target_tsoo_param["wind_angle"] = 270
+    #         print(self.tsoo_param_processor.get_tsoo_param())
+    #         basic = self.tsoo_param_processor.shifting_basic(16, 8, scale=7, z=0.0)
+
+    #         # 初始化自然追蹤器
+    #         self.natural_tracker = NaturalTracker()
+    #         self.natural_tracker.update()  # 確保有初始數據
+    #         previous_natural_update_time = 0
+
+    #         def update_natural_tracker():
+    #             self.natural_tracker.update()
+    #             print(self.tsoo_param_processor.get_tsoo_param())
+
+    #         self.tsoo_param_processor.on_basic_fade_out_done = update_natural_tracker
+
+    #         try:
+    #             while self.is_running:
+    #                 basic = self.tsoo_param_processor.shifting_basic(
+    #                     16,
+    #                     8,
+    #                     scale=7,
+    #                     z=time_val,
+    #                     gradient_vector=(
+    #                         self.tsoo_param_processor.target_tsoo_param[
+    #                             "effect_vector"
+    #                         ][0]
+    #                         * 5,
+    #                         self.tsoo_param_processor.target_tsoo_param[
+    #                             "effect_vector"
+    #                         ][1]
+    #                         * 5,
+    #                     ),
+    #                 )
+    #                 matrix = basic.flatten().tolist()
+
+    #                 time_val += 0.002
+
+    #                 natural_data = self.natural_tracker.get_data()
+    #                 if natural_data[0] == 0:
+    #                     natural_data[0] = 1
+    #                 self.tsoo_param_processor.update_wind_speed(natural_data[0])
+    #                 self.tsoo_param_processor.update_wind_angle(natural_data[2])
+
+    #                 self.tsoo_param_processor.caculate_param()
+    #                 self.socketio.emit("dmx_data", {"value": matrix})
+    #                 self.socketio.emit(
+    #                     "tsoo_param", self.tsoo_param_processor.interper_tsoo_param
+    #                 )
+    #                 count += 1
+
+    #                 self.artnet.set_packet(matrix, 0.5)
+    #                 sleep(0.03)
+    #         except Exception as e:
+    #             print(f"Error in effect thread: {e}")
+    #             self.is_running = False
+
+    #     self.effect_thread = threading.Thread(target=effect_thread, daemon=True)
+    #     self.effect_thread.start()
+
+    # def set_artnet_host(self, host):
+    #     """設置 ArtNet 主機地址"""
+    #     if self.is_running:
+    #         self.artnet.stop()
+    #         self.artnet = ArtNetSender(
+    #             host,
+    #             universe=self.artnet.universe,
+    #             channels=self.artnet.channels,
+    #             block_shape=self.artnet.block_shape,
+    #             block_order=self.artnet.block_order,
+    #         )
+    #         self.artnet.start()
+    #     else:
+    #         self.artnet = ArtNetSender(
+    #             host,
+    #             universe=self.artnet.universe,
+    #             channels=self.artnet.channels,
+    #             block_shape=self.artnet.block_shape,
+    #             block_order=self.artnet.block_order,
+    #         )
+
+    def broadcast_message(self, event_name, data):
+        """向所有客戶端廣播訊息"""
+        if self.is_running:
+            self.socketio.emit(event_name, data)
+        else:
+            print("Server is not running, can't broadcast message")
 
 
-# --- Flask 路由 ---
+# if __name__ == "__main__":
+#     # 創建應用實例
+#     app = TSOOFlaskApp(artnet_host="2.56.31.102")
+#     # app = TSOOFlaskApp(artnet_host="127.0.0.1")
 
+#     # 啟動服務器
+#     app.start_server()
 
-@app.route("/")
-def index():
-    try:
-        return send_from_directory(app.static_folder, "index.html")
-    except FileNotFoundError:
-        # During development, webpack-dev-server serves the file
-        # so it's normal that we don't find it
-        return "Development mode: Please access through webpack-dev-server", 200
-    except Exception as e:
-        print(f"Error serving index.html: {e}")
-        return "Error serving the page", 500
+#     try:
+#         # 啟動測試效果
+#         # app.send_test_effect()
+#         app.test_channel_check()
 
+#         # 保持主線程運行
+#         while True:
+#             sleep(0.01)
 
-@app.route("/show-case")
-def show_case():
-    try:
-        return send_from_directory(app.static_folder, "show_case.html")
-    except Exception as e:
-        print(f"Error serving show_case.html: {e}")
-        return "Error serving the page", 500
-
-
-# Add a proper static file handler
-@app.route("/static/<path:path>")
-def serve_static(path):
-    try:
-        return send_from_directory(app.static_folder, path)
-    except Exception as e:
-        print(f"Error serving static file {path}: {e}")
-        return "File not found", 404
-
-
-def run_server():
-    print("🚀 Flask + Socket.IO server starting on http://127.0.0.1:5000")
-    socketio.run(app, host="0.0.0.0", port=5000, use_reloader=False, debug=False)
-
-
-if __name__ == "__main__":
-    server_thread = threading.Thread(target=run_server, daemon=True)
-    server_thread.start()
-
-    try:
-        send_test_effect()  # 啟動測試序列發送 DMX 數據
-
-        # 您也可以在主線程中，主動向所有客戶端廣播訊息
-        # socketio.emit('server_broadcast', {'data': f'This is a broadcast from main thread, count: {count}'})
-
-    except KeyboardInterrupt:
-        print("\n🛑 Main thread received KeyboardInterrupt. Shutting down.")
+#     except KeyboardInterrupt:
+#         print("\n🛑 Main thread received KeyboardInterrupt. Shutting down.")
+#         app.stop_server()

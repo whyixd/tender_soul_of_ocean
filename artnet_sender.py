@@ -51,11 +51,11 @@ class ArtNetSender:
         #     self.packet[i] = round(self.packet[i])
         self.artnet.set(self.packet)
 
-    def set_channel(self, channel, value):
-        if 0 <= channel < self.packet_size:
-            self.packet[channel] = value
-        else:
-            raise IndexError("Channel index out of range")
+    # def set_channel(self, channel, value):
+    #     if 0 <= channel < self.packet_size:
+    #         self.packet[channel] = value
+    #     else:
+    #         raise IndexError("Channel index out of range")
 
     def __caculate_remap_order(self):
 
@@ -108,7 +108,6 @@ class ArtNetSender:
         #                     (block - 1) * self.block_shape[1] + block_repeat
         #                 ]
         #             )
-        # print(self.channel_order)
 
     def __packet_remap(self, packet):
         packet_copy = bytearray(packet)
@@ -116,8 +115,9 @@ class ArtNetSender:
         for idx, order in enumerate(self.channel_order):
             packet[order] = packet_copy[idx]
         # fill the rest of the packet with zeros if needed
-        if len(packet) < 512:
-            packet.extend(bytearray(512 - len(packet)))
+        # if len(packet) < 512:
+        #     packet.extend(bytearray(512 - len(packet)))
+
         return packet
 
     def __print_block_order_graph(self):
@@ -153,13 +153,13 @@ def split_list(list, n):
         yield list[idx : idx + n]
 
 
-artnet = ArtNetSender(
-    "127.0.0.1",
-    universe=0,
-    channels=128,
-    block_order=[[1, 2], [3, 4]],
-    block_shape=(8, 4),
-)
+# artnet = ArtNetSender(
+#     "127.0.0.1",
+#     universe=0,
+#     channels=128,
+#     block_order=[[1, 2], [3, 4]],
+#     block_shape=(8, 4),
+# )
 
 # artnet.start()
 

@@ -2,16 +2,18 @@ import math
 import numpy as np
 from noise import snoise2, snoise3
 from scipy.ndimage import gaussian_filter
+import random
 
 
 class TSOOParamProcesser:
-    def __init__(self, interpolation_speed=0.005):
+    def __init__(self, interpolation_speed=0.05):
         self.target_tsoo_param = {
             "people_natrual_weight": 0.5,
             "people_natrual_weight_level": 0,
             "people_natrual_weight_level_threshold": [0, 0.3, 0.8, 1],
             "area_people_count": [],
             "people_count_max": 30,  # set by guess
+            "people_vector": (0.0, 0.0),  # 人數向量
             "wind_speed": 0.0,
             "wind_speed_max": 5.0,  # get from https://www.timeanddate.com/weather/austria/linz/climate
             "wind_angle": 0.0,
@@ -19,6 +21,24 @@ class TSOOParamProcesser:
             "effect_angle": 0.0,  # 風向角度
             "effect_vector": (0.0, 0.0),  # 風向向量
         }
+        self.previous_tsoo_param = self.target_tsoo_param.copy()
+        self.interper_tsoo_param = self.target_tsoo_param.copy()
+
+        # 噪聲生成和淡出控制參數
+        self.noise_duration = 5.0  # 噪聲持續時間（秒）
+        self.fade_duration = 1.0  # 淡出持續時間（秒）
+        self.fade_in_duration = 1.0  # 淡入持續時間（秒）
+        self.current_noise_time = 0.0  # 當前噪聲生成的時間
+        self.fade_factor = 0.0  # 當前淡出因子，1.0 表示完全顯示，0.0 表示完全淡出
+        self.should_update_vector = False  # 是否應該更新風向向量
+        self.last_update_time = 0.0  # 上次更新風向向量的時間
+        self.cached_wind_vector = (0.0, 0.0)  # 緩存的風向向量，用於平滑過渡
+        self.fade_state = "FADE_IN"  # 淡入淡出狀態：FADE_IN, NORMAL, FADE_OUT
+        self.on_basic_fade_out_done = None
+
+        # 用於通知外部系統何時可以更新參數
+        self.can_update_params = False  # 是否可以更新參數
+        self.params_updated = False  # 參數是否已經更新
         self.previous_tsoo_param = self.target_tsoo_param.copy()
         self.interper_tsoo_param = self.target_tsoo_param.copy()
 
@@ -63,7 +83,7 @@ class TSOOParamProcesser:
             self.target_tsoo_param["area_people_count"], normalize=True
         )
         people_vector = (round(people_vector[0], 2), round(people_vector[1], 2))
-
+        self.target_tsoo_param["people_vector"] = people_vector
         # 計算風向向量
         wind_vector = angle_to_vector(self.target_tsoo_param["wind_angle"])
         self.target_tsoo_param["wind_vector"] = (
@@ -110,7 +130,9 @@ class TSOOParamProcesser:
                         continue
                     # 数值类型插值
                     self.interper_tsoo_param[key] = self._interpolate_value(
-                        prev_value, target_value
+                        prev_value,
+                        target_value,
+                        interpolation_speed=self.interpolation_speed,
                     )
                     if abs(target_value - self.interper_tsoo_param[key]) < 0.01:
                         self.interper_tsoo_param[key] = target_value
@@ -121,8 +143,19 @@ class TSOOParamProcesser:
                     and len(prev_value) == 2
                 ):
                     # 二维向量插值
-                    x = self._interpolate_value(prev_value[0], target_value[0])
-                    y = self._interpolate_value(prev_value[1], target_value[1])
+                    fix_interprolation_speed = self.interpolation_speed
+                    if key == "wind_vector":
+                        fix_interprolation_speed = 0.05
+                    x = self._interpolate_value(
+                        prev_value[0],
+                        target_value[0],
+                        interpolation_speed=fix_interprolation_speed,
+                    )
+                    y = self._interpolate_value(
+                        prev_value[1],
+                        target_value[1],
+                        interpolation_speed=fix_interprolation_speed,
+                    )
                     self.interper_tsoo_param[key] = (x, y)
                     if abs(target_value[0] - x) < 0.01:
                         x = target_value[0]
@@ -139,13 +172,13 @@ class TSOOParamProcesser:
 
         return self.interper_tsoo_param
 
-    def _interpolate_value(self, prev, target):
+    def _interpolate_value(self, prev, target, interpolation_speed=1):
         """计算单个数值的插值"""
         if prev == target:
             return target
 
         # 线性插值: current = current + (target - current) * speed
-        return prev + (target - prev) * self.interpolation_speed
+        return prev + (target - prev) * interpolation_speed
 
     def get_interpolated_param(self):
         """获取当前插值后的参数"""
@@ -159,22 +192,99 @@ class TSOOParamProcesser:
         scale=10.0,
         z=0.0,
         gradient_vector=(1, 0),
+        delta_time=0.016,  # 假設每幀 16ms，即約 60fps
     ):
         """
         生成 3D Perlin 噪聲並進行平移，z 參數控制噪聲的時間維度
         gradient_vector: 梯度向量，格式為 (x, y)，用於指定梯度的方向和強度
                          向量的方向決定梯度方向，向量的長度影響梯度強度
+        delta_time: 上一幀到當前幀的時間間隔（秒）
         """
         x = np.linspace(0, width / scale, width)
         y = np.linspace(0, height / scale, height)
         X, Y = np.meshgrid(x, y)
 
         self.get_interpolated_param()  # 確保使用最新的插值參數
-        # 使用插值后的参数而不是目标参数
-        # v = self.interper_tsoo_param["effect_vector"]
-        wv = self.interper_tsoo_param["wind_vector"]
-        ws = self.interper_tsoo_param["wind_speed"]
-        offset = (3 * z * ws * wv[0], 0.1 * z * ws * wv[1])
+
+        # 更新噪聲時間和淡出因子
+        self.current_noise_time += delta_time
+
+        # 根據當前狀態處理淡入淡出
+        if self.fade_state == "FADE_IN":
+            # 淡入階段
+            fade_in_progress = min(self.current_noise_time / self.fade_in_duration, 1.0)
+            self.fade_factor = fade_in_progress
+
+            # 當完全淡入時，切換到正常顯示狀態
+            if fade_in_progress >= 1.0:
+                self.fade_factor = 1.0
+                self.fade_state = "NORMAL"
+                # 重置參數更新標誌
+                self.params_updated = False
+                self.can_update_params = False
+
+        elif self.fade_state == "NORMAL":
+            # 正常顯示階段
+            self.fade_factor = 1.0
+
+            # 檢查是否需要開始淡出
+            if self.current_noise_time >= self.noise_duration:
+                self.fade_state = "FADE_OUT"
+
+        elif self.fade_state == "FADE_OUT":
+            # 淡出階段
+            fade_out_progress = min(
+                (self.current_noise_time - self.noise_duration) / self.fade_duration,
+                1.0,
+            )
+            self.fade_factor = max(0, 1.0 - fade_out_progress)
+
+            # 設定可以更新參數的標誌
+            # 當淡出到一定程度時(例如80%淡出)，通知外部可以更新參數
+            if fade_out_progress >= 1.0 and not self.can_update_params:
+                self.can_update_params = True
+                if self.on_basic_fade_out_done:
+                    self.on_basic_fade_out_done()
+                self.noise_duration = random.randrange(
+                    3, 10
+                )  # 隨機設定下一次噪聲持續時間
+                self.fade_duration = (
+                    random.randrange(10, 20) / 10
+                )  # 隨機設定下一次淡出持續時間
+                self.fade_in_duration = (
+                    random.randrange(20, 25) / 10
+                )  # 隨機設定下一次淡入持續時間
+                print(
+                    f"下一次噪聲持續時間: {self.noise_duration} 秒 淡出持續時間: {self.fade_duration} 秒 淡入持續時間: {self.fade_in_duration} 秒"
+                )
+            # 當完全淡出時，更新風向向量並重置狀態
+            if self.fade_factor <= 0:
+
+                # 更新緩存的風向向量，只有在參數已更新的情況下
+                if self.params_updated:
+                    self.cached_wind_vector = self.interper_tsoo_param["wind_vector"]
+                    self.last_update_time = z
+
+                # 重置狀態
+                self.current_noise_time = 0.0
+                self.fade_factor = 0.0  # 確保完全透明
+                self.fade_state = "FADE_IN"  # 切換到淡入狀態
+                self.can_update_params = False  # 重置可更新標誌
+
+        # 使用緩存的風向向量或當前的風向向量
+        # if self.cached_wind_vector == (0.0, 0.0):
+        #     wv = self.interper_tsoo_param["wind_vector"]
+        #     self.cached_wind_vector = wv
+        # else:
+        #     wv = self.cached_wind_vector
+        wv = self.target_tsoo_param["wind_vector"]
+        ws = self.target_tsoo_param["wind_speed"] * 10
+
+        # 使用相對時間計算位移，避免大跳變
+        relative_time = z - self.last_update_time
+        # 將風向向量納入噪聲位移計算
+        offset = (relative_time * ws * wv[0], relative_time * ws * wv[1])
+
         # 使用固定的 z 值或傳入的 z 值來生成第三維度
         Z = np.zeros((height, width))
         for i in range(height):
@@ -291,6 +401,9 @@ class TSOOParamProcesser:
         # 應用梯度遮罩到噪聲
         Z = Z * gradient_mask
 
+        # 應用淡出效果
+        Z = Z * self.fade_factor
+
         Z = np.interp(Z, (0, 1), (0, 255)).astype(np.uint8)
 
         return Z
@@ -317,7 +430,7 @@ def calculate_balanced_vector(
     values: list[int], normalize: bool = False
 ) -> tuple[float, float]:
     if len(values) != 4:
-        raise ValueError("輸入的列表長度必須為 4")
+        raise ValueError(f"輸入的列表長度必須為 4 ，{values}")
     v00, v01, v10, v11 = values
 
     # x 分量：右邊的權重總和 - 左邊的權重總和
@@ -358,12 +471,4 @@ def vector_to_angle_new_coordinate(vx, vy):
 def angle_to_vector(angle):
     """將角度轉換為向量（標準數學坐標系，0度在右方）"""
     radians = math.radians(angle)  # 轉換為弧度
-    return (math.sin(radians), math.cos(radians))  # 返回 (vx, vy) 向量
-
-
-def angle_to_vector_new_coordinate(angle):
-    """將角度轉換為向量（新坐標系，0度在上方，90度在右方）"""
-    # 將角度調整為標準坐標系（90度順時針旋轉）
-    adjusted_angle = (angle + 90) % 360
-    radians = math.radians(adjusted_angle)  # 轉換為弧度
     return (math.sin(radians), math.cos(radians))  # 返回 (vx, vy) 向量

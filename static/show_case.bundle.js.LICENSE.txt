@@ -1,9 +1,1 @@
 /*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
-
-/**
- * lil-gui
- * https://lil-gui.georgealways.com
- * @version 0.20.0
- * @author George Michael Brower
- * @license MIT
- */
