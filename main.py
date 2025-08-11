@@ -1,7 +1,9 @@
 # from person_tracker import PersonTracker
 from mock_person_tracker import MockPersonTracker
 from param_processer import TSOOParamProcesser
-from natural_tracker import NaturalTracker
+
+# from natural_tracker import NaturalTracker
+from mock_natrual_tracker import MockNaturalTracker
 from time import sleep
 from flask_app import TSOOFlaskApp
 import time
@@ -71,7 +73,9 @@ def effect_process(
         address=osc_config["address"], port=osc_config["port"]
     )
     param_processor = TSOOParamProcesser(interpolation_speed=0.005)
-    natural_tracker = NaturalTracker()
+    natural_tracker = MockNaturalTracker()
+    natural_tracker.update()  # 初始化自然追蹤器數據
+    last_natural_data_update_time = 0
 
     # 初始化參數
     param_processor.target_tsoo_param["area_people_count"] = [0, 0, 0, 0]
@@ -120,7 +124,7 @@ def effect_process(
                         param_processor.target_tsoo_param["area_people_count"] = (
                             people_counts
                         )
-                        natural_data = natural_tracker.update()
+                        natural_data = natural_tracker.get_data()
                         print(f"Natural data: {natural_data}")
                         if natural_data[0] == 0:
                             natural_data[0] = 1
@@ -135,7 +139,9 @@ def effect_process(
                         param_processor.params_updated = True
                 except Exception as e:
                     print(f"Error getting data from queue: {e}")
-
+            if time.time() - last_natural_data_update_time > 600:
+                natural_tracker.update()
+                last_natural_data_update_time = time.time()
             # effect
             if time.time() - last_matrix_update_time > 0.03:
                 try:

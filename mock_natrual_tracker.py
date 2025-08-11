@@ -3,7 +3,7 @@ import requests
 
 class MockNaturalTracker:
     def wind_speed_convert_to_ms(wind_speed):
-        return wind_speed / 3.6  # Convert m/s to km/h
+        return round(wind_speed / 3.6, 2)  # Convert m/s to km/h
 
     def __init__(self):
         """Data structure is  [wind_speed, wind_level, wind_direction, wind_direction_compass]"""
@@ -19,7 +19,9 @@ class MockNaturalTracker:
 
         response = requests.get(self.uri).json()
         natural_data = [
-            self.wind_speed_convert_to_ms(response["wind"]["speed"]["value"]),
+            MockNaturalTracker.wind_speed_convert_to_ms(
+                response["wind"]["speed"]["value"]
+            ),
             0,
             response["wind"]["direction"]["degrees"],
             response["wind"]["direction"]["cardinal"],
@@ -34,7 +36,7 @@ class MockNaturalTracker:
     #     pass
 
 
-mock_natural_tracker = MockNaturalTracker()
+# mock_natural_tracker = MockNaturalTracker()
 
-data = mock_natural_tracker.update()
-print(data)
+# data = mock_natural_tracker.update()
+# print(data)
