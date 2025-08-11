@@ -5,6 +5,8 @@ from time import sleep
 
 
 class NaturalTracker:
+    """Data structure is  [wind_speed, wind_level, wind_direction, wind_direction_compass]"""
+
     def __init__(
         self, vid="0403", pid="6001", history_file_path="[2025-07-10]modbus_reader.log"
     ):

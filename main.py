@@ -1,16 +1,52 @@
-from person_tracker import PersonTracker
+# from person_tracker import PersonTracker
+from mock_person_tracker import MockPersonTracker
 from param_processer import TSOOParamProcesser
 from natural_tracker import NaturalTracker
-import logging
 from time import sleep
 from flask_app import TSOOFlaskApp
 import time
 import threading
-import multiprocessing as mp
+
+
 from multiprocessing import Queue, Process
+from pythonosc import udp_client
+from config import Config
 
 
-# 将 effect_thread 函数移到 main() 外部，并接收所需的参数
+def send_osc_message(
+    client: udp_client.SimpleUDPClient, tsoo_param: TSOOParamProcesser
+):
+    param = tsoo_param.target_tsoo_param
+    client.send_message(
+        "/whyixd/composite/weight",
+        param["people_natrual_weight"],
+    )
+    client.send_message(
+        "/whyixd/composite/level",
+        param["people_natrual_weight_level"],
+    )
+    client.send_message(
+        "/whyixd/composite/threshold",
+        param["people_natrual_weight_level_threshold"],
+    )
+    client.send_message("/whyixd/people/counts", param["area_people_count"])
+    client.send_message(
+        "/whyixd/people/vector",
+        param["people_vector"],
+    )
+    client.send_message(
+        "/whyixd/light/vector",
+        param["effect_vector"],
+    )
+    client.send_message("/whyixd/wind/speed", param["wind_speed"])
+    client.send_message("/whyixd/wind/angle", param["wind_angle"])
+    client.send_message(
+        "/whyixd/wind/vector",
+        param["wind_vector"],
+    )
+
+
+# 將 effect_thread 函數移到 main() 外部，並接收所需的參數
 def effect_process(
     artnet_host,
     artnet_universe,
@@ -19,8 +55,9 @@ def effect_process(
     block_order,
     people_queue,
     update_signal_queue,
+    osc_config,
 ):
-    # 创建自己的对象实例，而不是使用主进程的实例
+    # 創建自己的對象實例，而不是使用主進程的實例
     flask_app = TSOOFlaskApp(
         host="127.0.0.1",
         port=5000,
@@ -30,13 +67,16 @@ def effect_process(
         block_shape=block_shape,
         block_order=block_order,
     )
-    param_processor = TSOOParamProcesser()
+    osc_client = udp_client.SimpleUDPClient(
+        address=osc_config["address"], port=osc_config["port"]
+    )
+    param_processor = TSOOParamProcesser(interpolation_speed=0.005)
     natural_tracker = NaturalTracker()
 
-    # 初始化参数
+    # 初始化參數
     param_processor.target_tsoo_param["area_people_count"] = [0, 0, 0, 0]
 
-    # 设置回调函数，当可以更新参数时通知主进程
+    # 設置回調函數，當可以更新參數時通知主進程
     def on_fade_out_done():
         try:
             if not update_signal_queue.full():
@@ -45,10 +85,10 @@ def effect_process(
         except Exception as e:
             print(f"Error sending update signal: {e}")
 
-    # 设置回调函数
+    # 設置回調函數
     param_processor.on_basic_fade_out_done = on_fade_out_done
 
-    # 启动服务
+    # 啟動服務
     flask_app.start_server()
 
     # effect
@@ -68,12 +108,12 @@ def effect_process(
 
             # 每秒更新一次數據
 
-            # 仅在可以更新参数时更新人员数据
+            # 僅在可以更新參數時更新人員數據
             if True:
-                # 检查队列中是否有新的人员追踪数据
+                # 檢查隊列中是否有新的人員追蹤數據
                 try:
                     if not people_queue.empty():
-                        # 非阻塞方式获取数据
+                        # 非阻塞方式獲取數據
 
                         people_counts = people_queue.get_nowait()
                         print(f"Effect process - Person in area: {people_counts}")
@@ -88,10 +128,10 @@ def effect_process(
                         param_processor.update_wind_angle(natural_data[2])
 
                         param_processor.caculate_param()
-
+                        send_osc_message(osc_client, param_processor)
                         print(f"Effect process received people counts: {people_counts}")
 
-                        # 标记参数已更新
+                        # 標記參數已更新
                         param_processor.params_updated = True
                 except Exception as e:
                     print(f"Error getting data from queue: {e}")
@@ -113,26 +153,19 @@ def effect_process(
 
                     time_val += 0.002
 
-                    # natural_data = natural_tracker.update()
-                    # print(f"Natural data: {natural_data}")
-                    # if natural_data[0] == 0:
-                    #     natural_data[0] = 1
-                    # param_processor.update_wind_speed(natural_data[0])
-                    # param_processor.update_wind_angle(natural_data[2])
-
-                    # param_processor.caculate_param()
                     flask_app.socketio.emit("dmx_data", {"value": matrix})
                     flask_app.socketio.emit(
                         "tsoo_param", param_processor.interper_tsoo_param
                     )
+                    osc_client.send_message("/whyixd/light/dmx", matrix)
                     # count += 1
 
-                    flask_app.artnet.set_packet(matrix, 0.5)
+                    flask_app.artnet.set_packet(matrix, 1)
                 except Exception as e:
                     print(f"Error in effect : {e}")
                 finally:
                     last_matrix_update_time = time.time()
-                    # 避免进程消耗过多 CPU
+                    # 避免進程消耗過多 CPU
                     time.sleep(0.01)
 
     except KeyboardInterrupt:
@@ -143,25 +176,21 @@ def effect_process(
 
 
 def main():
-    # 主进程的设置
-    # flask_app = TSOOFlaskApp(
-    #     host="127.0.0.1",
-    #     port=5000,
-    #     artnet_host="2.56.31.102",
-    #     artnet_universe=0,
-    #     artnet_channels=128,
-    #     block_shape=(8, 4),
-    #     block_order=[[1, 3], [2, 4]],
-    # )
-    # param_processor = TSOOParamProcesser()
+    osc_config = {"address": "127.0.0.1", "port": 5005}
+    osc_config_instance = Config(osc_config, "osc_config.json")
+    osc_config = osc_config_instance.load()
+    # 創建一個隊列用於在進程之間傳遞人員追蹤數據
+    people_queue = Queue(maxsize=5)  # 限制隊列大小，防止內存溢出
 
-    # 创建一个队列用于在进程之间传递人员追踪数据
-    people_queue = Queue(maxsize=5)  # 限制队列大小，防止内存溢出
-
-    # 创建一个新的队列，用于接收参数可以更新的信号
+    # 創建一個新的隊列，用於接收參數可以更新的信號
     update_signal_queue = Queue(maxsize=1)
 
-    person_tracker = PersonTracker(
+    # person_tracker = PersonTracker(
+    #     video_source="people_top.mp4",  # or 0 for webcam
+    #     width=1280,
+    #     height=720,
+    # )
+    person_tracker = MockPersonTracker(
         video_source="people_top.mp4",  # or 0 for webcam
         width=1280,
         height=720,
@@ -172,15 +201,16 @@ def main():
     sleep(2)  # 等待追蹤器初始化
     # natural_tracker = NaturalTracker()
 
-    # 获取必要的参数以启动效果进程
-    artnet_host = "2.56.31.102"
+    # 獲取必要的參數以啟動效果進程
+    # artnet_host = "2.56.31.102"
+    artnet_host = "2.0.0.100"
     # artnet_host = "127.0.0.1"；
     artnet_universe = 0
     artnet_channels = 128
     block_shape = (8, 4)
     block_order = [[1, 3], [2, 4]]
 
-    # 创建并启动效果进程
+    # 創建並啟動效果進程
     effect_thread_instance = Process(
         target=effect_process,
         args=(
@@ -191,22 +221,23 @@ def main():
             block_order,
             people_queue,
             update_signal_queue,
+            osc_config,
         ),
     )
     effect_thread_instance.start()
 
-    # 输出主进程中的线程
+    # 輸出主進程中的線程
     for thread in threading.enumerate():
         print(thread.name)
 
     try:
-        # 主进程监视用户输入和更新人员追踪数据
+        # 主進程監視用戶輸入和更新人員追蹤數據
         last_people_data_update = 0
         can_update_params = False
         while True:
             current_time = time.time()
 
-            # 检查是否收到可以更新参数的信号
+            # 檢查是否收到可以更新參數的信號
             try:
                 if not update_signal_queue.empty():
                     can_update_params = update_signal_queue.get_nowait()
@@ -214,27 +245,27 @@ def main():
             except Exception as e:
                 print(f"Error checking update signal: {e}")
 
-            # 每5秒更新一次人员追踪数据，但只有在收到信号时才发送到队列
+            # 每5秒更新一次人員追蹤數據，但只有在收到信號時才發送到隊列
             if current_time - last_people_data_update >= 0.1:
                 last_people_data_update = current_time
 
-                # 获取最新的人员追踪数据
+                # 獲取最新的人員追蹤數據
                 people_counts = person_tracker.inside_area_counts
                 # print(f"Main process - Person in area: {people_counts}")
 
-                # 仅在允许更新参数时才将数据发送到队列
+                # 僅在允許更新參數時才將數據發送到隊列
                 if can_update_params:
-                    # 尝试将数据放入队列，但不阻塞
+                    # 嘗試將數據放入隊列，但不阻塞
                     try:
                         if not people_queue.full():
                             people_queue.put_nowait(people_counts)
                             print("Person data sent to effect process")
                             can_update_params = (
-                                False  # 重置标志，直到收到下一个更新信号
+                                False  # 重置標誌，直到收到下一個更新信號
                             )
                         else:
-                            # 队列已满，可以选择清空队列或忽略这次更新
-                            # 这里选择清空队列后再放入新数据
+                            # 隊列已滿，可以選擇清空隊列或忽略這次更新
+                            # 這裡選擇清空隊列後再放入新數據
                             try:
                                 while not people_queue.empty():
                                     people_queue.get_nowait()
@@ -243,21 +274,21 @@ def main():
                                     "Person data sent to effect process (after queue clear)"
                                 )
                                 can_update_params = (
-                                    False  # 重置标志，直到收到下一个更新信号
+                                    False  # 重置標誌，直到收到下一個更新信號
                                 )
                             except:
                                 pass
                     except Exception as e:
                         print(f"Error putting data to queue: {e}")
 
-            # 减少 CPU 使用率
-            time.sleep(0.1)  # 更小的睡眠时间，以便更频繁地检查
+            # 減少 CPU 使用率
+            time.sleep(0.1)  # 更小的睡眠時間，以便更頻繁地檢查
 
     except KeyboardInterrupt:
         print("Main program interrupted")
     finally:
         person_tracker.stop()
-        # 终止效果进程
+        # 終止效果進程
         effect_thread_instance.terminate()
         effect_thread_instance.join()
         print("Shutting down ...")

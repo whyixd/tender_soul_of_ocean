@@ -152,29 +152,29 @@ class TSOOFlaskApp:
         self.is_running = False
         print("Server has been stopped")
 
-    # def test_channel_check(self):
-    #     """依序點亮所有通道以檢查 ArtNet 設置"""
-    #     if not self.is_running:
-    #         print("Server must be running to test channels")
-    #         return
-    #     off = 1
-    #     count = 0
+    def test_channel_check(self):
+        """依序點亮所有通道以檢查 ArtNet 設置"""
+        if not self.is_running:
+            print("Server must be running to test channels")
+            return
+        off = 1
+        count = 0
 
-    #     def test_thread():
-    #         nonlocal count, off
-    #         matrix = [0] * 128
-    #         while True:
-    #             for i in range(128):
+        def test_thread():
+            nonlocal count, off
+            matrix = [0] * 128
+            while True:
+                for i in range(128):
 
-    #                 matrix[i] = 255 * off  # 點亮當前通道
-    #                 self.socketio.emit("dmx_data", {"value": matrix})
-    #                 self.artnet.set_packet(matrix, 1)
-    #                 count += 1
-    #                 sleep(0.05)  # 每個通道點亮後等待一段時間
-    #             off = 1 - off  # 切換點亮狀態
+                    matrix[i] = 255 * off  # 點亮當前通道
+                    self.socketio.emit("dmx_data", {"value": matrix})
+                    self.artnet.set_packet(matrix, 1)
+                    count += 1
+                    sleep(0.05)  # 每個通道點亮後等待一段時間
+                off = 1 - off  # 切換點亮狀態
 
-    #     test_thread_instance = threading.Thread(target=test_thread, daemon=True)
-    #     test_thread_instance.start()
+        test_thread_instance = threading.Thread(target=test_thread, daemon=True)
+        test_thread_instance.start()
 
     # def send_test_effect(self):
     #     """啟動測試效果序列"""
@@ -281,18 +281,18 @@ class TSOOFlaskApp:
     #             block_order=self.artnet.block_order,
     #         )
 
-    def broadcast_message(self, event_name, data):
-        """向所有客戶端廣播訊息"""
-        if self.is_running:
-            self.socketio.emit(event_name, data)
-        else:
-            print("Server is not running, can't broadcast message")
+    # def broadcast_message(self, event_name, data):
+    #     """向所有客戶端廣播訊息"""
+    #     if self.is_running:
+    #         self.socketio.emit(event_name, data)
+    #     else:
+    #         print("Server is not running, can't broadcast message")
 
 
 # if __name__ == "__main__":
 #     # 創建應用實例
-#     app = TSOOFlaskApp(artnet_host="2.56.31.102")
-#     # app = TSOOFlaskApp(artnet_host="127.0.0.1")
+#     # app = TSOOFlaskApp(artnet_host="2.56.31.102")
+#     app = TSOOFlaskApp(artnet_host="2.0.0.100")
 
 #     # 啟動服務器
 #     app.start_server()
