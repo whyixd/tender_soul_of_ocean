@@ -1,0 +1,41 @@
+{
+  "currentTime": "2025-08-11T07:34:50.941193749Z",
+  "timeZone": { "id": "Asia/Taipei" },
+  "isDaytime": true,
+  "weatherCondition": {
+    "iconBaseUri": "https://maps.gstatic.com/weather/v1/strong_tstorms",
+    "description": {
+      "text": "Light thunderstorms and rain",
+      "languageCode": "en"
+    },
+    "type": "LIGHT_THUNDERSTORM_RAIN"
+  },
+  "temperature": { "degrees": 30.8, "unit": "CELSIUS" },
+  "feelsLikeTemperature": { "degrees": 38.3, "unit": "CELSIUS" },
+  "dewPoint": { "degrees": 25.9, "unit": "CELSIUS" },
+  "heatIndex": { "degrees": 38.3, "unit": "CELSIUS" },
+  "windChill": { "degrees": 30.8, "unit": "CELSIUS" },
+  "relativeHumidity": 75,
+  "uvIndex": 1,
+  "precipitation": {
+    "probability": { "percent": 31, "type": "RAIN" },
+    "snowQpf": { "quantity": 0, "unit": "MILLIMETERS" },
+    "qpf": { "quantity": 1.0008, "unit": "MILLIMETERS" }
+  },
+  "thunderstormProbability": 60,
+  "airPressure": { "meanSeaLevelMillibars": 1007.2 },
+  "wind": {
+    "direction": { "degrees": 200, "cardinal": "SOUTH_SOUTHWEST" },
+    "speed": { "value": 5, "unit": "KILOMETERS_PER_HOUR" },
+    "gust": { "value": 10, "unit": "KILOMETERS_PER_HOUR" }
+  },
+  "visibility": { "distance": 16, "unit": "KILOMETERS" },
+  "cloudCover": 78,
+  "currentConditionsHistory": {
+    "temperatureChange": { "degrees": -0.6, "unit": "CELSIUS" },
+    "maxTemperature": { "degrees": 35.2, "unit": "CELSIUS" },
+    "minTemperature": { "degrees": 26.1, "unit": "CELSIUS" },
+    "snowQpf": { "quantity": 0, "unit": "MILLIMETERS" },
+    "qpf": { "quantity": 4.7067, "unit": "MILLIMETERS" }
+  }
+}
