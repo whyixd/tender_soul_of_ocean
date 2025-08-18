@@ -1,12 +1,13 @@
-# from person_tracker import PersonTracker
-from mock_person_tracker import MockPersonTracker
+from person_tracker import PersonTracker
+
+# from mock_person_tracker import MockPersonTracker
 from param_processer import TSOOParamProcesser
 from natural_tracker import NaturalTracker
 from time import sleep
 from flask_app import TSOOFlaskApp
 import time
 import threading
-
+from config import Config
 
 from multiprocessing import Queue, Process
 from pythonosc import udp_client
@@ -56,6 +57,7 @@ def effect_process(
     people_queue,
     update_signal_queue,
     osc_config,
+    general_config,
 ):
     # 創建自己的對象實例，而不是使用主進程的實例
     flask_app = TSOOFlaskApp(
@@ -71,6 +73,7 @@ def effect_process(
         address=osc_config["address"], port=osc_config["port"]
     )
     param_processor = TSOOParamProcesser(interpolation_speed=0.005)
+    param_processor.wind_speed_factor = general_config.get("wind_speed_factor", 10)
     natural_tracker = NaturalTracker()
 
     # 初始化參數
@@ -160,7 +163,9 @@ def effect_process(
                     osc_client.send_message("/whyixd/light/dmx", matrix)
                     # count += 1
 
-                    flask_app.artnet.set_packet(matrix, 1)
+                    flask_app.artnet.set_packet(
+                        matrix, general_config.get("light_intensity", 1)
+                    )
                 except Exception as e:
                     print(f"Error in effect : {e}")
                 finally:
@@ -179,6 +184,14 @@ def main():
     osc_config = {"address": "127.0.0.1", "port": 5005}
     osc_config_instance = Config(osc_config, "osc_config.json")
     osc_config = osc_config_instance.load()
+
+    general_config = {
+        "artnet_target": "2.0.0.105",
+        "light_intensity": 1,
+        "wind_speed_factor": 10,  # 默認風速因子
+    }
+    general_config_instance = Config(general_config, "general_config.json")
+    general_config = general_config_instance.load()
     # 創建一個隊列用於在進程之間傳遞人員追蹤數據
     people_queue = Queue(maxsize=5)  # 限制隊列大小，防止內存溢出
 
@@ -190,10 +203,10 @@ def main():
     #     width=1280,
     #     height=720,
     # )
-    person_tracker = MockPersonTracker(
+    person_tracker = PersonTracker(
         video_source="people_top.mp4",  # or 0 for webcam
-        width=1280,
-        height=720,
+        width=640,
+        height=360,
     )
     # 使用新方法，在背景執行 tracking 和 display
     person_tracker.start_all_in_background()
@@ -203,7 +216,7 @@ def main():
 
     # 獲取必要的參數以啟動效果進程
     # artnet_host = "2.56.31.102"
-    artnet_host = "2.0.0.100"
+    artnet_host = general_config.get("artnet_target", "2.0.0.100")
     # artnet_host = "127.0.0.1"；
     artnet_universe = 0
     artnet_channels = 128
@@ -222,6 +235,7 @@ def main():
             people_queue,
             update_signal_queue,
             osc_config,
+            general_config,  # 默認值為1
         ),
     )
     effect_thread_instance.start()
@@ -281,8 +295,7 @@ def main():
                     except Exception as e:
                         print(f"Error putting data to queue: {e}")
 
-            # 減少 CPU 使用率
-            time.sleep(0.1)  # 更小的睡眠時間，以便更頻繁地檢查
+            time.sleep(0.1)
 
     except KeyboardInterrupt:
         print("Main program interrupted")

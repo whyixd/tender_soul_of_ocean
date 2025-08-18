@@ -44,6 +44,7 @@ class TSOOParamProcesser:
 
         # 插值速度控制（值越大，过渡越快）
         self.interpolation_speed = interpolation_speed
+        self.wind_speed_factor = 10
 
         # 儲存之前的梯度遮罩，用於在梯度向量變化時保留之前的效果
         self.previous_gradient_mask = None
@@ -278,7 +279,7 @@ class TSOOParamProcesser:
         # else:
         #     wv = self.cached_wind_vector
         wv = self.target_tsoo_param["wind_vector"]
-        ws = self.target_tsoo_param["wind_speed"] * 10
+        ws = self.target_tsoo_param["wind_speed"] * self.wind_speed_factor
 
         # 使用相對時間計算位移，避免大跳變
         relative_time = z - self.last_update_time

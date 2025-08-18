@@ -15,8 +15,9 @@ class PersonTracker(threading.Thread):
     def __init__(
         self,
         video_source="people_top.mp4",
-        width=1280,
-        height=720,
+        width=320,
+        height=240,
+        window_name="Person Tracker",
     ):
         """Initialize the person tracker with video source and parameters."""
         super(PersonTracker, self).__init__()
@@ -39,9 +40,9 @@ class PersonTracker(threading.Thread):
         )
         # Video settings
         self.video_source = video_source
-        self.desired_width = width
-        self.desired_height = height
-
+        self.desired_width = self.config.loaded_config.get("width")
+        self.desired_height = self.config.loaded_config.get("height")
+        self.window_name = window_name
         # YOLO model
         self.model = YOLO("yolo11n-seg.pt")
         # if torch.cuda.is_available():
@@ -137,17 +138,24 @@ class PersonTracker(threading.Thread):
         self.running = True
 
         # Open video capture
-        cap = cv2.VideoCapture(self.video_source)
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
+        # cap = cv2.VideoCapture(self.video_source)
+        cap0 = cv2.VideoCapture(0)
+        cap0.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
+        cap0.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
+        cap1 = cv2.VideoCapture(1)
+        cap1.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
+        cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
 
-        while self.running and cap.isOpened():
-            success, frame = cap.read()
-            if not success:
-                cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reset to first frame
-                success, frame = cap.read()
-                if not success:  # Still not successful, exit loop
-                    break
+        while self.running and cap0.isOpened():
+            success0, frame0 = cap0.read()
+            success1, frame1 = cap1.read()
+            frame = np.concatenate((frame0, frame1), axis=0)
+            # success, frame = cap.read()
+            # if not success:
+            #     cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reset to first frame
+            #     success, frame = cap.read()
+            #     if not success:  # Still not successful, exit loop
+            #         break
 
             # Process frame with YOLO model
             for result in self.model.track(
@@ -157,7 +165,7 @@ class PersonTracker(threading.Thread):
                 conf=0.4,
                 stream=True,
                 persist=True,
-                imgsz=(self.desired_width, self.desired_height),
+                imgsz=(self.desired_width * 2, self.desired_height),
             ):
                 # Skip processing if result has no boxes
                 if result.boxes is None or result.boxes.data.numel() == 0:
@@ -203,21 +211,21 @@ class PersonTracker(threading.Thread):
                     cv2.putText(
                         processed_frame,
                         f"FPS: {int(self.display_fps)}",
-                        (5, 15),
+                        (5, 25),
                         cv2.FONT_HERSHEY_SIMPLEX,
-                        0.5,
-                        (0, 255, 0),
                         1,
+                        (0, 255, 0),
+                        2,
                         cv2.LINE_AA,
                     )
                     cv2.putText(
                         processed_frame,
                         f"Area Edit Mode: {'ON' if self.area_edit_mode else 'OFF'}",
-                        (5, 30),
+                        (5, 50),
                         cv2.FONT_HERSHEY_SIMPLEX,
-                        0.5,
-                        (255, 0, 0),
                         1,
+                        (255, 128, 0),
+                        2,
                         cv2.LINE_AA,
                     )
 
@@ -229,7 +237,9 @@ class PersonTracker(threading.Thread):
                     self.result_queue.put(processed_frame)
 
         # Release resources
-        cap.release()
+        # cap.release()
+        cap0.release()
+        cap1.release()
 
     def _process_detections(self, result, frame):
         """Process detections from YOLO model."""
@@ -280,17 +290,18 @@ class PersonTracker(threading.Thread):
         """Draw the defined areas on the frame."""
         if self.show_visualization:
             overlay = frame.copy()
-
+            colors = [(65, 255, 0), (255, 0, 208), (0, 255, 221), (242, 255, 0)]
             # Draw areas based on edit mode
             for idx, area in enumerate(self.areas):
                 if self.area_edit_mode:
-                    color = (
-                        (0, 0, 255) if idx == self.current_setting_area else (255, 0, 0)
-                    )
+                    # color = (
+                    #     (0, 0, 255) if idx == self.current_setting_area else (255, 0, 0)
+                    # )
+                    color = colors[idx]
                     cv2.fillPoly(
                         overlay,
                         [np.array(area, dtype=np.int32)],
-                        color=(255 * idx % 2, 255 * (1 - idx % 2), 0),
+                        color=color,
                     )
                     # Only draw corners in edit mode
                     for corner in area:
@@ -303,9 +314,9 @@ class PersonTracker(threading.Thread):
             else:
                 # Just draw outlines when not in edit mode
                 for idx, area in enumerate(self.areas):
-                    color = (255 * idx % 2, 255 * (1 - idx % 2), 0)
+                    color = colors[idx]
                     cv2.polylines(
-                        frame, [np.array(area, dtype=np.int32)], True, color, 1
+                        frame, [np.array(area, dtype=np.int32)], True, color, 2
                     )
 
     def _update_tracking(self, current_track_ids_in_frame):
@@ -367,7 +378,7 @@ class PersonTracker(threading.Thread):
                     (int(x1), int(y1)),
                     (int(x2), int(y2)),
                     color=(3, 78, 252),
-                    thickness=1,
+                    thickness=2,
                 )
 
                 # Draw bottom center point
@@ -385,7 +396,7 @@ class PersonTracker(threading.Thread):
                     f"ID:{track_id} Conf:{data['confidence']:.2f} C:({center_x},{center_y})",
                     (int(x1), int(y1) - 10),
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    0.3,
+                    0.5,
                     (0, 0, 255),
                     1,
                     cv2.LINE_AA,
@@ -446,7 +457,7 @@ class PersonTracker(threading.Thread):
 
                 if frame is not None:
                     # Display the frame
-                    cv2.imshow("Live Stream", frame)
+                    cv2.imshow(self.window_name, frame)
 
                 # Process keyboard input - this is critical for OpenCV to process window events
                 key = cv2.waitKey(1) & 0xFF
@@ -458,11 +469,6 @@ class PersonTracker(threading.Thread):
         finally:
             # Cleanup
             cv2.destroyAllWindows()
-
-    # def start_and_display(self):
-    #     """Start the tracking thread and then run the display loop."""
-    #     self.start()  # Start tracking in a separate thread
-    #     self.display_loop()  # Run display loop in the current thread
 
     def start_all_in_background(self):
         """Start both tracking and display in background threads.
@@ -481,8 +487,10 @@ class PersonTracker(threading.Thread):
     def _ui_thread_function(self):
         """Function to run in the UI thread that handles OpenCV window events."""
         # Create a named window with normal flags in this thread
-        cv2.namedWindow("Live Stream", cv2.WINDOW_NORMAL)
-        cv2.setMouseCallback("Live Stream", self.set_corner)
+        print(self.desired_width, self.desired_height)
+        cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
+        cv2.resizeWindow(self.window_name, self.desired_width, self.desired_height * 2)
+        cv2.setMouseCallback(self.window_name, self.set_corner)
 
         # Run the display loop in this thread
         self.display_loop()
@@ -490,17 +498,3 @@ class PersonTracker(threading.Thread):
     def stop(self):
         """Stop the tracking thread."""
         self.running = False
-
-
-# if __name__ == "__main__":
-#     # Create tracker instance
-#     tracker = PersonTracker(
-#         video_source="people_top.mp4",  # or 0 for webcam
-#         width=1280,
-#         height=720,
-#     )
-
-#     # Start tracking and display
-#     tracker.start_and_display()
-
-# No need for try/finally here as it's handled in display_loop
