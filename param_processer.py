@@ -278,7 +278,7 @@ class TSOOParamProcesser:
         # else:
         #     wv = self.cached_wind_vector
         wv = self.target_tsoo_param["wind_vector"]
-        ws = self.target_tsoo_param["wind_speed"] * 10
+        ws = self.target_tsoo_param["wind_speed"] * 5
 
         # 使用相對時間計算位移，避免大跳變
         relative_time = z - self.last_update_time

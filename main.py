@@ -166,7 +166,7 @@ def effect_process(
                     osc_client.send_message("/whyixd/light/dmx", matrix)
                     # count += 1
 
-                    flask_app.artnet.set_packet(matrix, 1)
+                    flask_app.artnet.set_packet(matrix, 1.5)
                 except Exception as e:
                     print(f"Error in effect : {e}")
                 finally:
@@ -209,7 +209,7 @@ def main():
 
     # 獲取必要的參數以啟動效果進程
     # artnet_host = "2.56.31.102"
-    artnet_host = "2.0.0.100"
+    artnet_host = "2.0.0.105"
     # artnet_host = "127.0.0.1"；
     artnet_universe = 0
     artnet_channels = 128
