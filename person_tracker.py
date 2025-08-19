@@ -139,30 +139,52 @@ class PersonTracker(threading.Thread):
 
         # Open video capture
         # cap = cv2.VideoCapture(self.video_source)
-        cap0 = cv2.VideoCapture(0)
+        # cap0 = cv2.VideoCapture(0)
+        cap0 = cv2.VideoCapture(self.video_source)
         cap0.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
         cap0.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
-        cap1 = cv2.VideoCapture(1)
+        cap1 = cv2.VideoCapture("people_top_2.mp4")
+        # cap1 = cv2.VideoCapture(1)
         cap1.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
         cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
 
         while self.running and cap0.isOpened():
             success0, frame0 = cap0.read()
             success1, frame1 = cap1.read()
+
+            if not success0:
+                cap0.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reset to first frame
+                success0, frame0 = cap0.read()
+                if not success0:
+                    print("Error: Could not restart video cap0")
+                    break
+
+            if not success1:
+                cap1.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reset to first frame
+                success1, frame1 = cap1.read()
+                if not success1:
+                    print("Error: Could not restart video cap1")
+                    break
+            # Check if frames are valid
+            if frame0 is None or frame1 is None:
+                print(
+                    f"Invalid frames - Cap0: {frame0 is not None}, Cap1: {frame1 is not None}"
+                )
+                continue
+
+            # Ensure both frames have the same width before concatenation
+            if frame0.shape[1] != frame1.shape[1]:
+                # Resize frame1 to match frame0's width if needed
+                frame1 = cv2.resize(frame1, (frame0.shape[1], frame0.shape[0]))
             frame = np.concatenate((frame0, frame1), axis=0)
-            # success, frame = cap.read()
-            # if not success:
-            #     cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reset to first frame
-            #     success, frame = cap.read()
-            #     if not success:  # Still not successful, exit loop
-            #         break
+            # Handle video end and loop back to beginning
 
             # Process frame with YOLO model
             for result in self.model.track(
                 frame,
                 show=False,
                 classes=[0],
-                conf=0.4,
+                conf=0.1,
                 stream=True,
                 persist=True,
                 imgsz=(self.desired_width * 2, self.desired_height),

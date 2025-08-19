@@ -18,6 +18,8 @@ def send_osc_message(
     client: udp_client.SimpleUDPClient, tsoo_param: TSOOParamProcesser
 ):
     param = tsoo_param.target_tsoo_param
+    inter_param = tsoo_param.interper_tsoo_param
+    # -------------------composite--------------------#
     client.send_message(
         "/whyixd/composite/weight",
         param["people_natrual_weight"],
@@ -30,21 +32,36 @@ def send_osc_message(
         "/whyixd/composite/threshold",
         param["people_natrual_weight_level_threshold"],
     )
+    # client.send_message("/whyixd/composite/weight/interper", inter_param["weight"])
+
+    # ---------------------people---------------------#
     client.send_message("/whyixd/people/counts", param["area_people_count"])
     client.send_message(
         "/whyixd/people/vector",
         param["people_vector"],
     )
+    client.send_message("/whyixd/people/interper/vector", inter_param["people_vector"])
+    # ---------------------light----------------------#
     client.send_message(
         "/whyixd/light/vector",
         param["effect_vector"],
     )
+    client.send_message("/whyixd/light/interper/vector", inter_param["effect_vector"])
+    # ---------------------wind-----------------------#
     client.send_message("/whyixd/wind/speed", param["wind_speed"])
+    client.send_message("/whyixd/wind/speed/normalized", param["wind_speed_normalized"])
     client.send_message("/whyixd/wind/angle", param["wind_angle"])
     client.send_message(
         "/whyixd/wind/vector",
         param["wind_vector"],
     )
+    client.send_message("/whyixd/wind/interper/speed", inter_param["wind_speed"])
+    # client.send_message(
+    #     "/whyixd/wind/interper/speed/normalized", inter_param["wind_speed_normalized"]
+    # )
+    client.send_message("/whyixd/wind/interper/angle", inter_param["wind_angle"])
+    client.send_message("/whyixd/wind/interper/vector", inter_param["wind_vector"])
+    # ---------------------
 
 
 # 將 effect_thread 函數移到 main() 外部，並接收所需的參數
@@ -131,7 +148,6 @@ def effect_process(
                         param_processor.update_wind_angle(natural_data[2])
 
                         param_processor.caculate_param()
-                        send_osc_message(osc_client, param_processor)
                         print(f"Effect process received people counts: {people_counts}")
 
                         # 標記參數已更新
@@ -160,6 +176,7 @@ def effect_process(
                     flask_app.socketio.emit(
                         "tsoo_param", param_processor.interper_tsoo_param
                     )
+                    send_osc_message(osc_client, param_processor)
                     osc_client.send_message("/whyixd/light/dmx", matrix)
                     # count += 1
 

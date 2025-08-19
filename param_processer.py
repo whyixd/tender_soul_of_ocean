@@ -15,6 +15,7 @@ class TSOOParamProcesser:
             "people_count_max": 30,  # set by guess
             "people_vector": (0.0, 0.0),  # 人數向量
             "wind_speed": 0.0,
+            "wind_speed_normalized": 0.0,
             "wind_speed_max": 5.0,  # get from https://www.timeanddate.com/weather/austria/linz/climate
             "wind_angle": 0.0,
             "wind_vector": (0.0, 0.0),  # 風向向量
@@ -56,7 +57,7 @@ class TSOOParamProcesser:
         self.max_vector_change_rate = 0.15
 
     def caculate_param(self):
-        # 保存当前参数为上一次参数
+        # 保存當前參數為上一次參數
         # self.previous_tsoo_param = self.target_tsoo_param.copy()
 
         total_people = sum(self.target_tsoo_param["area_people_count"])
@@ -68,6 +69,7 @@ class TSOOParamProcesser:
             0,
             self.target_tsoo_param["wind_speed_max"],
         )
+        self.target_tsoo_param["wind_speed_normalized"] = wind_speed_normalized
         # -----------------------------IMPORTANT-----------------------------------#
         self.target_tsoo_param["people_natrual_weight"] = round(
             combine_normalize(people_count_normalized, wind_speed_normalized), 2
@@ -76,7 +78,7 @@ class TSOOParamProcesser:
         threshold = self.target_tsoo_param["people_natrual_weight_level_threshold"]
         for idx, t in enumerate(threshold):
             if self.target_tsoo_param["people_natrual_weight"] <= t:
-                self.target_tsoo_param["people_natrual_weight_level"] = idx
+                self.target_tsoo_param["people_natrual_weight_level"] = idx - 1
                 break
 
         # 計算區域人數向量
@@ -117,19 +119,19 @@ class TSOOParamProcesser:
         return self.target_tsoo_param
 
     def calculate_interpolation(self):
-        """计算从previous到target的插值"""
-        # 对每个数值类型的参数进行插值
+        """計算從previous到target的插值"""
+        # 對每個數值類型的參數進行插值
         for key, target_value in self.target_tsoo_param.items():
             if key in self.interper_tsoo_param:
                 prev_value = self.interper_tsoo_param[key]
 
-                # 根据不同类型进行不同的插值
+                # 根據不同類型進行不同的插值
                 if isinstance(target_value, (int, float)) and isinstance(
                     prev_value, (int, float)
                 ):
                     if key == "people_natrual_weight_level":
                         continue
-                    # 数值类型插值
+                    # 數值類型插值
                     self.interper_tsoo_param[key] = self._interpolate_value(
                         prev_value,
                         target_value,
@@ -182,7 +184,7 @@ class TSOOParamProcesser:
         return prev + (target - prev) * interpolation_speed
 
     def get_interpolated_param(self):
-        """获取当前插值后的参数"""
+        """獲取當前插值後的參數"""
         self.calculate_interpolation()
         return self.interper_tsoo_param
 
