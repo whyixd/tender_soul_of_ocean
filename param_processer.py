@@ -192,7 +192,7 @@ class TSOOParamProcesser:
         self,
         width,
         height,
-        scale=10.0,
+        scale=0.1,
         z=0.0,
         gradient_vector=(1, 0),
         delta_time=0.016,  # 假設每幀 16ms，即約 60fps
@@ -203,11 +203,11 @@ class TSOOParamProcesser:
                          向量的方向決定梯度方向，向量的長度影響梯度強度
         delta_time: 上一幀到當前幀的時間間隔（秒）
         """
-        x = np.linspace(0, width / scale, width)
-        y = np.linspace(0, height / scale, height)
-        X, Y = np.meshgrid(x, y)
-
         self.get_interpolated_param()  # 確保使用最新的插值參數
+        effect_vector = self.interper_tsoo_param["effect_vector"]
+        x = np.linspace(0, width / scale * abs(effect_vector[0]), width)
+        y = np.linspace(0, height / scale * abs(effect_vector[1]), height)
+        X, Y = np.meshgrid(x, y)
 
         # 更新噪聲時間和淡出因子
         self.current_noise_time += delta_time

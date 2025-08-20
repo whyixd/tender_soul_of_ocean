@@ -39,47 +39,81 @@ class ModbusReader:
 
         if connection:
             try:
-                res = self.client.read_holding_registers(address=0, count=4, slave=1)
+                res = self.client.read_holding_registers(address=500, count=4, slave=1)
                 if res.isError():
                     modbus_logger.error("Modbus 讀取失敗")
-                    return [0, 0, 0, "未知"]
+                    return [0, 0, 0, "unknown"]
                 wind_speed = res.registers[0] / 10.0
                 wind_level = res.registers[1]
-                wind_angle = res.registers[2] / 10
-                wind_direction = self.get_wind_direction(wind_angle)
+                wind_direction = self.get_wind_direction(res.registers[2])
+                wind_angle = res.registers[3]
+                res2 = self.client.read_holding_registers(address=504, count=2, slave=1)
+                humidity = res2.registers[0] / 10.0
+                temperature = res2.registers[1] / 10.0
+                if res2.isError():
+                    modbus_logger.error("Modbus 讀取失敗")
+                    return [0, 0, 0, "unknown"]
                 modbus_logger.info(
-                    f"風速: {wind_speed} m/s, 風級: {wind_level}, 風向角度: {wind_angle}, 風向: {wind_direction}"
+                    f"風速: {wind_speed} m/s, 風級: {wind_level}, 風向角度: {wind_angle}, 風向: {wind_direction}, 濕度: {humidity}%, 溫度: {temperature}°C"
                 )
-                return [wind_speed, wind_level, wind_angle, wind_direction]
+                return [
+                    wind_speed,
+                    wind_level,
+                    wind_angle,
+                    wind_direction,
+                    humidity,
+                    temperature,
+                ]
             except Exception as e:
                 modbus_logger.error(f"讀取 Modbus 失敗: {e}")
-                return [0, 0, 0, "未知"]
+                return [0, 0, 0, "unknown"]
 
         return None
 
-    def get_wind_direction(self, angle):
-        """根據角度轉換成風向文字"""
-        directions = [
-            "北",
-            "北北東",
-            "東北",
-            "東北東",
-            "東",
-            "東南東",
-            "東南",
-            "南南東",
-            "南",
-            "南南西",
-            "西南",
-            "西南西",
-            "西",
-            "西北西",
-            "西北",
-            "北北西",
-            "北",
-        ]
-        index = round(angle / 22.5) % 16
-        return directions[index]
+    def get_wind_direction(self, wind_direction):
+        """根據風向數值轉換成風向文字"""
+        if wind_direction == 0:
+            return "N"
+        elif wind_direction == 1:
+            return "NE"
+        elif wind_direction == 2:
+            return "E"
+        elif wind_direction == 3:
+            return "SE"
+        elif wind_direction == 4:
+            return "S"
+        elif wind_direction == 5:
+            return "SW"
+        elif wind_direction == 6:
+            return "W"
+        elif wind_direction == 7:
+            return "NW"
+        else:
+            return "unknown"
+
+    # def get_wind_direction(self, angle):
+    #     """根據角度轉換成風向文字"""
+    #     directions = [
+    #         "北",
+    #         "北北東",
+    #         "東北",
+    #         "東北東",
+    #         "東",
+    #         "東南東",
+    #         "東南",
+    #         "南南東",
+    #         "南",
+    #         "南南西",
+    #         "西南",
+    #         "西南西",
+    #         "西",
+    #         "西北西",
+    #         "西北",
+    #         "北北西",
+    #         "北",
+    #     ]
+    #     index = round(angle / 22.5) % 16
+    #     return directions[index]
 
     def close(self):
         self.client.close()
@@ -91,3 +125,6 @@ class ModbusReader:
 # else:
 #     modbus_logger.info(f"找到 風速計 設備: {com_port}")
 # modbus = ModbusReader(com_port=com_port)
+
+# modbus.read_sensor_data()
+# modbus.close()

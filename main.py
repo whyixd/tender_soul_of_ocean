@@ -132,31 +132,40 @@ def effect_process(
             # 每秒更新一次數據
 
             # 僅在可以更新參數時更新人員數據
-            if True:
-                # 檢查隊列中是否有新的人員追蹤數據
-                try:
-                    if not people_queue.empty():
-                        # 非阻塞方式獲取數據
 
-                        people_counts = people_queue.get_nowait()
-                        print(f"Effect process - Person in area: {people_counts}")
-                        param_processor.target_tsoo_param["area_people_count"] = (
-                            people_counts
-                        )
-                        natural_data = natural_tracker.update()
-                        print(f"Natural data: {natural_data}")
-                        if natural_data[0] == 0:
-                            natural_data[0] = 1
-                        param_processor.update_wind_speed(natural_data[0])
-                        param_processor.update_wind_angle(natural_data[2])
+            # 檢查隊列中是否有新的人員追蹤數據
+            try:
+                # if time.time() - last_data_update_time >= 5:
+                #     natural_data = natural_tracker.update()
+                #     print(f"Natural data: {natural_data}")
+                #     if natural_data[0] == 0:
+                #         natural_data[0] = 1
+                #     param_processor.update_wind_speed(natural_data[0])
+                #     param_processor.update_wind_angle(natural_data[2])
+                #     param_processor.caculate_param()
+                #     last_data_update_time = time.time()
+                if not people_queue.empty():
+                    # 非阻塞方式獲取數據
 
-                        param_processor.caculate_param()
-                        print(f"Effect process received people counts: {people_counts}")
+                    people_counts = people_queue.get_nowait()
+                    print(f"Effect process - Person in area: {people_counts}")
+                    param_processor.target_tsoo_param["area_people_count"] = (
+                        people_counts
+                    )
+                    natural_data = natural_tracker.update()
+                    print(f"Natural data: {natural_data}")
+                    if natural_data[0] == 0:
+                        natural_data[0] = 1
+                    param_processor.update_wind_speed(natural_data[0])
+                    param_processor.update_wind_angle(natural_data[2])
 
-                        # 標記參數已更新
-                        param_processor.params_updated = True
-                except Exception as e:
-                    print(f"Error getting data from queue: {e}")
+                    param_processor.caculate_param()
+                    print(f"Effect process received people counts: {people_counts}")
+
+                    # 標記參數已更新
+                    param_processor.params_updated = True
+            except Exception as e:
+                print(f"Error getting data from queue: {e}")
 
             # effect
             if time.time() - last_matrix_update_time > 0.03:
