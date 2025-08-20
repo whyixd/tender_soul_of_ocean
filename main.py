@@ -1,4 +1,5 @@
-from person_tracker import PersonTracker
+# from person_tracker import PersonTracker
+from mock_person_tracker import MockPersonTracker
 
 # from mock_person_tracker import MockPersonTracker
 from param_processer import TSOOParamProcesser
@@ -32,7 +33,9 @@ def send_osc_message(
         "/whyixd/composite/threshold",
         param["people_natrual_weight_level_threshold"],
     )
-    # client.send_message("/whyixd/composite/weight/interper", inter_param["weight"])
+    client.send_message(
+        "/whyixd/composite/interper/weight", inter_param["people_natrual_weight"]
+    )
 
     # ---------------------people---------------------#
     client.send_message("/whyixd/people/counts", param["area_people_count"])
@@ -49,7 +52,7 @@ def send_osc_message(
     client.send_message("/whyixd/light/interper/vector", inter_param["effect_vector"])
     # ---------------------wind-----------------------#
     client.send_message("/whyixd/wind/speed", param["wind_speed"])
-    client.send_message("/whyixd/wind/speed/normalized", param["wind_speed_normalized"])
+    # client.send_message("/whyixd/wind/speed/normalized", param["wind_speed_normalized"])
     client.send_message("/whyixd/wind/angle", param["wind_angle"])
     client.send_message(
         "/whyixd/wind/vector",
@@ -215,16 +218,16 @@ def main():
     # 創建一個新的隊列，用於接收參數可以更新的信號
     update_signal_queue = Queue(maxsize=1)
 
-    # person_tracker = PersonTracker(
-    #     video_source="people_top.mp4",  # or 0 for webcam
-    #     width=1280,
-    #     height=720,
-    # )
-    person_tracker = PersonTracker(
+    person_tracker = MockPersonTracker(
         video_source="people_top.mp4",  # or 0 for webcam
         width=640,
         height=360,
     )
+    # person_tracker = PersonTracker(
+    #     video_source="people_top.mp4",  # or 0 for webcam
+    #     width=640,
+    #     height=360,
+    # )
     # 使用新方法，在背景執行 tracking 和 display
     person_tracker.start_all_in_background()
 

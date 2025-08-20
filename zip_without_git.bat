@@ -1,0 +1,1 @@
+7z a tender_soul_of_ocean_Klong.zip ./ -mx7 -r -x!*.zip -xr@zip_ignore.txt 

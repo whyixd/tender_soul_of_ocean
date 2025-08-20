@@ -15,7 +15,6 @@ class TSOOParamProcesser:
             "people_count_max": 30,  # set by guess
             "people_vector": (0.0, 0.0),  # 人數向量
             "wind_speed": 0.0,
-            "wind_speed_normalized": 0.0,
             "wind_speed_max": 5.0,  # get from https://www.timeanddate.com/weather/austria/linz/climate
             "wind_angle": 0.0,
             "wind_vector": (0.0, 0.0),  # 風向向量
@@ -69,7 +68,8 @@ class TSOOParamProcesser:
             0,
             self.target_tsoo_param["wind_speed_max"],
         )
-        self.target_tsoo_param["wind_speed_normalized"] = wind_speed_normalized
+        self.target_tsoo_param["wind_speed"] = wind_speed_normalized
+        # self.target_tsoo_param["wind_speed_normalized"] = wind_speed_normalized
         # -----------------------------IMPORTANT-----------------------------------#
         self.target_tsoo_param["people_natrual_weight"] = round(
             combine_normalize(people_count_normalized, wind_speed_normalized), 2
