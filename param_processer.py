@@ -5,6 +5,37 @@ from scipy.ndimage import gaussian_filter
 import random
 
 
+def draw_circle(center_x, center_y, radius, shape):
+    """
+    Generate coordinates of pixels on the circle circumference.
+
+    Parameters:
+    center_x, center_y: Center coordinates of the circle
+    radius: Radius of the circle
+    shape: Shape of the image (height, width)
+
+    Returns:
+    rr, cc: Row and column coordinates of pixels on the circle circumference
+    """
+    height, width = shape
+
+    # Create coordinate arrays
+    y, x = np.ogrid[:height, :width]
+
+    # Calculate distance from center
+    dist_from_center = np.sqrt((x - center_x) ** 2 + (y - center_y) ** 2)
+
+    # Find pixels on the circle circumference (within a small tolerance)
+    # Use a tolerance to account for discrete pixel positions
+    tolerance = 0.5
+    mask = np.abs(dist_from_center - radius) <= tolerance
+
+    # Get row and column indices
+    rr, cc = np.where(mask)
+
+    return rr, cc
+
+
 class TSOOParamProcesser:
     def __init__(self, interpolation_speed=0.05):
         self.target_tsoo_param = {
@@ -401,6 +432,9 @@ class TSOOParamProcesser:
         # 保存當前梯度遮罩以供下次使用
         self.previous_gradient_mask = gradient_mask.copy()
 
+        # 保存原始噪声（未应用梯度遮罩）
+        Z_original = Z.copy()
+
         # 應用梯度遮罩到噪聲
         Z = Z * gradient_mask
 
@@ -409,6 +443,127 @@ class TSOOParamProcesser:
 
         Z = np.interp(Z, (0, 1), (0, 255)).astype(np.uint8)
 
+        return Z
+
+    def get_combined_effects(
+        self, width, height, scale=7, z=0.0, gradient_vector=(1, 0), delta_time=0.016
+    ):
+        """
+        獲取組合效果，讓梯度遮罩不影響雨滴效果
+        """
+        # 獲取基礎效果（帶梯度遮罩）
+        basic_effect = self.shifting_basic(
+            width, height, scale, z, gradient_vector, delta_time
+        )
+
+        # 獲取雨滴效果（獨立不受梯度影響）
+        rain_drop_effect = self.rain_drop_effect(width, height)
+
+        # 智能組合：雨滴效果採用加法混合，但不受梯度遮罩影響
+        # 可以根據需要調整雨滴的強度
+        rain_intensity = 0.3  # 可調整雨滴強度
+
+        # 將雨滴效果疊加到基礎效果上
+        # 使用 np.clip 確保數值不會超出範圍
+        combined = np.clip(
+            basic_effect.astype(np.float32)
+            + rain_drop_effect.astype(np.float32) * rain_intensity,
+            0,
+            255,
+        )
+
+        return combined.astype(np.uint8)
+
+    def get_effects_separately(
+        self, width, height, scale=7, z=0.0, gradient_vector=(1, 0), delta_time=0.016
+    ):
+        """
+        分別獲取基礎噪聲、梯度遮罩和雨滴效果，提供更大的組合靈活性
+        返回: (基礎噪聲, 梯度遮罩, 雨滴效果)
+        """
+        # 獲取基礎噪聲（調用 shifting_basic 但修改其返回邏輯）
+        # 暫時保存當前的 previous_gradient_mask
+        temp_previous_mask = self.previous_gradient_mask
+
+        # 獲取基礎效果以計算梯度遮罩
+        _ = self.shifting_basic(width, height, scale, z, gradient_vector, delta_time)
+
+        # 獲取計算好的梯度遮罩
+        current_gradient_mask = self.previous_gradient_mask.copy()
+
+        # 恢復 previous_gradient_mask（因為 shifting_basic 會修改它）
+        # self.previous_gradient_mask = temp_previous_mask
+
+        # 重新生成基礎噪聲（不應用梯度遮罩）
+        self.get_interpolated_param()
+        effect_vector = self.interper_tsoo_param["effect_vector"]
+        x = np.linspace(0, width / scale * abs(effect_vector[0]), width)
+        y = np.linspace(0, height / scale * abs(effect_vector[1]), height)
+        X, Y = np.meshgrid(x, y)
+
+        wv = self.target_tsoo_param["wind_vector"]
+        ws = self.target_tsoo_param["wind_speed"] * self.wind_speed_factor
+        relative_time = z - self.last_update_time
+        offset = (relative_time * ws * wv[0], relative_time * ws * wv[1])
+
+        # 生成基礎噪聲
+        Z_basic = np.zeros((height, width))
+        for i in range(height):
+            for j in range(width):
+                Z_basic[i, j] = snoise3(
+                    X[i, j] + offset[0],
+                    Y[i, j] + offset[1],
+                    z,
+                    octaves=6,
+                    persistence=0.05,
+                    lacunarity=2.0,
+                )
+        Z_basic = (Z_basic - np.min(Z_basic)) / (np.max(Z_basic) - np.min(Z_basic))
+        Z_basic = 0.5 - Z_basic
+        Z_basic = np.interp(Z_basic, (0, 1), (0, 255)).astype(np.uint8)
+
+        # 獲取雨滴效果
+        rain_effect = self.rain_drop_effect(width, height, z=relative_time)
+
+        return Z_basic, current_gradient_mask, rain_effect
+
+    class RainDrop:
+        def __init__(self, x, y, radius, expansion_rate):
+            self.x = x
+            self.y = y
+            self.radius = radius
+            self.expansion_rate = expansion_rate
+            self.end_radius = 5  # 最大半徑
+
+    rain_drops = []
+
+    def rain_drop_effect(self, width, height, z=0.0):
+
+        Z = np.zeros((height, width))
+        # 隨機生成雨滴
+        if len(self.rain_drops) < 2:
+            self.rain_drops.append(
+                self.RainDrop(
+                    random.randint(0, width - 1),
+                    random.randint(0, height - 1),
+                    random.uniform(0.1, 2),  # 隨機半徑
+                    random.uniform(0.08, 0.2),  # 隨機擴展速度
+                )
+            )
+        # 從後往前遍歷，避免在刪除元素時影響索引
+        for idx in range(len(self.rain_drops) - 1, -1, -1):
+            drop = self.rain_drops[idx]
+            if drop.radius > drop.end_radius:
+                # 如果半徑超過最大值，則移除雨滴
+                self.rain_drops.pop(idx)
+            else:
+                rr, cc = draw_circle(drop.x, drop.y, drop.radius, Z.shape)
+                value = 0.6 - (drop.radius / drop.end_radius)
+                Z[rr, cc] = value  # 在雨滴位置生成圓點
+                # 擴展雨滴半徑
+                drop.radius += drop.expansion_rate
+
+        Z = np.interp(Z, (0, 1), (0, 255)).astype(np.uint8)
         return Z
 
 
