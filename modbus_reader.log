@@ -147,3 +147,646 @@
 2025-08-20 16:24:30 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 70.0%, 溫度: 29.7°C
 2025-08-20 16:25:00 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 70.8%, 溫度: 29.7°C
 2025-08-20 16:25:20 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 70.9%, 溫度: 29.7°C
+2025-08-21 12:50:48 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-21 12:50:52 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-21 12:51:01 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-21 12:51:05 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-21 12:51:21 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-21 12:51:25 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-21 12:51:52 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-21 12:51:56 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-21 13:01:22 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-21 13:01:23 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 37.6%, 溫度: 31.2°C
+2025-08-21 13:01:28 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-21 13:01:29 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 37.6%, 溫度: 31.2°C
+2025-08-21 13:14:32 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-21 13:14:32 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 44.5%, 溫度: 29.5°C
+2025-08-21 13:14:35 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-21 13:14:36 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 45.4%, 溫度: 29.5°C
+2025-08-21 13:14:41 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-21 13:14:43 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 45.2%, 溫度: 29.5°C
+2025-08-25 12:41:26 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 12:41:27 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.1%, 溫度: 29.0°C
+2025-08-25 12:41:30 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.1%, 溫度: 29.0°C
+2025-08-25 12:41:32 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.2%, 溫度: 28.9°C
+2025-08-25 12:41:34 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.2%, 溫度: 28.9°C
+2025-08-25 12:41:37 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.2%, 溫度: 28.9°C
+2025-08-25 12:41:39 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.2%, 溫度: 28.9°C
+2025-08-25 12:41:40 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.2%, 溫度: 28.9°C
+2025-08-25 12:41:43 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.2%, 溫度: 28.9°C
+2025-08-25 12:41:45 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.2%, 溫度: 28.9°C
+2025-08-25 12:41:47 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.3%, 溫度: 29.0°C
+2025-08-25 12:41:50 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.3%, 溫度: 29.0°C
+2025-08-25 12:41:52 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.3%, 溫度: 29.0°C
+2025-08-25 12:41:54 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.4%, 溫度: 29.0°C
+2025-08-25 12:41:59 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:42:04 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:42:09 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:42:14 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:42:19 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:42:24 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:42:29 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:42:34 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] ERROR: No response received of the last requests (default: retries+3), CLOSING CONNECTION.
+2025-08-25 12:42:39 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] ERROR: No response received of the last requests (default: retries+3), CLOSING CONNECTION.
+2025-08-25 12:42:45 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] ERROR: No response received of the last requests (default: retries+3), CLOSING CONNECTION.
+2025-08-25 12:42:50 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] ERROR: No response received of the last requests (default: retries+3), CLOSING CONNECTION.
+2025-08-25 12:42:55 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] ERROR: No response received of the last requests (default: retries+3), CLOSING CONNECTION.
+2025-08-25 12:43:00 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] ERROR: No response received of the last requests (default: retries+3), CLOSING CONNECTION.
+2025-08-25 12:43:05 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] ERROR: No response received of the last requests (default: retries+3), CLOSING CONNECTION.
+2025-08-25 12:43:48 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 12:43:52 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:45:07 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 12:45:11 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:46:38 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 12:46:42 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:47:18 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 12:47:20 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:21 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:24 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:26 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:27 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:28 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:29 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:30 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:31 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:33 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:35 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:36 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:37 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:40 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:41 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:42 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:43 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:44 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:45 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:47 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:49 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:50 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:47:55 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:48:00 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:59:09 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 12:59:13 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:59:20 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 12:59:24 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 12:59:52 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 12:59:52 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:59:53 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:59:54 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:59:55 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:59:56 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 12:59:59 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:00 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:01 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:02 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:03 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:05 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:06 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:07 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:08 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:09 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:10 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:12 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:13 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:14 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:15 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:16 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:17 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:19 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:20 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:21 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:00:26 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:00:31 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:00:36 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:00:41 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:00:46 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:00:51 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:00:56 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:01:01 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] ERROR: No response received of the last requests (default: retries+3), CLOSING CONNECTION.
+2025-08-25 13:03:59 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:04:19 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:04:40 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:05:01 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:08:07 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:08:12 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:30 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:09:30 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:31 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:32 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:34 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:35 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:36 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:37 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:39 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:41 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:42 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:43 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:44 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:45 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:46 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:48 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:49 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:50 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:51 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:52 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:53 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:55 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:56 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:09:57 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:10:03 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:10:10 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:10:11 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:10:12 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:10:13 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:10:14 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:10:15 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:10:17 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:10:38 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:10:59 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:11:20 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:11:41 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:12:02 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:12:23 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:12:44 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:14:25 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:14:41 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:14:41 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:14:44 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:14:48 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:14:51 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:14:54 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:14:57 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:00 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:03 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:07 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:10 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:13 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:16 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:19 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:22 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:26 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:29 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:32 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:35 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:15:41 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:16:04 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:16:27 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:18:27 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:18:27 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:18:30 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:18:34 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:18:37 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:18:40 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:18:43 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:18:46 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:18:49 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 1%, 溫度: 1°C
+2025-08-25 13:19:12 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
+2025-08-25 13:19:39 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:20:00 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:24:19 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:24:26 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:24:27 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.6°C
+2025-08-25 13:24:30 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.6°C
+2025-08-25 13:24:33 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:24:36 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:24:39 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:24:42 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:24:45 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:24:49 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.7%, 溫度: 28.6°C
+2025-08-25 13:24:52 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.7%, 溫度: 28.6°C
+2025-08-25 13:24:55 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.7%, 溫度: 28.6°C
+2025-08-25 13:24:58 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.5%, 溫度: 28.6°C
+2025-08-25 13:25:01 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.5%, 溫度: 28.6°C
+2025-08-25 13:25:04 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.6%, 溫度: 28.6°C
+2025-08-25 13:25:08 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.6%, 溫度: 28.6°C
+2025-08-25 13:25:11 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.6°C
+2025-08-25 13:25:14 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.6°C
+2025-08-25 13:25:17 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.6°C
+2025-08-25 13:25:20 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:25:23 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:25:26 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.6°C
+2025-08-25 13:25:30 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.6°C
+2025-08-25 13:25:33 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.6°C
+2025-08-25 13:25:36 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:25:39 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:25:42 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.6°C
+2025-08-25 13:25:45 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.6°C
+2025-08-25 13:25:48 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.6°C
+2025-08-25 13:25:52 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:25:55 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:25:58 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:26:01 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:26:04 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:26:07 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:26:11 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:26:14 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:26:17 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:26:20 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:26:23 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:26:26 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:26:29 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:26:33 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:26:36 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:26:39 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:26:42 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:26:45 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:26:48 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:26:51 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:26:55 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:26:58 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:27:01 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:27:04 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:27:07 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:27:10 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:27:14 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:27:17 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:27:20 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:27:23 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:27:26 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:27:29 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:27:32 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:27:36 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:27:39 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:27:42 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:27:45 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:27:48 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:27:51 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:27:55 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:27:58 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:28:01 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:28:04 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:28:07 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:28:10 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:28:13 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:28:17 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:28:20 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:28:23 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:28:26 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:28:29 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:28:32 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:28:35 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:28:39 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:28:42 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:28:45 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:28:48 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:28:51 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:28:54 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:28:58 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:29:01 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:29:04 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:29:07 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:29:10 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:29:13 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:29:16 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:29:20 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:29:23 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:29:26 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:29:29 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:29:32 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:29:35 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:29:39 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:29:42 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:29:45 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:29:48 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:29:51 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:29:54 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:29:57 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:30:01 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:30:04 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:30:07 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:30:10 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:30:13 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:30:16 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:30:19 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:30:23 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:30:26 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:30:29 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:30:32 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:30:35 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:30:38 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:30:42 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:30:45 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:30:48 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:30:51 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:30:54 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:30:57 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:31:00 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:31:04 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:31:07 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:31:10 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:31:13 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:31:16 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:31:19 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:31:22 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:31:26 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:31:29 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:31:32 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:31:35 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.7%, 溫度: 28.7°C
+2025-08-25 13:31:38 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.7%, 溫度: 28.7°C
+2025-08-25 13:31:41 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.7%, 溫度: 28.7°C
+2025-08-25 13:31:45 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.7%, 溫度: 28.7°C
+2025-08-25 13:31:48 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.7%, 溫度: 28.7°C
+2025-08-25 13:31:51 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:31:54 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:31:57 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:32:00 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:32:03 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:32:07 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:32:10 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:32:13 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:32:16 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:32:19 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:32:22 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:32:25 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:32:29 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:32:32 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:32:35 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:32:38 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:32:41 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:32:44 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:32:48 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:32:51 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:32:54 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:32:57 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:33:00 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:33:03 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:33:06 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:33:10 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:33:13 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:33:16 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:33:19 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:33:22 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:33:25 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:33:29 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:33:32 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:33:35 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:33:38 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:33:41 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:33:44 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:33:47 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:33:51 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:33:54 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:33:57 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:34:00 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:34:03 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:34:06 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:34:09 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:34:13 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:34:16 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:34:19 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:34:22 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:34:25 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.6%, 溫度: 28.7°C
+2025-08-25 13:34:28 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.6%, 溫度: 28.7°C
+2025-08-25 13:34:32 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.6%, 溫度: 28.7°C
+2025-08-25 13:34:35 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:34:38 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:34:41 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:34:44 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:34:47 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:34:50 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:34:54 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:34:57 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:35:00 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:35:03 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:35:06 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:35:09 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:35:12 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:35:16 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:35:19 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.7%, 溫度: 28.7°C
+2025-08-25 13:35:22 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.7%, 溫度: 28.7°C
+2025-08-25 13:35:25 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.7%, 溫度: 28.7°C
+2025-08-25 13:35:28 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:35:31 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:35:35 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:35:38 - ModbusReader - INFO - 風速: 0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:35:42 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:35:47 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:36:20 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 5 retries, continue with next request
+2025-08-25 13:36:52 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:37:16 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:37:22 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:37:30 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:37:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:37:46 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:37:55 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:38:03 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 13:47:34 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:47:40 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:47:41 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 35.2%, 溫度: 28.6°C
+2025-08-25 13:47:44 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: unknown, 濕度: 35.2%, 溫度: 28.6°C
+2025-08-25 13:48:03 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:48:04 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.2%, 溫度: 28.6°C
+2025-08-25 13:48:07 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.2%, 溫度: 28.6°C
+2025-08-25 13:48:11 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.1%, 溫度: 28.6°C
+2025-08-25 13:48:14 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.1%, 溫度: 28.6°C
+2025-08-25 13:48:18 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.9%, 溫度: 28.6°C
+2025-08-25 13:48:21 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.9%, 溫度: 28.6°C
+2025-08-25 13:48:25 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.0%, 溫度: 28.6°C
+2025-08-25 13:48:28 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.0%, 溫度: 28.6°C
+2025-08-25 13:48:32 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.0%, 溫度: 28.6°C
+2025-08-25 13:48:36 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.0%, 溫度: 28.6°C
+2025-08-25 13:48:39 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.9%, 溫度: 28.6°C
+2025-08-25 13:48:43 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.9%, 溫度: 28.6°C
+2025-08-25 13:48:46 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.9%, 溫度: 28.6°C
+2025-08-25 13:48:50 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.1%, 溫度: 28.7°C
+2025-08-25 13:48:58 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.1%, 溫度: 28.7°C
+2025-08-25 13:49:07 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.1%, 溫度: 28.7°C
+2025-08-25 13:49:10 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.1%, 溫度: 28.7°C
+2025-08-25 13:49:14 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.1%, 溫度: 28.7°C
+2025-08-25 13:49:17 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.1%, 溫度: 28.7°C
+2025-08-25 13:49:21 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 35.1%, 溫度: 28.7°C
+2025-08-25 13:49:54 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 5 retries, continue with next request
+2025-08-25 13:50:36 - ModbusReader - INFO - 找到 風速計 設備: COM3
+2025-08-25 13:50:37 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.8%, 溫度: 28.7°C
+2025-08-25 13:50:41 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.8%, 溫度: 28.7°C
+2025-08-25 13:50:45 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:50:48 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:50:52 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:50:56 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:51:00 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.7%, 溫度: 28.7°C
+2025-08-25 13:51:04 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.7%, 溫度: 28.7°C
+2025-08-25 13:51:08 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.7%, 溫度: 28.7°C
+2025-08-25 13:51:11 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.7%, 溫度: 28.7°C
+2025-08-25 13:51:15 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.8%, 溫度: 28.7°C
+2025-08-25 13:51:19 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.8%, 溫度: 28.7°C
+2025-08-25 13:51:23 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.8%, 溫度: 28.7°C
+2025-08-25 13:51:27 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.8%, 溫度: 28.7°C
+2025-08-25 13:51:31 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.8%, 溫度: 28.7°C
+2025-08-25 13:51:34 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.8%, 溫度: 28.7°C
+2025-08-25 13:51:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.7%, 溫度: 28.7°C
+2025-08-25 13:51:42 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.7%, 溫度: 28.7°C
+2025-08-25 13:51:46 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:51:50 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:51:53 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:51:57 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:52:01 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.7%, 溫度: 28.7°C
+2025-08-25 13:52:05 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.7%, 溫度: 28.7°C
+2025-08-25 13:52:09 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:52:13 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:52:16 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:52:20 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:52:24 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:52:28 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:52:32 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:52:35 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:52:39 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:52:43 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:52:47 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:52:51 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.7°C
+2025-08-25 13:52:55 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:52:58 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:53:02 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:53:06 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:53:10 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:53:14 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:53:18 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:53:21 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:53:25 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:53:34 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:53:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:53:42 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:53:46 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:53:49 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.6°C
+2025-08-25 13:53:53 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.6%, 溫度: 28.6°C
+2025-08-25 13:53:57 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:54:01 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.5%, 溫度: 28.7°C
+2025-08-25 13:54:05 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:54:09 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:54:12 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:54:16 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:54:20 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:54:24 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:54:28 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:54:31 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:54:40 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:54:44 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:54:48 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:54:52 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:54:56 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:55:00 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:55:03 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 13:55:07 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:55:11 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:55:15 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:55:19 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.6°C
+2025-08-25 13:55:23 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:55:26 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:55:59 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.1%, 溫度: 28.6°C
+2025-08-25 13:56:09 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:56:32 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:56:46 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 13:57:01 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:57:13 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.6°C
+2025-08-25 13:57:32 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.9%, 溫度: 28.6°C
+2025-08-25 13:57:44 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 13:57:56 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:58:15 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:58:37 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 13:58:57 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.3%, 溫度: 28.7°C
+2025-08-25 13:59:16 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 13:59:39 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.0%, 溫度: 28.6°C
+2025-08-25 13:59:50 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.2%, 溫度: 28.6°C
+2025-08-25 14:00:00 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.3%, 溫度: 28.6°C
+2025-08-25 14:00:21 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.9%, 溫度: 28.6°C
+2025-08-25 14:00:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.7%, 溫度: 28.6°C
+2025-08-25 14:00:56 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.9%, 溫度: 28.6°C
+2025-08-25 14:01:19 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.7%, 溫度: 28.7°C
+2025-08-25 14:01:33 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.9%, 溫度: 28.6°C
+2025-08-25 14:01:50 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.8%, 溫度: 28.6°C
+2025-08-25 14:02:04 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.8%, 溫度: 28.6°C
+2025-08-25 14:02:32 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 14:02:44 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.4%, 溫度: 28.7°C
+2025-08-25 14:03:04 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 14:03:24 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.2%, 溫度: 28.7°C
+2025-08-25 14:03:46 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 14:04:02 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 14:04:20 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 14:04:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 14:04:55 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 14:05:11 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.0%, 溫度: 28.7°C
+2025-08-25 14:05:27 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 14:05:41 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 14:05:59 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 14:06:13 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.7%, 溫度: 28.7°C
+2025-08-25 14:06:24 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.7%, 溫度: 28.7°C
+2025-08-25 14:06:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.9%, 溫度: 28.7°C
+2025-08-25 14:06:59 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.7%, 溫度: 28.7°C
+2025-08-25 14:07:13 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.8%, 溫度: 28.7°C
+2025-08-25 14:07:32 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.7%, 溫度: 28.7°C
+2025-08-25 14:07:55 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.5%, 溫度: 28.7°C
+2025-08-25 14:08:09 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.6%, 溫度: 28.7°C
+2025-08-25 14:08:20 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.6%, 溫度: 28.7°C
+2025-08-25 14:08:36 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.4%, 溫度: 28.7°C
+2025-08-25 14:08:55 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.4%, 溫度: 28.7°C
+2025-08-25 14:09:17 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.4%, 溫度: 28.7°C
+2025-08-25 14:09:34 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.3%, 溫度: 28.7°C
+2025-08-25 14:09:47 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.2%, 溫度: 28.7°C
+2025-08-25 14:10:06 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.3%, 溫度: 28.7°C
+2025-08-25 14:10:17 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.1%, 溫度: 28.7°C
+2025-08-25 14:10:32 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.1%, 溫度: 28.7°C
+2025-08-25 14:10:50 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.2%, 溫度: 28.7°C
+2025-08-25 14:11:11 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.0%, 溫度: 28.7°C
+2025-08-25 14:11:23 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.3%, 溫度: 28.7°C
+2025-08-25 14:11:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.4%, 溫度: 28.7°C
+2025-08-25 14:12:00 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.0%, 溫度: 28.7°C
+2025-08-25 14:12:11 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.0%, 溫度: 28.7°C
+2025-08-25 14:12:31 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.3%, 溫度: 28.7°C
+2025-08-25 14:12:41 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.6%, 溫度: 28.7°C
+2025-08-25 14:12:54 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.5%, 溫度: 28.7°C
+2025-08-25 14:13:10 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.5%, 溫度: 28.7°C
+2025-08-25 14:13:29 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 31.8%, 溫度: 28.7°C
+2025-08-25 14:13:50 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.3%, 溫度: 28.7°C
+2025-08-25 14:14:03 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.8%, 溫度: 28.6°C
+2025-08-25 14:14:16 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 34.1%, 溫度: 28.7°C
+2025-08-25 14:14:34 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.3%, 溫度: 28.6°C
+2025-08-25 14:14:58 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.2%, 溫度: 28.6°C
+2025-08-25 14:15:18 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.5%, 溫度: 28.6°C
+2025-08-25 14:15:36 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.7%, 溫度: 28.6°C
+2025-08-25 14:15:50 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.7%, 溫度: 28.6°C
+2025-08-25 14:16:11 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.6%, 溫度: 28.6°C
+2025-08-25 14:16:29 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.6%, 溫度: 28.7°C
+2025-08-25 14:16:51 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.5%, 溫度: 28.7°C
+2025-08-25 14:17:13 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.6%, 溫度: 28.6°C
+2025-08-25 14:17:36 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.4%, 溫度: 28.7°C
+2025-08-25 14:17:56 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.3%, 溫度: 28.7°C
+2025-08-25 14:18:19 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.3%, 溫度: 28.7°C
+2025-08-25 14:18:41 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.1%, 溫度: 28.7°C
+2025-08-25 14:19:03 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.2%, 溫度: 28.7°C
+2025-08-25 14:19:24 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.0%, 溫度: 28.7°C
+2025-08-25 14:19:39 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.1%, 溫度: 28.7°C
+2025-08-25 14:19:49 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.1%, 溫度: 28.7°C
+2025-08-25 14:20:00 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.8%, 溫度: 28.7°C
+2025-08-25 14:20:21 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.0%, 溫度: 28.7°C
+2025-08-25 14:20:30 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.0%, 溫度: 28.7°C
+2025-08-25 14:20:50 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.8%, 溫度: 28.7°C
+2025-08-25 14:21:13 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.9%, 溫度: 28.7°C
+2025-08-25 14:21:29 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.8%, 溫度: 28.7°C
+2025-08-25 14:21:46 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.8%, 溫度: 28.7°C
+2025-08-25 14:22:01 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.8%, 溫度: 28.7°C
+2025-08-25 14:22:23 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.7%, 溫度: 28.7°C
+2025-08-25 14:22:40 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.7%, 溫度: 28.7°C
+2025-08-25 14:22:53 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.7%, 溫度: 28.7°C
+2025-08-25 14:23:09 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.7%, 溫度: 28.7°C
+2025-08-25 14:23:25 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.7%, 溫度: 28.7°C
+2025-08-25 14:23:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.6%, 溫度: 28.7°C
+2025-08-25 14:23:59 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.6%, 溫度: 28.7°C
+2025-08-25 14:24:22 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.6%, 溫度: 28.7°C
+2025-08-25 14:24:35 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.7%, 溫度: 28.7°C
+2025-08-25 14:24:46 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.7%, 溫度: 28.7°C
+2025-08-25 14:25:03 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.8%, 溫度: 28.7°C
+2025-08-25 14:25:27 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.9%, 溫度: 28.7°C
+2025-08-25 14:25:47 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.2%, 溫度: 28.7°C
+2025-08-25 14:26:07 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.2%, 溫度: 28.7°C
+2025-08-25 14:26:24 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.3%, 溫度: 28.7°C
+2025-08-25 14:26:47 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 31.9%, 溫度: 28.7°C
+2025-08-25 14:27:07 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 31.7%, 溫度: 28.7°C
+2025-08-25 14:27:18 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.7%, 溫度: 28.7°C
+2025-08-25 14:27:28 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.9%, 溫度: 28.6°C
+2025-08-25 14:27:52 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.4%, 溫度: 28.6°C
+2025-08-25 14:28:05 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.3%, 溫度: 28.6°C
+2025-08-25 14:28:18 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.4%, 溫度: 28.6°C
+2025-08-25 14:28:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.5%, 溫度: 28.6°C
+2025-08-25 14:28:49 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 33.4%, 溫度: 28.7°C
+2025-08-25 14:29:11 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 32.6%, 溫度: 28.6°C

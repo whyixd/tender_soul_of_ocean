@@ -1,7 +1,10 @@
 import logging.handlers
 from pymodbus.client import ModbusSerialClient
+from pymodbus import FramerType, ModbusException
+
 from serial_device_finder import find_usb_serial_device
 import logging
+import time
 
 modbus_logger = logging.getLogger("ModbusReader")
 modbus_logger.setLevel(logging.DEBUG)
@@ -27,17 +30,19 @@ class ModbusReader:
     def __init__(self, com_port="COM13"):
         self.client = ModbusSerialClient(
             port=com_port,
+            framer=FramerType.RTU,
             baudrate=9600,
-            timeout=1,
+            timeout=5,
+            retries=5,
             bytesize=8,
             parity="N",
             stopbits=1,
         )
+        self.connection = self.client.connect()
 
     def read_sensor_data(self):
-        connection = self.client.connect()
 
-        if connection:
+        if self.connection:
             try:
                 res = self.client.read_holding_registers(address=500, count=4, slave=1)
                 if res.isError():
@@ -47,6 +52,10 @@ class ModbusReader:
                 wind_level = res.registers[1]
                 wind_direction = self.get_wind_direction(res.registers[2])
                 wind_angle = res.registers[3]
+                # wind_level = 0
+                # wind_direction = "unknown"
+                # wind_angle = 0
+                time.sleep(0.5)  # 請求之間增加延遲
                 res2 = self.client.read_holding_registers(address=504, count=2, slave=1)
                 humidity = res2.registers[0] / 10.0
                 temperature = res2.registers[1] / 10.0
@@ -64,8 +73,11 @@ class ModbusReader:
                     humidity,
                     temperature,
                 ]
-            except Exception as e:
+            except ModbusException as e:
                 modbus_logger.error(f"讀取 Modbus 失敗: {e}")
+                return [0, 0, 0, "unknown"]
+            except Exception as e:
+                modbus_logger.error(f"發生錯誤: {e}")
                 return [0, 0, 0, "unknown"]
 
         return None
@@ -126,5 +138,16 @@ class ModbusReader:
 #     modbus_logger.info(f"找到 風速計 設備: {com_port}")
 # modbus = ModbusReader(com_port=com_port)
 
-# modbus.read_sensor_data()
+
+# def continuous_read():
+#     import time
+
+#     while True:
+#         modbus.read_sensor_data()
+#         time.sleep(3)
+
+
+# continuous_read()
+
+
 # modbus.close()
