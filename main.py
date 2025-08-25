@@ -170,7 +170,8 @@ def effect_process(
             # effect
             if time.time() - last_matrix_update_time > 0.03:
                 try:
-                    basic = param_processor.shifting_basic(
+                    # 使用新的組合效果方法，避免梯度遮罩影響雨滴效果
+                    matrix_data = param_processor.get_combined_effects(
                         16,
                         8,
                         scale=7,
@@ -180,7 +181,7 @@ def effect_process(
                             param_processor.target_tsoo_param["effect_vector"][1] * 5,
                         ),
                     )
-                    matrix = basic.flatten().tolist()
+                    matrix = matrix_data.flatten().tolist()
 
                     time_val += 0.002
 
