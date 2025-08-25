@@ -139,12 +139,12 @@ class PersonTracker(threading.Thread):
 
         # Open video capture
         # cap = cv2.VideoCapture(self.video_source)
-        # cap0 = cv2.VideoCapture(0)
-        cap0 = cv2.VideoCapture(self.video_source)
+        cap0 = cv2.VideoCapture(0)
+        # cap0 = cv2.VideoCapture(self.video_source)
         cap0.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
         cap0.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
-        cap1 = cv2.VideoCapture("people_top_2.mp4")
-        # cap1 = cv2.VideoCapture(1)
+        # cap1 = cv2.VideoCapture("people_top_2.mp4")
+        cap1 = cv2.VideoCapture(1)
         cap1.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
         cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
 
