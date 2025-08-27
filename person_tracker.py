@@ -149,121 +149,123 @@ class PersonTracker(threading.Thread):
         cap1.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
         cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
 
-        while self.running and cap0.isOpened():
-            success0, frame0 = cap0.read()
-            success1, frame1 = cap1.read()
-
-            if not success0:
-                cap0.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reset to first frame
+        try:
+            while self.running and cap0.isOpened():
                 success0, frame0 = cap0.read()
-                if not success0:
-                    print("Error: Could not restart video cap0")
-                    break
-
-            if not success1:
-                cap1.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reset to first frame
                 success1, frame1 = cap1.read()
+
+                if not success0:
+                    cap0.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reset to first frame
+                    success0, frame0 = cap0.read()
+                    if not success0:
+                        print("Error: Could not restart video cap0")
+                        break
+
                 if not success1:
-                    print("Error: Could not restart video cap1")
-                    break
-            # Check if frames are valid
-            if frame0 is None or frame1 is None:
-                print(
-                    f"Invalid frames - Cap0: {frame0 is not None}, Cap1: {frame1 is not None}"
-                )
-                continue
+                    cap1.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reset to first frame
+                    success1, frame1 = cap1.read()
+                    if not success1:
+                        print("Error: Could not restart video cap1")
+                        break
+                # Check if frames are valid
+                if frame0 is None or frame1 is None:
+                    print(
+                        f"Invalid frames - Cap0: {frame0 is not None}, Cap1: {frame1 is not None}"
+                    )
+                    continue
 
-            # Ensure both frames have the same width before concatenation
-            if frame0.shape[1] != frame1.shape[1]:
-                # Resize frame1 to match frame0's width if needed
-                frame1 = cv2.resize(frame1, (frame0.shape[1], frame0.shape[0]))
-            frame = np.concatenate((frame0, frame1), axis=0)
-            # Handle video end and loop back to beginning
+                # Ensure both frames have the same width before concatenation
+                if frame0.shape[1] != frame1.shape[1]:
+                    # Resize frame1 to match frame0's width if needed
+                    frame1 = cv2.resize(frame1, (frame0.shape[1], frame0.shape[0]))
+                frame = np.concatenate((frame0, frame1), axis=0)
+                # Handle video end and loop back to beginning
 
-            # Process frame with YOLO model
-            for result in self.model.track(
-                frame,
-                show=False,
-                classes=[0],
-                conf=0.1,
-                stream=True,
-                persist=True,
-                imgsz=(self.desired_width * 2, self.desired_height),
-            ):
-                # Skip processing if result has no boxes
-                if result.boxes is None or result.boxes.data.numel() == 0:
-                    processed_frame = frame.copy()
+                # Process frame with YOLO model
+                for result in self.model.track(
+                    frame,
+                    show=False,
+                    classes=[0],
+                    conf=0.1,
+                    stream=True,
+                    persist=True,
+                    imgsz=(self.desired_width * 2, self.desired_height),
+                ):
+                    # Skip processing if result has no boxes
+                    if result.boxes is None or result.boxes.data.numel() == 0:
+                        processed_frame = frame.copy()
+                        if self.show_visualization:
+                            cv2.putText(
+                                processed_frame,
+                                "No detections",
+                                (5, 50),
+                                cv2.FONT_HERSHEY_SIMPLEX,
+                                0.5,
+                                (0, 0, 255),
+                                1,
+                                cv2.LINE_AA,
+                            )
+
+                        # Put the frame in the result queue for display
+                        if not self.result_queue.full():
+                            self.result_queue.put(processed_frame)
+                        continue
+
+                    # Get the original frame from the result
+                    processed_frame = result.orig_img.copy()
+
+                    # Reset area_polygons if areas change
+                    if len(self.area_polygons) != len(self.areas):
+                        self.area_polygons = [
+                            np.array(area, dtype=np.int32) for area in self.areas
+                        ]
+
+                    # Update FPS calculation if visualization is enabled
                     if self.show_visualization:
+                        self.frame_count_for_fps += 1
+                        current_time = time.time()
+                        if current_time - self.prev_fps_calc_time >= 0.5:
+                            self.display_fps = self.frame_count_for_fps / (
+                                current_time - self.prev_fps_calc_time
+                            )
+                            self.frame_count_for_fps = 0
+                            self.prev_fps_calc_time = current_time
+
+                        # Display FPS on the frame
                         cv2.putText(
                             processed_frame,
-                            "No detections",
+                            f"FPS: {int(self.display_fps)}",
+                            (5, 25),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            1,
+                            (0, 255, 0),
+                            2,
+                            cv2.LINE_AA,
+                        )
+                        cv2.putText(
+                            processed_frame,
+                            f"Area Edit Mode: {'ON' if self.area_edit_mode else 'OFF'}",
                             (5, 50),
                             cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5,
-                            (0, 0, 255),
                             1,
+                            (255, 128, 0),
+                            2,
                             cv2.LINE_AA,
                         )
 
-                    # Put the frame in the result queue for display
+                    # Process detections
+                    self._process_detections(result, processed_frame)
+
+                    # Put the processed frame in the result queue
                     if not self.result_queue.full():
                         self.result_queue.put(processed_frame)
-                    continue
-
-                # Get the original frame from the result
-                processed_frame = result.orig_img.copy()
-
-                # Reset area_polygons if areas change
-                if len(self.area_polygons) != len(self.areas):
-                    self.area_polygons = [
-                        np.array(area, dtype=np.int32) for area in self.areas
-                    ]
-
-                # Update FPS calculation if visualization is enabled
-                if self.show_visualization:
-                    self.frame_count_for_fps += 1
-                    current_time = time.time()
-                    if current_time - self.prev_fps_calc_time >= 0.5:
-                        self.display_fps = self.frame_count_for_fps / (
-                            current_time - self.prev_fps_calc_time
-                        )
-                        self.frame_count_for_fps = 0
-                        self.prev_fps_calc_time = current_time
-
-                    # Display FPS on the frame
-                    cv2.putText(
-                        processed_frame,
-                        f"FPS: {int(self.display_fps)}",
-                        (5, 25),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        1,
-                        (0, 255, 0),
-                        2,
-                        cv2.LINE_AA,
-                    )
-                    cv2.putText(
-                        processed_frame,
-                        f"Area Edit Mode: {'ON' if self.area_edit_mode else 'OFF'}",
-                        (5, 50),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        1,
-                        (255, 128, 0),
-                        2,
-                        cv2.LINE_AA,
-                    )
-
-                # Process detections
-                self._process_detections(result, processed_frame)
-
-                # Put the processed frame in the result queue
-                if not self.result_queue.full():
-                    self.result_queue.put(processed_frame)
-
-        # Release resources
-        # cap.release()
-        cap0.release()
-        cap1.release()
-        time.sleep(0.5)
+        finally:
+            # Release resources
+            print("Releasing camera resources...")
+            # cap.release()
+            cap0.release()
+            cap1.release()
+            time.sleep(0.5)
 
     def _process_detections(self, result, frame):
         """Process detections from YOLO model."""
