@@ -109,9 +109,19 @@ const sketch = (p) => {
     }
     p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
     try {
-      font = await p.loadFont("assets/Roboto_Condensed-Light.ttf"); // 載入字體檔案
-      boldFont = await p.loadFont("assets/Roboto_Condensed-Medium.ttf");
-      barcodeFont = await p.loadFont("assets/LibreBarcode39Text-Regular.ttf");
+      if (process.env.NODE_ENV === "production") {
+        font = await p.loadFont("/static/assets/Roboto_Condensed-Light.ttf"); // 載入字體檔案
+        boldFont = await p.loadFont(
+          "/static/assets/Roboto_Condensed-Medium.ttf"
+        );
+        barcodeFont = await p.loadFont(
+          "/static/assets/LibreBarcode39Text-Regular.ttf"
+        );
+      } else {
+        font = await p.loadFont("assets/Roboto_Condensed-Light.ttf"); // 載入字體檔案
+        boldFont = await p.loadFont("assets/Roboto_Condensed-Medium.ttf");
+        barcodeFont = await p.loadFont("assets/LibreBarcode39Text-Regular.ttf");
+      }
       p.textFont(font); // 設定字體
     } catch (e) {
       console.error("Font loading error:", e);
