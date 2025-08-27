@@ -332,7 +332,7 @@ def main():
     finally:
         person_tracker.stop()
         # 終止效果進程
-        effect_thread_instance.terminate()
+        # effect_thread_instance.terminate()
         effect_thread_instance.join()
         print("Shutting down ...")
 
