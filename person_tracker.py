@@ -144,6 +144,7 @@ class PersonTracker(threading.Thread):
         cap0.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
         cap0.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
         # cap1 = cv2.VideoCapture("people_top_2.mp4")
+        time.sleep(1)
         cap1 = cv2.VideoCapture(1,cv2.CAP_DSHOW)
         cap1.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
         cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
@@ -262,6 +263,7 @@ class PersonTracker(threading.Thread):
         # cap.release()
         cap0.release()
         cap1.release()
+        time.sleep(0.5)
 
     def _process_detections(self, result, frame):
         """Process detections from YOLO model."""
@@ -520,3 +522,4 @@ class PersonTracker(threading.Thread):
     def stop(self):
         """Stop the tracking thread."""
         self.running = False
+        self.ui_thread.join()
