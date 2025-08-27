@@ -136,21 +136,46 @@ class PersonTracker(threading.Thread):
     def run(self):
         """Main thread function that runs the tracking loop."""
         self.running = True
-
-        # Open video capture
-        # cap = cv2.VideoCapture(self.video_source)
-        cap0 = cv2.VideoCapture(0,cv2.CAP_DSHOW)
-        # cap0 = cv2.VideoCapture(self.video_source)
-        cap0.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
-        cap0.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
-        # cap1 = cv2.VideoCapture("people_top_2.mp4")
-        time.sleep(1)
-        cap1 = cv2.VideoCapture(1,cv2.CAP_DSHOW)
-        cap1.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
-        cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
+        cap0, cap1 = None, None  # Initialize as None
 
         try:
-            while self.running and cap0.isOpened():
+            # --- Retry logic for cap0 ---
+            for i in range(5):
+                cap0 = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+                if cap0 and cap0.isOpened():
+                    print("Successfully opened camera 0.")
+                    break
+                print(f"Attempt {i+1}/5 to open camera 0 failed. Retrying in 1 second...")
+                time.sleep(1)
+                cap0 = None  # Reset to None if failed
+
+            if not cap0:
+                print("Error: Could not open camera 0 after 5 attempts. Exiting thread.")
+                self.running = False
+                return
+
+            cap0.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
+            cap0.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
+
+            # --- Retry logic for cap1 ---
+            for i in range(5):
+                cap1 = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+                if cap1 and cap1.isOpened():
+                    print("Successfully opened camera 1.")
+                    break
+                print(f"Attempt {i+1}/5 to open camera 1 failed. Retrying in 1 second...")
+                time.sleep(1)
+                cap1 = None  # Reset to None if failed
+
+            if not cap1:
+                print("Error: Could not open camera 1 after 5 attempts. Exiting thread.")
+                self.running = False
+                return  # The finally block will still execute
+
+            cap1.set(cv2.CAP_PROP_FRAME_WIDTH, self.desired_width)
+            cap1.set(cv2.CAP_PROP_FRAME_HEIGHT, self.desired_height)
+
+            while self.running and cap0.isOpened() and cap1.isOpened():
                 success0, frame0 = cap0.read()
                 success1, frame1 = cap1.read()
 
@@ -262,10 +287,11 @@ class PersonTracker(threading.Thread):
         finally:
             # Release resources
             print("Releasing camera resources...")
-            # cap.release()
-            cap0.release()
-            cap1.release()
-            time.sleep(0.5)
+            if cap0:
+                cap0.release()
+            if cap1:
+                cap1.release()
+            time.sleep(2.0)
 
     def _process_detections(self, result, frame):
         """Process detections from YOLO model."""
