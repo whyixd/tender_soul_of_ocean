@@ -72,7 +72,7 @@ class NaturalTracker:
                     # 循環讀取歷史數據
                     count = (count + 1) % len(self.history_data)
 
-                    return [wind_speed, 0, dir, "未知"]
+                    return [wind_speed, 0, dir, "unknown"]
                 except ValueError:
                     print("歷史數據格式錯誤，請檢查文件內容")
                     return None
