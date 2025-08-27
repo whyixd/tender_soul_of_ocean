@@ -264,6 +264,7 @@ const sketch = (p) => {
         currentAreaCircleSize
       );
     }
+
     p.push();
     p.textSize(5);
     p.textFont(boldFont);
@@ -272,13 +273,14 @@ const sketch = (p) => {
     let lat = p.round(p.random(-5, 5));
     let long = p.round(p.random(-5, 5));
     p.text(
-      `[${(location.latitude * 10000000 + lat) / 10000000} ${
-        (location.longitude * 10000000 + long) / 10000000
+      `[${(p.round(location.latitude * 10000000) + lat) / 10000000} ${
+        (p.round(location.longitude * 10000000) + long) / 10000000
       }]`,
       0,
       138
     );
     p.pop();
+
     // 繪製 DMX 資料，最新資料在最下方
     p.push();
     p.textSize(1);
