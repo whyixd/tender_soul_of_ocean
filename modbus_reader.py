@@ -32,7 +32,7 @@ class ModbusReader:
             port=com_port,
             framer=FramerType.RTU,
             baudrate=9600,
-            timeout=5,
+            timeout=3,
             retries=5,
             bytesize=8,
             parity="N",
@@ -41,25 +41,32 @@ class ModbusReader:
         self.connection = self.client.connect()
 
     def read_sensor_data(self):
-
-        if self.connection:
+        if not self.client.connected:
+            self.client.connect()
+        if self.client.connected:
             try:
-                res = self.client.read_holding_registers(address=500, count=4, slave=1)
+                time.sleep(0.5)
+                res = self.client.read_holding_registers(address=500, count=2, slave=1)
                 if res.isError():
                     modbus_logger.error("Modbus 讀取失敗")
                     return [0, 0, 0, "unknown"]
                 wind_speed = res.registers[0] / 10.0
                 wind_level = res.registers[1]
-                wind_direction = self.get_wind_direction(res.registers[2])
-                wind_angle = res.registers[3]
+                time.sleep(0.5)
+                res2 = self.client.read_holding_registers(address=502, count=2, slave=1)
+                if res2.isError():
+                    modbus_logger.error("Modbus 讀取失敗")
+                    return [0, 0, 0, "unknown"]
+                wind_direction = self.get_wind_direction(res2.registers[0])
+                wind_angle = res2.registers[1]
                 # wind_level = 0
                 # wind_direction = "unknown"
                 # wind_angle = 0
                 time.sleep(0.5)  # 請求之間增加延遲
-                res2 = self.client.read_holding_registers(address=504, count=2, slave=1)
-                humidity = res2.registers[0] / 10.0
-                temperature = res2.registers[1] / 10.0
-                if res2.isError():
+                res3 = self.client.read_holding_registers(address=504, count=2, slave=1)
+                humidity = res3.registers[0] / 10.0
+                temperature = res3.registers[1] / 10.0
+                if res3.isError():
                     modbus_logger.error("Modbus 讀取失敗")
                     return [0, 0, 0, "unknown"]
                 modbus_logger.info(
@@ -130,24 +137,24 @@ class ModbusReader:
     def close(self):
         self.client.close()
 
-
-# com_port = find_usb_serial_device(vid="0403", pid="6001")
-# if com_port is None:
-#     modbus_logger.warning("找不到 風速計 設備")
-# else:
-#     modbus_logger.info(f"找到 風速計 設備: {com_port}")
-# modbus = ModbusReader(com_port=com_port)
-
-
-# def continuous_read():
-#     import time
-
-#     while True:
-#         modbus.read_sensor_data()
-#         time.sleep(3)
+# if __name__ == "__main__":
+#     com_port = find_usb_serial_device(vid="0403", pid="6001")
+#     if com_port is None:
+#         modbus_logger.warning("找不到 風速計 設備")
+#     else:
+#         modbus_logger.info(f"找到 風速計 設備: {com_port}")
+#     modbus = ModbusReader(com_port=com_port)
 
 
-# continuous_read()
+#     def continuous_read():
+#         import time
+
+#         while True:
+#             modbus.read_sensor_data()
+#             time.sleep(3)
 
 
-# modbus.close()
+#     continuous_read()
+
+
+#     modbus.close()
