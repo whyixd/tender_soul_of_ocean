@@ -1,4 +1,5 @@
 from person_tracker import PersonTracker
+
 # from mock_person_tracker import MockPersonTracker
 
 # from mock_person_tracker import MockPersonTracker
@@ -166,12 +167,28 @@ def effect_process(
                     param_processor.params_updated = True
             except Exception as e:
                 print(f"Error getting data from queue: {e}")
-
+            # if time.time() - last_data_update_time >= 0.05:
+            #     gap = 1
+            #     param_processor.glow += gap
+            #     if param_processor.glow >= 100:
+            #         param_processor.glow = 0
+            #     print(param_processor.glow)
+            #     last_data_update_time = time.time()
             # effect
             if time.time() - last_matrix_update_time > 0.03:
                 try:
                     # 使用新的組合效果方法，避免梯度遮罩影響雨滴效果
-                    matrix_data = param_processor.get_combined_effects(
+                    # matrix_data = param_processor.get_combined_effects(
+                    #     16,
+                    #     8,
+                    #     scale=7,
+                    #     z=time_val,
+                    #     gradient_vector=(
+                    #         param_processor.target_tsoo_param["effect_vector"][0] * 5,
+                    #         param_processor.target_tsoo_param["effect_vector"][1] * 5,
+                    #     ),
+                    # )
+                    basic, mask, rain = param_processor.get_effects_separately(
                         16,
                         8,
                         scale=7,
@@ -181,6 +198,7 @@ def effect_process(
                             param_processor.target_tsoo_param["effect_vector"][1] * 5,
                         ),
                     )
+                    matrix_data = basic
                     matrix = matrix_data.flatten().tolist()
 
                     time_val += 0.002
@@ -194,13 +212,12 @@ def effect_process(
                     # count += 1
 
                     flask_app.artnet.set_packet(
-                        matrix, general_config.get("light_intensity", 1)
+                        matrix, general_config.get("light_intensity", 2)
                     )
                 except Exception as e:
                     print(f"Error in effect : {e}")
                 finally:
                     last_matrix_update_time = time.time()
-                    # 避免進程消耗過多 CPU
                     time.sleep(0.01)
 
     except KeyboardInterrupt:
