@@ -1,5 +1,5 @@
 {
   "artnet_target": "2.0.0.105",
   "light_intensity": 2,
-  "wind_speed_factor": 30
+  "wind_speed_factor": 50
 }

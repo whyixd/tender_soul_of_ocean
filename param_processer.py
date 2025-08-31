@@ -73,6 +73,8 @@ class TSOOParamProcesser:
         self.previous_tsoo_param = self.target_tsoo_param.copy()
         self.interper_tsoo_param = self.target_tsoo_param.copy()
 
+        self.glow = 1
+
         # 插值速度控制（值越大，过渡越快）
         self.interpolation_speed = interpolation_speed
         self.wind_speed_factor = 10
@@ -212,7 +214,7 @@ class TSOOParamProcesser:
         return self.interper_tsoo_param
 
     def _interpolate_value(self, prev, target, interpolation_speed=1):
-        """计算单个数值的插值"""
+        """計算單的數值的插值"""
         if prev == target:
             return target
 
@@ -243,43 +245,31 @@ class TSOOParamProcesser:
         effect_vector = self.interper_tsoo_param["effect_vector"]
         x = np.linspace(0, width / scale * abs(effect_vector[0]), width)
         y = np.linspace(0, height / scale * abs(effect_vector[1]), height)
+
         X, Y = np.meshgrid(x, y)
 
         # 更新噪聲時間和淡出因子
         self.current_noise_time += delta_time
 
-        # 根據當前狀態處理淡入淡出
+        # --- FADE IN/OUT LOGIC (SAME AS BEFORE) ---
         if self.fade_state == "FADE_IN":
-            # 淡入階段
             fade_in_progress = min(self.current_noise_time / self.fade_in_duration, 1.0)
             self.fade_factor = fade_in_progress
-
-            # 當完全淡入時，切換到正常顯示狀態
             if fade_in_progress >= 1.0:
                 self.fade_factor = 1.0
                 self.fade_state = "NORMAL"
-                # 重置參數更新標誌
                 self.params_updated = False
                 self.can_update_params = False
-
         elif self.fade_state == "NORMAL":
-            # 正常顯示階段
             self.fade_factor = 1.0
-
-            # 檢查是否需要開始淡出
             if self.current_noise_time >= self.noise_duration:
                 self.fade_state = "FADE_OUT"
-
         elif self.fade_state == "FADE_OUT":
-            # 淡出階段
             fade_out_progress = min(
                 (self.current_noise_time - self.noise_duration) / self.fade_duration,
                 1.0,
             )
             self.fade_factor = max(0, 1.0 - fade_out_progress)
-
-            # 設定可以更新參數的標誌
-            # 當淡出到一定程度時(例如80%淡出)，通知外部可以更新參數
             if fade_out_progress >= 1.0 and not self.can_update_params:
                 self.can_update_params = True
                 if self.on_basic_fade_out_done:
@@ -317,7 +307,8 @@ class TSOOParamProcesser:
         # else:
         #     wv = self.cached_wind_vector
         wv = self.target_tsoo_param["wind_vector"]
-        ws = self.target_tsoo_param["wind_speed"] * self.wind_speed_factor
+        ws = self.target_tsoo_param["wind_speed"]
+        ws = ease_in_out_circ(ws) * self.wind_speed_factor
 
         # 使用相對時間計算位移，避免大跳變
         relative_time = z - self.last_update_time
@@ -355,97 +346,50 @@ class TSOOParamProcesser:
                     dy = (target_y - prev_y) / vector_diff * self.max_vector_change_rate
                 else:
                     dx, dy = 0, 0
-
-                # 應用有限的變化
-                actual_x = prev_x + dx
-                actual_y = prev_y + dy
-                gradient_vector = (actual_x, actual_y)
-
-        # 保存當前梯度向量，以便下次比較
+                gradient_vector = (prev_x + dx, prev_y + dy)
         self.previous_gradient_vector = gradient_vector
 
-        # 創建當前梯度遮罩
         current_gradient_mask = np.ones((height, width))
-
-        gradient_vector = (gradient_vector[0], gradient_vector[1] * -1)  # 反轉 y 軸方向
-        # 使用向量來創建梯度
+        gradient_vector = (gradient_vector[0], gradient_vector[1] * -1)
         vec_x, vec_y = gradient_vector
-        # 創建歸一化的座標網格
         norm_x = np.linspace(0, 1, width)
         norm_y = np.linspace(0, 1, height)
         norm_X, norm_Y = np.meshgrid(norm_x, norm_y)
-
-        # 計算向量的方向上的投影 (點積)
-        # 假設向量的原點在 (0,0)，目標是產生從原點向著向量方向的梯度
         vec_len = np.sqrt(vec_x**2 + vec_y**2)
         if vec_len > 0:
             unit_vec_x, unit_vec_y = vec_x / vec_len, vec_y / vec_len
-            # 計算每個點到直線的投影距離
             projection = norm_X * unit_vec_x + norm_Y * unit_vec_y
-
-            # 標準化投影值到 [0,1] 範圍
-            min_proj = np.min(projection)
-            max_proj = np.max(projection)
+            min_proj, max_proj = np.min(projection), np.max(projection)
             if max_proj > min_proj:
                 current_gradient_mask = (projection - min_proj) / (max_proj - min_proj)
-
-            # 調整梯度強度 (向量長度作為強度)
-            # 使用平方根而非直接指數，使變化更溫和
             current_gradient_mask = np.power(current_gradient_mask, np.sqrt(vec_len))
 
-        # 如果存在之前的梯度遮罩，則將其與當前梯度遮罩混合
         gradient_mask = current_gradient_mask
         if self.previous_gradient_mask is not None:
-            # 混合新舊梯度遮罩，採用更柔和的過渡方式
-            # 使用加權平均而非最大值，並應用高斯模糊使邊緣更平滑
-
-            # 首先進行基本的混合，使用更高的記憶因子使過渡更平滑
             enhanced_memory_factor = np.clip(self.gradient_memory_factor + 0.1, 0, 0.9)
             memory_mask = (
                 self.previous_gradient_mask * enhanced_memory_factor
                 + current_gradient_mask * (1 - enhanced_memory_factor)
             )
-
-            # 創建一個差異遮罩，找出變化較大的區域
             diff_mask = np.abs(self.previous_gradient_mask - current_gradient_mask)
-
-            # 在差異較大的區域應用更多的模糊效果，使過渡更加柔和
-            # 使用高斯濾波進行模糊處理
-            from scipy.ndimage import gaussian_filter
-
-            # 對邊緣區域進行平滑處理，根據差異程度調整模糊強度
-            sigma = 0.3 + diff_mask.mean() * 2  # 動態調整模糊程度
+            sigma = 0.3 + diff_mask.mean() * 2
             smoothed_mask = gaussian_filter(memory_mask, sigma=sigma)
-
-            # 為了防止暴漲，額外對結果進行非線性調整
-            # 使用閾值限制每幀的最大變化幅度
-            max_change_per_frame = 0.1  # 每幀的最大變化幅度
+            max_change_per_frame = 0.1
             change_mask = np.abs(smoothed_mask - self.previous_gradient_mask)
-            # 任何超過閾值的變化都會被限制
             excess_mask = np.clip(change_mask - max_change_per_frame, 0, 1)
-            # 應用限制，從平滑的遮罩中減去過量的變化
             if excess_mask.max() > 0:
                 normalized_excess = excess_mask / excess_mask.max()
                 smoothed_mask = smoothed_mask - normalized_excess * excess_mask
-
-            # 根據差異程度融合原始遮罩和平滑遮罩
-            blend_factor = np.clip(diff_mask * 3, 0, 0.8)  # 控制融合比例
+            blend_factor = np.clip(diff_mask * 3, 0, 0.8)
             gradient_mask = (
                 memory_mask * (1 - blend_factor) + smoothed_mask * blend_factor
             )
-
-        # 保存當前梯度遮罩以供下次使用
         self.previous_gradient_mask = gradient_mask.copy()
+        # --- END OF GRADIENT LOGIC ---
 
-        # 保存原始噪声（未应用梯度遮罩）
-        Z_original = Z.copy()
-
-        # 應用梯度遮罩到噪聲
+        # 應用梯度遮罩和淡出效果
         Z = Z * gradient_mask
-
-        # 應用淡出效果
         Z = Z * self.fade_factor
-
         Z = np.interp(Z, (0, 1), (0, 255)).astype(np.uint8)
 
         return Z
@@ -508,6 +452,7 @@ class TSOOParamProcesser:
 
         wv = self.target_tsoo_param["wind_vector"]
         ws = self.target_tsoo_param["wind_speed"] * self.wind_speed_factor
+
         relative_time = z - self.last_update_time
         offset = (relative_time * ws * wv[0], relative_time * ws * wv[1])
 
@@ -530,7 +475,7 @@ class TSOOParamProcesser:
         # 獲取雨滴效果
         rain_effect = self.rain_drop_effect(width, height, z=relative_time)
 
-        return Z_basic, current_gradient_mask, rain_effect
+        return _, current_gradient_mask, rain_effect
 
     class RainDrop:
         def __init__(self, x, y, radius, expansion_rate):
@@ -635,3 +580,15 @@ def angle_to_vector(angle):
     """將角度轉換為向量（標準數學坐標系，0度在右方）"""
     radians = math.radians(angle)  # 轉換為弧度
     return (math.sin(radians), math.cos(radians))  # 返回 (vx, vy) 向量
+
+
+def ease_in_out_circ(x: float) -> float:
+    if x < 0.5:
+        return (1 - math.sqrt(1 - math.pow(2 * x, 2))) / 2
+    else:
+        return (math.sqrt(1 - math.pow(-2 * x + 2, 2)) + 1) / 2
+
+
+def ease_out_circ(x: float) -> float:
+
+    return math.sqrt(1 - math.pow(x - 1, 2))
