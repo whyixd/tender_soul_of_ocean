@@ -6389,3 +6389,4 @@
 2025-08-31 18:37:09 - ModbusReader - INFO - 風速: 0.9 m/s, 風級: 1, 風向角度: 146, 風向: SE, 濕度: 25.0%, 溫度: 32.0°C
 2025-08-31 18:37:26 - ModbusReader - INFO - 風速: 0.5 m/s, 風級: 1, 風向角度: 145, 風向: SE, 濕度: 25.1%, 溫度: 32.0°C
 2025-08-31 18:37:48 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 24.8%, 溫度: 32.2°C
+2025-09-01 14:30:50 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 5 retries, continue with next request

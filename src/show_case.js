@@ -177,8 +177,8 @@ const sketch = (p) => {
     });
 
     // p.camera(400, -400, 500);
-    capture = p.createCapture(p.VIDEO);
-    capture.hide();
+    // capture = p.createCapture(p.VIDEO);
+    // capture.hide();
     setInterval(() => {
       const timestamp = new Date().toISOString(); // 生成 ISO 格式的時間碼
       scroll_dmx_data.push(
@@ -234,6 +234,7 @@ const sketch = (p) => {
       wd = 0;
     }
     p.fill(255);
+    p.textSize(4);
     p.textAlign(p.RIGHT, p.BOTTOM);
     p.text(`#wind_speed -> ${ws} m/s`, 150, -75);
     p.text(`#wind_direction -> ${wd} °`, 150, -71);
@@ -277,13 +278,13 @@ const sketch = (p) => {
         (p.round(location.longitude * 10000000) + long) / 10000000
       }]`,
       0,
-      138
+      185
     );
     p.pop();
 
     // 繪製 DMX 資料，最新資料在最下方
     p.push();
-    p.textSize(1);
+    p.textSize(2.5);
     p.translate(36, -32);
 
     let y = -p.height / 6 + 80;
@@ -318,7 +319,7 @@ const sketch = (p) => {
         x += p.textWidth(part); // 更新 x 座標
       });
 
-      y += 2.5; // 每行文字的間距
+      y += 3.5; // 每行文字的間距
     }
     p.fill(255, 30);
     p.textSize(10);

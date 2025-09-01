@@ -125,14 +125,14 @@ def effect_process(
     flask_app.socketio.emit("dmx_data", {"value": matrix})  # 初始發送
     last_data_update_time = 0
     last_matrix_update_time = 0
-    person_conut_cache =[0,0,0,0]
+
     try:
         while True:  # 主循環
             # 1. 即時更新 people_counts
             try:
                 if not people_queue.empty():
                     people_counts = people_queue.get_nowait()
-                    print(f"Effect process - Person in area: {people_counts}")
+                    # print(f"Effect process - Person in area: {people_counts}")
                     param_processor.target_tsoo_param["area_people_count"] = people_counts
                     # 不做 caculate_param()，只更新人數
             except Exception as e:
@@ -278,7 +278,7 @@ def main():
             current_time = time.time()
 
             # 每1秒更新一次人員追蹤數據
-            if current_time - last_people_data_update >= 0.5:
+            if current_time - last_people_data_update >= 0.3:
                 last_people_data_update = current_time
 
                 # 獲取最新的人員追蹤數據
@@ -288,7 +288,7 @@ def main():
                 try:
                     if not people_queue.full():
                         people_queue.put_nowait(people_counts)
-                        print("Person data sent to effect process")
+                        # print("Person data sent to effect process")
                     else:
                         # 隊列已滿，清空後再放入新數據
                         try:
