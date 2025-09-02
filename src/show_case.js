@@ -21,10 +21,10 @@ function drawAreaPeople(
   currentAreaCircleSize
 ) {
   let areaPoss = [
-    [-200, -50],
-    [80, -120],
-    [200, 120],
-    [-150, 80],
+    [-200*1.5, -50*1.5],
+    [80*1.5, -120*1.5],
+    [200*1.5, 120*1.5],
+    [-150*1.5, 80*1.5],
   ];
   let areaPos = areaPoss[areaIndex];
   let preAreaPos = areaPoss[areaIndex - 1] || areaPoss[areaPoss.length - 1];
@@ -218,12 +218,12 @@ const sketch = (p) => {
     );
     p.push();
     p.fill(255);
-    p.textSize(5);
+    p.textSize(8);
     p.textFont(barcodeFont);
     p.text(
       "*Tender Soul of Ocean*\n*How could I survive*\n*The answer lies within*",
       153,
-      50
+      70
     );
     p.pop();
     p.push();
@@ -236,14 +236,14 @@ const sketch = (p) => {
     p.fill(255);
     p.textSize(4);
     p.textAlign(p.RIGHT, p.BOTTOM);
-    p.text(`#wind_speed -> ${ws} m/s`, 150, -75);
-    p.text(`#wind_direction -> ${wd} °`, 150, -71);
+    p.text(`#wind_speed -> ${ws} m/s`, 150*1.5, -75*1.5);
+    p.text(`#wind_direction -> ${wd} °`, 150*1.5, -71*1.5);
 
     p.stroke(255);
     p.strokeWeight(0.08);
-    p.line(140, -71, 205, -54);
+    p.line(140*1.5, -71*1.5, 196*1.5, -52*1.5);
 
-    p.translate(220, -50, 0);
+    p.translate(220*1.4, -50*1.4, 0);
     p.text(convertWindAngleToDirection(wd), -25, -7);
     p.noFill();
     p.stroke(255);
@@ -274,12 +274,16 @@ const sketch = (p) => {
     let lat = p.round(p.random(-5, 5));
     let long = p.round(p.random(-5, 5));
     p.text(
-      `[${(p.round(location.latitude * 10000000) + lat) / 10000000} ${
+      `Linz [${(p.round(location.latitude * 10000000) + lat) / 10000000} ${
         (p.round(location.longitude * 10000000) + long) / 10000000
       }]`,
       0,
       185
     );
+    p.textSize(15);
+    p.textFont(barcodeFont);
+    p.text("*Tender Soul of Ocean*", -200, 175);
+    p.text("*WHYIXD*", 170, 175);
     p.pop();
 
     // 繪製 DMX 資料，最新資料在最下方
@@ -334,13 +338,13 @@ const sketch = (p) => {
     p.strokeWeight(0.1);
     p.noFill();
     p.stroke(255);
-    p.rect(-70, -150, 140, 300);
+    p.rect(-70*1.5, -150*1.5, 140*1.5, 300*1.5);
     p.pop();
 
     p.push();
     p.noStroke();
     p.strokeWeight(0.1);
-    p.fill(200);
+    p.fill(255,196,0);
     // 讓球體更靠近camera
     p.rotateY(-p.PI / 4);
     p.rotateX(p.PI / 2);
