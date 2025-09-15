@@ -38,7 +38,10 @@ class NaturalTracker:
         if self.serial is not None:
             print(f"找到 風速計 設備: {self.serial}")
             self.modbus = ModbusReader(com_port=self.serial)
-            self.read_wind_data = self.modbus.read_sensor_data
+            def read_data():
+                self.modbus.read_sensor_data_threaded()
+                return self.modbus.data
+            self.read_wind_data = read_data
         else:
             print("找不到 風速計 設備，使用歷史數據")
             self._load_history_data()

@@ -5,6 +5,7 @@ from pymodbus import FramerType, ModbusException
 from serial_device_finder import find_usb_serial_device
 import logging
 import time
+import threading
 
 modbus_logger = logging.getLogger("ModbusReader")
 modbus_logger.setLevel(logging.DEBUG)
@@ -39,6 +40,11 @@ class ModbusReader:
             stopbits=1,
         )
         self.connection = self.client.connect()
+        self.data = None
+    def read_sensor_data_threaded(self):
+        self.read_thread = threading.Thread(target=self.read_sensor_data,daemon=True)
+        self.read_thread.start()
+    
 
     def read_sensor_data(self):
         if not self.client.connected:
@@ -72,14 +78,8 @@ class ModbusReader:
                 modbus_logger.info(
                     f"風速: {wind_speed} m/s, 風級: {wind_level}, 風向角度: {wind_angle}, 風向: {wind_direction}, 濕度: {humidity}%, 溫度: {temperature}°C"
                 )
-                return [
-                    wind_speed,
-                    wind_level,
-                    wind_angle,
-                    wind_direction,
-                    humidity,
-                    temperature,
-                ]
+                self.data = [wind_speed, wind_level, wind_angle, wind_direction, humidity, temperature]
+                return self.data
             except ModbusException as e:
                 modbus_logger.error(f"讀取 Modbus 失敗: {e}")
                 return [0, 0, 0, "unknown"]

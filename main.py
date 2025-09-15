@@ -13,7 +13,9 @@ from config import Config
 from multiprocessing import Queue, Process
 from pythonosc import udp_client
 from config import Config
+from osc_reciver import OSCReceiver
 
+from param_processer import ease_in_out_circ
 
 def send_osc_message(
     client: udp_client.SimpleUDPClient, tsoo_param: TSOOParamProcesser
@@ -51,7 +53,7 @@ def send_osc_message(
     )
     client.send_message("/whyixd/light/interper/vector", inter_param["effect_vector"])
     # ---------------------wind-----------------------#
-    client.send_message("/whyixd/wind/speed", param["wind_speed"])
+    client.send_message("/whyixd/wind/speed", inter_param["wind_speed"])
     # client.send_message("/whyixd/wind/speed/normalized", param["wind_speed_normalized"])
     client.send_message("/whyixd/wind/angle", param["wind_angle"])
     client.send_message(
@@ -65,7 +67,7 @@ def send_osc_message(
     client.send_message("/whyixd/wind/interper/angle", inter_param["wind_angle"])
     client.send_message("/whyixd/wind/interper/vector", inter_param["wind_vector"])
     # ---------------------
-
+    
 
 # 將 effect_thread 函數移到 main() 外部，並接收所需的參數
 def effect_process(
@@ -92,6 +94,8 @@ def effect_process(
     osc_client = udp_client.SimpleUDPClient(
         address=osc_config["address"], port=osc_config["port"]
     )
+    osc_receiver = OSCReceiver(ip="0.0.0.0", port=57121)
+    osc_receiver.start()
     param_processor = TSOOParamProcesser(interpolation_speed=0.005)
     param_processor.wind_speed_factor = general_config.get("wind_speed_factor", 10)
     natural_tracker = NaturalTracker()
@@ -123,12 +127,23 @@ def effect_process(
     print("🚀 Starting test sequence...")
     # flask_app.artnet.set_packet(matrix)  # 設定初始數據包
     flask_app.socketio.emit("dmx_data", {"value": matrix})  # 初始發送
-    last_data_update_time = 0
+    last_pluck_trigger_time = 0
     last_matrix_update_time = 0
-
+    last_glitch_update_time =0
+    
     try:
         while True:  # 主循環
-            # 1. 即時更新 people_counts
+            try:
+                # print(f"Rain : {intensity}")
+                if not osc_receiver.received.empty():
+                    address, args, trigger = osc_receiver.received.get_nowait()
+                    intensity = trigger
+
+                    intensity = ease_in_out_circ(min(max((trigger - 0.004) / 0.2, 0), 1))
+                    param_processor.target_tsoo_param["rain_intensity"] = intensity
+
+            except Exception as e:
+                print(f"Error getting data from OSC receiver: {e}")
             try:
                 if not people_queue.empty():
                     people_counts = people_queue.get_nowait()
@@ -153,22 +168,22 @@ def effect_process(
                     param_processor.params_updated = True
             except Exception as e:
                 print(f"Error updating natural data: {e}")
-
+            if time.time() - last_glitch_update_time > 0.008:
+                try:
+                    if param_processor.glitch_frame is not None:
+                        glitch_flaten = param_processor.glitch_frame.flatten().tolist()
+                        
+                        # print("Glitch frame detected:", glitch_flaten)
+                        osc_client.send_message("/whyixd/light/glitch", glitch_flaten)
+                except:
+                    pass
+                finally:
+                    last_glitch_update_time = time.time()
             # effect
             if time.time() - last_matrix_update_time > 0.03:
                 try:
                     # 使用新的組合效果方法，避免梯度遮罩影響雨滴效果
-                    # matrix_data = param_processor.get_combined_effects(
-                    #     16,
-                    #     8,
-                    #     scale=7,
-                    #     z=time_val,
-                    #     gradient_vector=(
-                    #         param_processor.target_tsoo_param["effect_vector"][0] * 5,
-                    #         param_processor.target_tsoo_param["effect_vector"][1] * 5,
-                    #     ),
-                    # )
-                    basic, mask, rain = param_processor.get_effects_separately(
+                    matrix_data = param_processor.get_combined_effects(
                         16,
                         8,
                         scale=7,
@@ -178,7 +193,17 @@ def effect_process(
                             param_processor.target_tsoo_param["effect_vector"][1] * 5,
                         ),
                     )
-                    matrix_data = basic
+                    # basic, mask, rain = param_processor.get_effects_separately(
+                    #     16,
+                    #     8,
+                    #     scale=7,
+                    #     z=time_val,
+                    #     gradient_vector=(
+                    #         param_processor.target_tsoo_param["effect_vector"][0] * 5,
+                    #         param_processor.target_tsoo_param["effect_vector"][1] * 5,
+                    #     ),
+                    # )
+                    # matrix_data = basic
                     matrix = matrix_data.flatten().tolist()
 
                     time_val += 0.002
@@ -189,6 +214,7 @@ def effect_process(
                     )
                     send_osc_message(osc_client, param_processor)
                     osc_client.send_message("/whyixd/light/dmx", matrix)
+                    
                     # count += 1
 
                     flask_app.artnet.set_packet(
@@ -198,12 +224,13 @@ def effect_process(
                     print(f"Error in effect : {e}")
                 finally:
                     last_matrix_update_time = time.time()
-                    time.sleep(0.01)
+                    time.sleep(0.001)
 
     except KeyboardInterrupt:
         print("Effect thread interrupted")
     finally:
         flask_app.stop_server()
+        osc_receiver.stop()
         print("Effect thread shutting down ...")
 
 
@@ -278,7 +305,7 @@ def main():
             current_time = time.time()
 
             # 每1秒更新一次人員追蹤數據
-            if current_time - last_people_data_update >= 0.3:
+            if current_time - last_people_data_update >= 3:
                 last_people_data_update = current_time
 
                 # 獲取最新的人員追蹤數據

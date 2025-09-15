@@ -27,7 +27,7 @@ def draw_circle(center_x, center_y, radius, shape):
 
     # Find pixels on the circle circumference (within a small tolerance)
     # Use a tolerance to account for discrete pixel positions
-    tolerance = 0.5
+    tolerance = 1.2
     mask = np.abs(dist_from_center - radius) <= tolerance
 
     # Get row and column indices
@@ -43,15 +43,17 @@ class TSOOParamProcesser:
             "people_natrual_weight_level": 0,
             "people_natrual_weight_level_threshold": [0, 0.3, 0.8, 1],
             "area_people_count": [],
-            "people_count_max": 30,  # set by guess
+            "people_count_max": 16,  # set by guess
             "people_vector": (0.0, 0.0),  # 人數向量
             "wind_speed": 0.0,
-            "wind_speed_max": 5.0,  # get from https://www.timeanddate.com/weather/austria/linz/climate
+            "wind_speed_max": 6.0,  # get from https://www.timeanddate.com/weather/austria/linz/climate
             "wind_angle": 0.0,
             "wind_vector": (0.0, 0.0),  # 風向向量
             "effect_angle": 0.0,  # 風向角度
             "effect_vector": (0.0, 0.0),  # 風向向量
+            "rain_intensity": 0
         }
+        self.glitch_frame = np.zeros((16,8), dtype=np.uint8)
         self.previous_tsoo_param = self.target_tsoo_param.copy()
         self.interper_tsoo_param = self.target_tsoo_param.copy()
 
@@ -87,6 +89,8 @@ class TSOOParamProcesser:
         self.gradient_memory_factor = 0.6
         # 梯度向量變化的最大允許速度（每幀）
         self.max_vector_change_rate = 0.15
+
+        self.glitch_frame_counter = 0  # 新增
 
     def caculate_param(self):
         # 保存當前參數為上一次參數
@@ -406,17 +410,24 @@ class TSOOParamProcesser:
         )
 
         # 獲取雨滴效果（獨立不受梯度影響）
-        rain_drop_effect = self.rain_drop_effect(width, height)
 
         # 智能組合：雨滴效果採用加法混合，但不受梯度遮罩影響
         # 可以根據需要調整雨滴的強度
-        rain_intensity = 0.0  # 可調整雨滴強度
+        rain_intensity = self.target_tsoo_param["rain_intensity"]  # 可調整雨滴強度
+        rain_drop_effect = np.zeros((height, width), dtype=np.uint8)
+        glitch_effect = self.glitch_effect(width, height, z)
+        if rain_intensity>0:
+            rain_drop_effect = self.rain_drop_effect(width, height)
+        else:
+            self.rain_drops = []
 
         # 將雨滴效果疊加到基礎效果上
         # 使用 np.clip 確保數值不會超出範圍
+
         combined = np.clip(
             basic_effect.astype(np.float32)
-            + rain_drop_effect.astype(np.float32) * rain_intensity,
+            + rain_drop_effect.astype(np.float32) * rain_intensity
+            + glitch_effect.astype(np.float32),
             0,
             255,
         )
@@ -473,7 +484,7 @@ class TSOOParamProcesser:
         Z_basic = np.interp(Z_basic, (0, 1), (0, 255)).astype(np.uint8)
 
         # 獲取雨滴效果
-        rain_effect = self.rain_drop_effect(width, height, z=relative_time)
+        rain_effect = self.rain_drop_effect(width, height, z=z)
 
         return _, current_gradient_mask, rain_effect
 
@@ -483,35 +494,70 @@ class TSOOParamProcesser:
             self.y = y
             self.radius = radius
             self.expansion_rate = expansion_rate
-            self.end_radius = 5  # 最大半徑
+            self.end_radius = 25  # 最大半徑
 
     rain_drops = []
+    def glitch_effect(self, width, height, z=0.0):
+        Z = np.zeros((height, width))
+        people_count = sum(self.target_tsoo_param["area_people_count"])
+        if people_count == 0:
+            return Z
+
+        # 動態調整間隔，people_count 越低，間隔越大
+        min_interval = 1
+        max_interval = 30
+        interval = random.randint(int(max_interval - (max_interval - min_interval) * min(people_count, 10) / 10), max_interval)
+        self.glitch_frame_counter += 1
+        if self.glitch_frame_counter < interval:
+            return Z
+        self.glitch_frame_counter = 0
+
+        # 動態調整產生白點的機率
+        people_count = min(people_count, self.target_tsoo_param["people_count_max"])
+        fix_people_count = round(people_count*ease_in_out_expo(people_count/self.target_tsoo_param["people_count_max"]))
+        probability = min(people_count / 10, 1.0)
+        for _ in range(fix_people_count):
+            if random.random() < probability:
+                x = random.randint(0, width - 1)
+                y = random.randint(0, height - 1)
+                Z[y, x] = random.randint(8, 15)
+        self.glitch_frame = np.clip(Z.astype(np.uint8), 0, 255)
+        return Z
 
     def rain_drop_effect(self, width, height, z=0.0):
 
         Z = np.zeros((height, width))
         # 隨機生成雨滴
-        if len(self.rain_drops) < 2:
+        if len(self.rain_drops) < 1:
+            corners=[(0, 0), (width-1, 0), (width-1, height-1), (0, height-1)]
+            corner = random.choice(corners)
             self.rain_drops.append(
                 self.RainDrop(
-                    random.randint(0, width - 1),
-                    random.randint(0, height - 1),
-                    random.uniform(0.1, 2),  # 隨機半徑
-                    random.uniform(0.08, 0.2),  # 隨機擴展速度
+                    # random.randint(0, 1),
+                    corner[0],
+                    # random.randint(0, height - 1),
+                    corner[1],
+                    # random.uniform(0.1, 2),  # 隨機半徑
+                    0,
+                    # random.uniform(0.08, 0.2),  # 隨機擴展速度
+                    0.18
+
                 )
             )
         # 從後往前遍歷，避免在刪除元素時影響索引
         for idx in range(len(self.rain_drops) - 1, -1, -1):
             drop = self.rain_drops[idx]
-            if drop.radius > drop.end_radius:
+            if abs(drop.end_radius-drop.radius) <= 0.1:
                 # 如果半徑超過最大值，則移除雨滴
                 self.rain_drops.pop(idx)
+                print("移除雨滴",self.rain_drops)
             else:
+                # print(f"drop:{idx} - {drop.x}, {drop.y}, {drop.radius}")
                 rr, cc = draw_circle(drop.x, drop.y, drop.radius, Z.shape)
-                value = 0.6 - (drop.radius / drop.end_radius)
+                value =1-ease_out_expo(drop.radius / drop.end_radius)
                 Z[rr, cc] = value  # 在雨滴位置生成圓點
                 # 擴展雨滴半徑
-                drop.radius += drop.expansion_rate
+                drop.radius += drop.expansion_rate * ease_out_expo(1 - drop.radius / drop.end_radius)
 
         Z = np.interp(Z, (0, 1), (0, 255)).astype(np.uint8)
         return Z
@@ -592,3 +638,12 @@ def ease_in_out_circ(x: float) -> float:
 def ease_out_circ(x: float) -> float:
 
     return math.sqrt(1 - math.pow(x - 1, 2))
+def ease_out_expo(x: float) -> float:
+    return 1 - math.pow(2, -10 * x)
+def ease_in_quart(x: float) -> float:
+    return x ** 4
+def ease_in_out_expo(x: float) -> float:
+    if x < 0.5:
+        return (1 - math.pow(2, -10 * (2 * x))) / 2
+    else:
+        return (math.pow(2, 10 * (-2 * x + 1)) + 1) / 2

@@ -216,16 +216,16 @@ const sketch = (p) => {
       0,
       1000
     );
-    p.push();
-    p.fill(255);
-    p.textSize(8);
-    p.textFont(barcodeFont);
-    p.text(
-      "*Tender Soul of Ocean*\n*How could I survive*\n*The answer lies within*",
-      153,
-      70
-    );
-    p.pop();
+    // p.push();
+    // p.fill(255);
+    // p.textSize(8);
+    // p.textFont(barcodeFont);
+    // p.text(
+    //   "*Tender Soul of Ocean*\n*How could I survive*\n*The answer lies within*",
+    //   153,
+    //   70
+    // );
+    // p.pop();
     p.push();
     let ws = tsooParam.wind_speed;
     let wd = tsooParam.wind_angle;
@@ -234,10 +234,10 @@ const sketch = (p) => {
       wd = 0;
     }
     p.fill(255);
-    p.textSize(4);
+    p.textSize(8);
     p.textAlign(p.RIGHT, p.BOTTOM);
     p.text(`#wind_speed -> ${ws} m/s`, 150*1.5, -75*1.5);
-    p.text(`#wind_direction -> ${wd} °`, 150*1.5, -71*1.5);
+    p.text(`#wind_direction -> ${wd} °`, 150*1.5, -70*1.5);
 
     p.stroke(255);
     p.strokeWeight(0.08);
@@ -267,29 +267,34 @@ const sketch = (p) => {
     }
 
     p.push();
-    p.textSize(5);
+    p.textSize(8);
     p.textFont(boldFont);
     p.fill(255, 100);
     p.textAlign(p.CENTER);
     let lat = p.round(p.random(-5, 5));
     let long = p.round(p.random(-5, 5));
     p.text(
-      `Linz [${(p.round(location.latitude * 10000000) + lat) / 10000000} ${
+      `Linz, Austria [${(p.round(location.latitude * 10000000) + lat) / 10000000} ${
         (p.round(location.longitude * 10000000) + long) / 10000000
       }]`,
-      0,
-      185
+      -282,
+      47
     );
-    p.textSize(15);
-    p.textFont(barcodeFont);
-    p.text("*Tender Soul of Ocean*", -200, 175);
-    p.text("*WHYIXD*", 170, 175);
+    p.textSize(24);
+    p.textFont(boldFont);
+    p.fill(255)
+    p.text("Tender Soul of Ocean : recall", -205, -10);
+    p.textSize(13/2);
+    p.fill(255)
+    p.rect(235, 0, 200, 20);
+    p.fill(0)
+    p.text("WHYIXD x KLING KLANG KLONG", 280, 0);
     p.pop();
 
     // 繪製 DMX 資料，最新資料在最下方
     p.push();
     p.textSize(2.5);
-    p.translate(36, -32);
+    p.translate(85, 150);
 
     let y = -p.height / 6 + 80;
     for (let i = 0; i < scroll_dmx_data.length; i++) {
@@ -333,13 +338,13 @@ const sketch = (p) => {
     p.rotateX(p.PI / 2);
     p.rotateZ(-p.PI / 2);
 
-    p.push();
-    p.rotateY(p.PI / 2);
-    p.strokeWeight(0.1);
-    p.noFill();
-    p.stroke(255);
-    p.rect(-70*1.5, -150*1.5, 140*1.5, 300*1.5);
-    p.pop();
+    // p.push();
+    // p.rotateY(p.PI / 2);
+    // p.strokeWeight(0.1);
+    // p.noFill();
+    // p.stroke(255);
+    // p.rect(-70*1.5, -150*1.5, 140*1.5, 300*1.5);
+    // p.pop();
 
     p.push();
     p.noStroke();
@@ -351,9 +356,11 @@ const sketch = (p) => {
     p.translate(-500, 500, 0);
     p.rotateY(p.frameCount * 0.001);
 
+    p.scale(1.9); // <--- 這裡調整整體大小
+
     let boxSize = 20;
     for (let i = 0; i < startPosition.length; i++) {
-      p.translate(startPosition[i].x, startPosition[i].y, startPosition[i].z);
+      p.translate(startPosition[i].x*1.5, startPosition[i].y*1.5, startPosition[i].z);
       if (dmx_data[i * 16] !== undefined)
         p.box((dmx_data[i * 16] / 255) * boxSize);
       for (let j = 1; j < 16; j++) {
@@ -375,7 +382,7 @@ const sketch = (p) => {
         if (dmxValue > 10) {
           p.stroke(255);
           p.strokeWeight(0.01);
-          p.line(0, 0, 0, 0, 1000, 0);
+          p.line(0, 0, 0, 0, 10000, 0);
         }
       }
     }
