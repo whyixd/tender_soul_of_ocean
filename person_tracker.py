@@ -57,8 +57,8 @@ class PersonTracker(threading.Thread):
 
         # Detection settings
         self.active_tracks = {}  # Stores info about currently tracked objects
-        self.min_consecutive_hits = 8  # Min consecutive frames to show a track
-        self.max_frames_missed = 3  # Max frames a track can be missed before removal
+        self.min_consecutive_hits = 1  # Min consecutive frames to show a track
+        self.max_frames_missed = 10  # Max frames a track can be missed before removal
 
         # People count
         self.total_entered = 0
@@ -211,11 +211,12 @@ class PersonTracker(threading.Thread):
                     frame,
                     show=False,
                     classes=[0],
-                    conf=0.1,
+                    conf=0.01,
                     stream=True,
-                    persist=True,
+                    persist=False,
                     imgsz=(self.desired_width * 2, self.desired_height),
                 ):
+                    self._draw_areas(frame)
                     # Skip processing if result has no boxes
                     if result.boxes is None or result.boxes.data.numel() == 0:
                         processed_frame = frame.copy()
@@ -244,7 +245,7 @@ class PersonTracker(threading.Thread):
                         self.area_polygons = [
                             np.array(area, dtype=np.int32) for area in self.areas
                         ]
-
+                    
                     # Update FPS calculation if visualization is enabled
                     if self.show_visualization:
                         self.frame_count_for_fps += 1
@@ -277,9 +278,9 @@ class PersonTracker(threading.Thread):
                             2,
                             cv2.LINE_AA,
                         )
-
                     # Process detections
                     self._process_detections(result, processed_frame)
+                    
 
                     # Put the processed frame in the result queue
                     if not self.result_queue.full():
@@ -327,7 +328,7 @@ class PersonTracker(threading.Thread):
                         self.active_tracks[track_id]["misses"] = 0  # Reset misses
 
         # Draw areas
-        self._draw_areas(frame)
+      
 
         # Update tracking info and remove old tracks
         self._update_tracking(current_track_ids_in_frame)
@@ -340,12 +341,12 @@ class PersonTracker(threading.Thread):
 
     def _draw_areas(self, frame):
         """Draw the defined areas on the frame."""
-        if self.show_visualization:
-            overlay = frame.copy()
-            colors = [(65, 255, 0), (255, 0, 208), (0, 255, 221), (242, 255, 0)]
+        # if self.show_visualization:
+        overlay = frame.copy()
+        colors = [(65, 255, 0), (255, 0, 208), (0, 255, 221), (242, 255, 0)]
             # Draw areas based on edit mode
-            for idx, area in enumerate(self.areas):
-                if self.area_edit_mode:
+        for idx, area in enumerate(self.areas):
+            if self.area_edit_mode:
                     # color = (
                     #     (0, 0, 255) if idx == self.current_setting_area else (255, 0, 0)
                     # )
@@ -360,12 +361,12 @@ class PersonTracker(threading.Thread):
                         cv2.circle(overlay, corner, 5, color, -1)
 
             # Apply transparency only in edit mode
-            if self.area_edit_mode:
+        if self.area_edit_mode:
                 alpha = 0.3
                 cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
-            else:
+        else:
                 # Just draw outlines when not in edit mode
-                for idx, area in enumerate(self.areas):
+            for idx, area in enumerate(self.areas):
                     color = colors[idx]
                     cv2.polylines(
                         frame, [np.array(area, dtype=np.int32)], True, color, 2
@@ -413,7 +414,7 @@ class PersonTracker(threading.Thread):
                 for i, area_poly in enumerate(self.area_polygons):
                     result = cv2.pointPolygonTest(
                         area_poly,
-                        (center_x, bottom_y),
+                        (center_x, center_y),
                         False,
                     )
                     if result >= 0:
@@ -436,7 +437,7 @@ class PersonTracker(threading.Thread):
                 # Draw bottom center point
                 cv2.circle(
                     frame,
-                    (center_x, bottom_y),
+                    (center_x, center_y),
                     radius=3,
                     color=draw_color,
                     thickness=-1,

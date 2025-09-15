@@ -23,6 +23,7 @@ class MockResult:
     def __init__(self, boxes=None, orig_img=None):
         self.boxes = boxes
         self.orig_img = orig_img
+        self.last_detection_time = time.time()
 
 
 class MockPersonTracker(threading.Thread):
@@ -121,16 +122,16 @@ class MockPersonTracker(threading.Thread):
     ):
         """Process mock detections."""
         self._draw_tracks_and_count()
-
     def _draw_tracks_and_count(self):
         """Simulate drawing tracks and counting people in areas."""
         self.inside_area_counts = [0] * len(self.areas)
         # self.inside_area_counts=[1,0,0,0]
+        # if time.time() - self.last_detection_time > 1:
         for idx, area in enumerate(self.areas):
-            self.inside_area_counts[idx] = random.randint(
-                0, 10
+                self.inside_area_counts[idx] = random.randint(
+                0, 4
             )  # Mock counts for each area
-
+            # self.last_detection_time = time.time()
     def display_loop(self):
         pass
 

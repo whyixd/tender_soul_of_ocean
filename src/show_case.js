@@ -21,10 +21,10 @@ function drawAreaPeople(
   currentAreaCircleSize
 ) {
   let areaPoss = [
-    [-200, -50],
-    [80, -120],
-    [200, 120],
-    [-150, 80],
+    [-200*1.5, -50*1.5],
+    [80*1.5, -120*1.5],
+    [200*1.5, 120*1.5],
+    [-150*1.5, 80*1.5],
   ];
   let areaPos = areaPoss[areaIndex];
   let preAreaPos = areaPoss[areaIndex - 1] || areaPoss[areaPoss.length - 1];
@@ -177,8 +177,8 @@ const sketch = (p) => {
     });
 
     // p.camera(400, -400, 500);
-    capture = p.createCapture(p.VIDEO);
-    capture.hide();
+    // capture = p.createCapture(p.VIDEO);
+    // capture.hide();
     setInterval(() => {
       const timestamp = new Date().toISOString(); // 生成 ISO 格式的時間碼
       scroll_dmx_data.push(
@@ -216,16 +216,16 @@ const sketch = (p) => {
       0,
       1000
     );
-    p.push();
-    p.fill(255);
-    p.textSize(5);
-    p.textFont(barcodeFont);
-    p.text(
-      "*Tender Soul of Ocean*\n*How could I survive*\n*The answer lies within*",
-      153,
-      50
-    );
-    p.pop();
+    // p.push();
+    // p.fill(255);
+    // p.textSize(8);
+    // p.textFont(barcodeFont);
+    // p.text(
+    //   "*Tender Soul of Ocean*\n*How could I survive*\n*The answer lies within*",
+    //   153,
+    //   70
+    // );
+    // p.pop();
     p.push();
     let ws = tsooParam.wind_speed;
     let wd = tsooParam.wind_angle;
@@ -234,15 +234,16 @@ const sketch = (p) => {
       wd = 0;
     }
     p.fill(255);
+    p.textSize(8);
     p.textAlign(p.RIGHT, p.BOTTOM);
-    p.text(`#wind_speed -> ${ws} m/s`, 150, -75);
-    p.text(`#wind_direction -> ${wd} °`, 150, -71);
+    p.text(`#wind_speed -> ${ws} m/s`, 150*1.5, -75*1.5);
+    p.text(`#wind_direction -> ${wd} °`, 150*1.5, -70*1.5);
 
     p.stroke(255);
     p.strokeWeight(0.08);
-    p.line(140, -71, 205, -54);
+    p.line(140*1.5, -71*1.5, 196*1.5, -52*1.5);
 
-    p.translate(220, -50, 0);
+    p.translate(220*1.4, -50*1.4, 0);
     p.text(convertWindAngleToDirection(wd), -25, -7);
     p.noFill();
     p.stroke(255);
@@ -266,25 +267,34 @@ const sketch = (p) => {
     }
 
     p.push();
-    p.textSize(5);
+    p.textSize(8);
     p.textFont(boldFont);
     p.fill(255, 100);
     p.textAlign(p.CENTER);
     let lat = p.round(p.random(-5, 5));
     let long = p.round(p.random(-5, 5));
     p.text(
-      `[${(p.round(location.latitude * 10000000) + lat) / 10000000} ${
+      `Linz, Austria [${(p.round(location.latitude * 10000000) + lat) / 10000000} ${
         (p.round(location.longitude * 10000000) + long) / 10000000
       }]`,
-      0,
-      138
+      -282,
+      47
     );
+    p.textSize(24);
+    p.textFont(boldFont);
+    p.fill(255)
+    p.text("Tender Soul of Ocean : recall", -205, -10);
+    p.textSize(13/2);
+    p.fill(255)
+    p.rect(235, 0, 200, 20);
+    p.fill(0)
+    p.text("WHYIXD x KLING KLANG KLONG", 280, 0);
     p.pop();
 
     // 繪製 DMX 資料，最新資料在最下方
     p.push();
-    p.textSize(1);
-    p.translate(36, -32);
+    p.textSize(2.5);
+    p.translate(85, 150);
 
     let y = -p.height / 6 + 80;
     for (let i = 0; i < scroll_dmx_data.length; i++) {
@@ -318,7 +328,7 @@ const sketch = (p) => {
         x += p.textWidth(part); // 更新 x 座標
       });
 
-      y += 2.5; // 每行文字的間距
+      y += 3.5; // 每行文字的間距
     }
     p.fill(255, 30);
     p.textSize(10);
@@ -328,27 +338,29 @@ const sketch = (p) => {
     p.rotateX(p.PI / 2);
     p.rotateZ(-p.PI / 2);
 
-    p.push();
-    p.rotateY(p.PI / 2);
-    p.strokeWeight(0.1);
-    p.noFill();
-    p.stroke(255);
-    p.rect(-70, -150, 140, 300);
-    p.pop();
+    // p.push();
+    // p.rotateY(p.PI / 2);
+    // p.strokeWeight(0.1);
+    // p.noFill();
+    // p.stroke(255);
+    // p.rect(-70*1.5, -150*1.5, 140*1.5, 300*1.5);
+    // p.pop();
 
     p.push();
     p.noStroke();
     p.strokeWeight(0.1);
-    p.fill(200);
+    p.fill(255,196,0);
     // 讓球體更靠近camera
     p.rotateY(-p.PI / 4);
     p.rotateX(p.PI / 2);
     p.translate(-500, 500, 0);
     p.rotateY(p.frameCount * 0.001);
 
+    p.scale(1.9); // <--- 這裡調整整體大小
+
     let boxSize = 20;
     for (let i = 0; i < startPosition.length; i++) {
-      p.translate(startPosition[i].x, startPosition[i].y, startPosition[i].z);
+      p.translate(startPosition[i].x*1.5, startPosition[i].y*1.5, startPosition[i].z);
       if (dmx_data[i * 16] !== undefined)
         p.box((dmx_data[i * 16] / 255) * boxSize);
       for (let j = 1; j < 16; j++) {
@@ -370,7 +382,7 @@ const sketch = (p) => {
         if (dmxValue > 10) {
           p.stroke(255);
           p.strokeWeight(0.01);
-          p.line(0, 0, 0, 0, 1000, 0);
+          p.line(0, 0, 0, 0, 10000, 0);
         }
       }
     }
