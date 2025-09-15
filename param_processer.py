@@ -200,10 +200,8 @@ class TSOOParamProcesser:
                     self.interper_tsoo_param[key] = (x, y)
 
                 else:
-                    # 其他类型直接使用目标值
                     self.interper_tsoo_param[key] = target_value
             else:
-                # 如果previous中没有该键，直接使用目标值
                 self.interper_tsoo_param[key] = target_value
 
         return self.interper_tsoo_param
@@ -212,8 +210,6 @@ class TSOOParamProcesser:
         """計算單的數值的插值"""
         if prev == target:
             return target
-
-        # 线性插值: current = current + (target - current) * speed
         return prev + (target - prev) * interpolation_speed
 
     def get_interpolated_param(self):
