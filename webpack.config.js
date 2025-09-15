@@ -14,6 +14,7 @@ module.exports = (env, argv) => {
     entry: {
       main: "./src/sketch.js",
       show_case: "./src/show_case.js",
+      configuration: "./src/configuration.js",
     },
 
     // 出口設定
@@ -31,7 +32,7 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        title: "p5.js with Flask & Webpack",
+        title: "TSOO",
         template: "src/index.html",
         chunks: ["main"],
       }),
@@ -40,6 +41,12 @@ module.exports = (env, argv) => {
         filename: "show_case.html",
         template: "src/show_case.html",
         chunks: ["show_case"],
+      }),
+      new HtmlWebpackPlugin({
+        title: "Configuration",
+        filename: "configuration.html",
+        template: "src/configuration.html",
+        chunks: ["configuration"],
       }),
       new CopyPlugin({
         patterns: [{ from: "public/assets", to: "assets" }],
