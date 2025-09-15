@@ -37,7 +37,7 @@ def draw_circle(center_x, center_y, radius, shape):
 
 
 class TSOOParamProcesser:
-    def __init__(self, interpolation_speed=0.05):
+    def __init__(self, interpolation_speed=0.2):
         self.target_tsoo_param = {
             "people_natrual_weight": 0.5,
             "people_natrual_weight_level": 0,
@@ -127,9 +127,14 @@ class TSOOParamProcesser:
             round(wind_vector[1], 2),
         )
 
+        # vector_combined = normalize_vector(
+        #     (-people_vector[0] + wind_vector[0]*2, -people_vector[1] + wind_vector[1]*2)
+        # )
         vector_combined = normalize_vector(
-            (people_vector[0] + wind_vector[0], people_vector[1] + wind_vector[1])
+            (-people_vector[0], -people_vector[1])
         )
+        if vector_combined == (0.0, 0.0):
+            vector_combined = normalize_vector(wind_vector)
         self.target_tsoo_param["effect_vector"] = (
             round(vector_combined[0], 2),
             round(vector_combined[1], 2),
@@ -181,7 +186,7 @@ class TSOOParamProcesser:
                     # 二维向量插值
                     fix_interprolation_speed = self.interpolation_speed
                     if key == "wind_vector":
-                        fix_interprolation_speed = 0.05
+                        fix_interprolation_speed = 0.01
                     x = self._interpolate_value(
                         prev_value[0],
                         target_value[0],
@@ -401,7 +406,7 @@ class TSOOParamProcesser:
 
         # 智能組合：雨滴效果採用加法混合，但不受梯度遮罩影響
         # 可以根據需要調整雨滴的強度
-        rain_intensity = 0.3  # 可調整雨滴強度
+        rain_intensity = 0.0  # 可調整雨滴強度
 
         # 將雨滴效果疊加到基礎效果上
         # 使用 np.clip 確保數值不會超出範圍

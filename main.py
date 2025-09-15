@@ -1,6 +1,5 @@
 from person_tracker import PersonTracker
-
-# from mock_person_tracker import MockPersonTracker
+from mock_person_tracker import MockPersonTracker
 
 # from mock_person_tracker import MockPersonTracker
 from param_processer import TSOOParamProcesser
@@ -126,54 +125,35 @@ def effect_process(
     flask_app.socketio.emit("dmx_data", {"value": matrix})  # 初始發送
     last_data_update_time = 0
     last_matrix_update_time = 0
-
+    person_conut_cache =[0,0,0,0]
     try:
         while True:  # 主循環
-
-            # 每秒更新一次數據
-
-            # 僅在可以更新參數時更新人員數據
-
-            # 檢查隊列中是否有新的人員追蹤數據
+            # 1. 即時更新 people_counts
             try:
-                # if time.time() - last_data_update_time >= 5:
-                #     natural_data = natural_tracker.update()
-                #     print(f"Natural data: {natural_data}")
-                #     if natural_data[0] == 0:
-                #         natural_data[0] = 1
-                #     param_processor.update_wind_speed(natural_data[0])
-                #     param_processor.update_wind_angle(natural_data[2])
-                #     param_processor.caculate_param()
-                #     last_data_update_time = time.time()
                 if not people_queue.empty():
-                    # 非阻塞方式獲取數據
-
                     people_counts = people_queue.get_nowait()
                     print(f"Effect process - Person in area: {people_counts}")
-                    param_processor.target_tsoo_param["area_people_count"] = (
-                        people_counts
-                    )
+                    param_processor.target_tsoo_param["area_people_count"] = people_counts
+                    # 不做 caculate_param()，只更新人數
+            except Exception as e:
+                print(f"Error getting data from queue: {e}")
+
+            # 2. 只在允許參數更新時才更新 natural_data 與計算參數
+            try:
+                if not update_signal_queue.empty():
+                    update_signal_queue.get_nowait()  # 清掉信號
                     natural_data = natural_tracker.update()
                     print(f"Natural data: {natural_data}")
                     if natural_data[0] == 0:
                         natural_data[0] = 1
                     param_processor.update_wind_speed(natural_data[0])
                     param_processor.update_wind_angle(natural_data[2])
-
                     param_processor.caculate_param()
-                    print(f"Effect process received people counts: {people_counts}")
-
-                    # 標記參數已更新
+                    print("Effect process: parameters recalculated (natural_data updated)")
                     param_processor.params_updated = True
             except Exception as e:
-                print(f"Error getting data from queue: {e}")
-            # if time.time() - last_data_update_time >= 0.05:
-            #     gap = 1
-            #     param_processor.glow += gap
-            #     if param_processor.glow >= 100:
-            #         param_processor.glow = 0
-            #     print(param_processor.glow)
-            #     last_data_update_time = time.time()
+                print(f"Error updating natural data: {e}")
+
             # effect
             if time.time() - last_matrix_update_time > 0.03:
                 try:
@@ -258,7 +238,7 @@ def main():
     # 使用新方法，在背景執行 tracking 和 display
     person_tracker.start_all_in_background()
 
-    sleep(2)  # 等待追蹤器初始化
+    sleep(10)  # 等待追蹤器初始化
     # natural_tracker = NaturalTracker()
 
     # 獲取必要的參數以啟動效果進程
@@ -294,53 +274,34 @@ def main():
     try:
         # 主進程監視用戶輸入和更新人員追蹤數據
         last_people_data_update = 0
-        can_update_params = False
         while True:
             current_time = time.time()
 
-            # 檢查是否收到可以更新參數的信號
-            try:
-                if not update_signal_queue.empty():
-                    can_update_params = update_signal_queue.get_nowait()
-                    print("Received signal: Parameter update allowed")
-            except Exception as e:
-                print(f"Error checking update signal: {e}")
-
-            # 每5秒更新一次人員追蹤數據，但只有在收到信號時才發送到隊列
-            if current_time - last_people_data_update >= 0.1:
+            # 每1秒更新一次人員追蹤數據
+            if current_time - last_people_data_update >= 0.5:
                 last_people_data_update = current_time
 
                 # 獲取最新的人員追蹤數據
                 people_counts = person_tracker.inside_area_counts
-                # print(f"Main process - Person in area: {people_counts}")
 
-                # 僅在允許更新參數時才將數據發送到隊列
-                if can_update_params:
-                    # 嘗試將數據放入隊列，但不阻塞
-                    try:
-                        if not people_queue.full():
+                # 嘗試將數據放入隊列，但不阻塞
+                try:
+                    if not people_queue.full():
+                        people_queue.put_nowait(people_counts)
+                        print("Person data sent to effect process")
+                    else:
+                        # 隊列已滿，清空後再放入新數據
+                        try:
+                            while not people_queue.empty():
+                                people_queue.get_nowait()
                             people_queue.put_nowait(people_counts)
-                            print("Person data sent to effect process")
-                            can_update_params = (
-                                False  # 重置標誌，直到收到下一個更新信號
+                            print(
+                                "Person data sent to effect process (after queue clear)"
                             )
-                        else:
-                            # 隊列已滿，可以選擇清空隊列或忽略這次更新
-                            # 這裡選擇清空隊列後再放入新數據
-                            try:
-                                while not people_queue.empty():
-                                    people_queue.get_nowait()
-                                people_queue.put_nowait(people_counts)
-                                print(
-                                    "Person data sent to effect process (after queue clear)"
-                                )
-                                can_update_params = (
-                                    False  # 重置標誌，直到收到下一個更新信號
-                                )
-                            except:
-                                pass
-                    except Exception as e:
-                        print(f"Error putting data to queue: {e}")
+                        except:
+                            pass
+                except Exception as e:
+                    print(f"Error putting data to queue: {e}")
 
             time.sleep(0.1)
 
