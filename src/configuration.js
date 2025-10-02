@@ -1,4 +1,4 @@
-import p5 from "p5";
+import p5, { add, update } from "p5";
 import { GUI } from "lil-gui";
 import { io } from "socket.io-client";
 
@@ -13,24 +13,40 @@ const sketch = (p) => {
 
   const gridConfig = {
     cellSize: 25,
-    cellsX: 20,
-    cellsZ: 20,
+    cellsX: 6,
+    cellsZ: 6,
     get sizeX() {
       return this.cellsX * this.cellSize;
     },
     get sizeZ() {
       return this.cellsZ * this.cellSize;
     },
+    saveUnitConfig: () => {
+      console.log("Saving unit configuration to backend...");
+      updateUnitConfig2Config();
+    },
   };
 
   const boxes = [
-    { id: 0, name: "Box 1", x: 0, y: -boxHeight / 2, z: 0 }, // Z will be corrected in setup
+    {
+      id: 0,
+      name: "Unit 1",
+      x: 0,
+      y: -boxHeight / 2,
+      z: 0,
+      cordX: 0,
+      cordZ: 0,
+    }, // Z will be corrected in setup
   ];
   let nextBoxId = 1;
   let selectedBox = boxes[0];
 
   let previewPosition = { x: 0, z: 0 };
   let isDragging = false;
+
+  let font;
+
+  let unitConfig;
 
   // --- New Snapping Logic ---
   const snapToGridX = (value) => {
@@ -44,7 +60,12 @@ const sketch = (p) => {
       gridConfig.cellSize / 2
     );
   };
-
+  const calculateCoordinatesX = (value) => {
+    return (value + gridConfig.sizeX / 2) / gridConfig.cellSize - 1;
+  };
+  const calculateCoordinatesZ = (value) => {
+    return (value + gridConfig.sizeZ / 2) / gridConfig.cellSize - 0.5;
+  };
   let boxGui, controllerX, controllerZ, boxSelector;
 
   const hasCollisionAt = (x, z, ignoredId = -1) => {
@@ -55,7 +76,27 @@ const sketch = (p) => {
         Math.abs(z - box.z) < boxDepth
     );
   };
-
+  function addBox() {
+    let newX = 0;
+    let newZ = snapToGridZ(0); // Start at a valid snapped Z position
+    while (hasCollisionAt(newX, newZ)) {
+      newX += gridConfig.cellSize;
+    }
+    const newName = `Unit ${nextBoxId + 1}`;
+    const newBox = {
+      id: nextBoxId,
+      name: newName,
+      x: newX,
+      y: -boxHeight / 2,
+      z: newZ,
+    };
+    boxes.push(newBox);
+    nextBoxId++;
+    guiState.selectedBoxName = newName;
+    refreshBoxSelector();
+    selectedBox.cordX = calculateCoordinatesX(selectedBox.x);
+    selectedBox.cordZ = calculateCoordinatesZ(selectedBox.z);
+  }
   const guiState = {
     get selectedBoxName() {
       return selectedBox ? selectedBox.name : "";
@@ -71,23 +112,26 @@ const sketch = (p) => {
       }
     },
     addBox: () => {
-      let newX = 0;
-      let newZ = snapToGridZ(0); // Start at a valid snapped Z position
-      while (hasCollisionAt(newX, newZ)) {
-        newX += gridConfig.cellSize;
-      }
-      const newName = `Box ${nextBoxId + 1}`;
-      const newBox = {
-        id: nextBoxId,
-        name: newName,
-        x: newX,
-        y: -boxHeight / 2,
-        z: newZ,
-      };
-      boxes.push(newBox);
-      nextBoxId++;
-      guiState.selectedBoxName = newName;
-      refreshBoxSelector();
+      addBox();
+      // let newX = 0;
+      // let newZ = snapToGridZ(0); // Start at a valid snapped Z position
+      // while (hasCollisionAt(newX, newZ)) {
+      //   newX += gridConfig.cellSize;
+      // }
+      // const newName = `Unit ${nextBoxId + 1}`;
+      // const newBox = {
+      //   id: nextBoxId,
+      //   name: newName,
+      //   x: newX,
+      //   y: -boxHeight / 2,
+      //   z: newZ,
+      // };
+      // boxes.push(newBox);
+      // nextBoxId++;
+      // guiState.selectedBoxName = newName;
+      // refreshBoxSelector();
+      // selectedBox.cordX = calculateCoordinatesX(selectedBox.x);
+      // selectedBox.cordZ = calculateCoordinatesZ(selectedBox.z);
     },
     removeBox: () => {
       if (boxes.length <= 1) {
@@ -109,8 +153,76 @@ const sketch = (p) => {
       .add(guiState, "selectedBoxName", boxNames)
       .name("Selected Box");
   }
-
-  p.setup = () => {
+  function updateUnitConfig2Config() {
+    unitConfig = {
+      unit_config: {
+        area_size: [gridConfig.cellsX, gridConfig.cellsZ],
+        units: [],
+      },
+    };
+    unitConfig.unit_config.units = boxes.map((box) => ({
+      id: box.id,
+      name: box.name,
+      position: {
+        x: box.x,
+        y: box.y,
+        z: box.z,
+      },
+      cord: {
+        x: box.cordX,
+        z: box.cordZ,
+      },
+    }));
+    const apiurl = "/api/update_unit_config";
+    let result = fetch(apiurl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(unitConfig),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  }
+  function getUnitConfigFromBackend() {
+    const apiurl = "/api/unit_config";
+    let result = fetch(apiurl)
+      .then((res) => res.json())
+      .then((data) => {
+        unitConfig = data;
+        console.log("Fetched unit config:", unitConfig);
+        gridConfig.cellsX = unitConfig.unit_config.area_size[0];
+        gridConfig.cellsZ = unitConfig.unit_config.area_size[1];
+        let box0 = unitConfig.unit_config.units[0];
+        boxes[0].x = box0.position.x;
+        boxes[0].y = box0.position.y;
+        boxes[0].z = box0.position.z;
+        boxes[0].cordX = box0.cord.x;
+        boxes[0].cordZ = box0.cord.z;
+        for (let i = 1; i < unitConfig.unit_config.units.length; i++) {
+          const unit = unitConfig.unit_config.units[i];
+          const newBox = {
+            id: unit.id,
+            name: unit.name,
+            x: unit.position.x,
+            y: unit.position.y,
+            z: unit.position.z,
+            cordX: unit.cord.x,
+            cordZ: unit.cord.z,
+          };
+          boxes.push(newBox);
+          nextBoxId = Math.max(nextBoxId, unit.id + 1);
+        }
+        refreshBoxSelector();
+      })
+      .catch((error) => {
+        console.error("Error fetching unit config:", error);
+      });
+  }
+  p.setup = async () => {
+    // updateUnitConfig2Config();
+    getUnitConfigFromBackend();
+    // console.log("unitConfig:", unitConfig);
     p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
 
     // Correct initial Z position for the first box
@@ -148,6 +260,9 @@ const sketch = (p) => {
       isDragging = false;
       controllerX.updateDisplay();
       controllerZ.updateDisplay();
+      selectedBox.cordX = calculateCoordinatesX(selectedBox.x);
+      selectedBox.cordZ = calculateCoordinatesZ(selectedBox.z);
+      console.log("Box moved to:", selectedBox.cordX, selectedBox.cordZ);
     };
 
     controllerX.onFinishChange(finishDragging);
@@ -168,13 +283,43 @@ const sketch = (p) => {
 
     const controllerCellsX = gridGui
       .add(gridConfig, "cellsX", 2, 100, 2)
-      .name("Grid Cells X");
+      .name("Grid Cells X")
+      .listen();
     const controllerCellsZ = gridGui
       .add(gridConfig, "cellsZ", 2, 100, 2)
-      .name("Grid Cells Z");
+      .name("Grid Cells Z")
+      .listen();
+    gridGui.add(gridConfig, "saveUnitConfig").name("Save Config");
     controllerCellsX.onChange(updateBoxLimits);
     controllerCellsZ.onChange(updateBoxLimits);
     updateBoxLimits();
+
+    try {
+      if (process.env.NODE_ENV === "production") {
+        font = await p.loadFont("/static/assets/Roboto_Condensed-Light.ttf");
+      } else {
+        font = await p.loadFont("assets/Roboto_Condensed-Light.ttf");
+      }
+    } catch (error) {
+      console.error("Failed to load font:", error);
+    }
+    p.textFont(font);
+
+    // try {
+    //   if (process.env.NODE_ENV === "production") {
+    //     if (fs.existsSync(path.join(__dirname, "static", "unit_setup.json"))) {
+    //       unitSetup = await p.loadJSON(
+    //         path.join(__dirname, "static", "unit_setup.json")
+    //       );
+    //     }
+    //   } else {
+    //     if (fs.existsSync(path.join(__dirname, "static", "unit_setup.json"))) {
+    //       unitSetup = await p.loadJSON("static/unit_setup.json");
+    //     }
+    //   }
+    // } catch (error) {
+    //   console.error("Failed to load unit setup:", error);
+    // }
   };
 
   const drawGrid = () => {
@@ -231,7 +376,7 @@ const sketch = (p) => {
     }
   };
 
-  p.draw = () => {
+  p.draw = async () => {
     p.background(200);
     if (!isDragging) {
       p.orbitControl();
@@ -258,6 +403,20 @@ const sketch = (p) => {
       }
 
       p.box(boxWidth, boxHeight, boxDepth);
+
+      // Draw the box ID on top
+      p.push();
+      p.translate(0, -boxHeight / 2 - 1, 0);
+      p.rotateX(p.HALF_PI);
+
+      p.fill(0); // Black text
+      p.noStroke();
+
+      p.textAlign(p.CENTER, p.CENTER);
+      p.textSize(14); // Adjust size as needed
+      p.text(box.name, 0, 0);
+      p.pop();
+
       p.pop();
     });
 

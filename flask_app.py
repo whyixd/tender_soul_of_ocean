@@ -1,6 +1,6 @@
 # app.py
 
-from flask import Flask, send_from_directory
+from flask import Flask, request, send_from_directory
 from flask_socketio import SocketIO
 import threading
 from time import sleep
@@ -9,6 +9,7 @@ from artnet_sender import ArtNetSender
 
 from param_processer import TSOOParamProcesser
 from natural_tracker import NaturalTracker
+from config import Config
 
 
 class TSOOFlaskApp:
@@ -59,9 +60,17 @@ class TSOOFlaskApp:
         # 設置路由和事件處理
         self._setup_routes()
         self._setup_socketio_events()
+        self._setup_unit_config_api()
 
     def _setup_routes(self):
         """設置 Flask 路由"""
+
+        @self.app.after_request
+        def add_cors_headers(resp):
+            resp.headers["Access-Control-Allow-Origin"] = "*"
+            resp.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+            resp.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"
+            return resp
 
         @self.app.route("/")
         def index():
@@ -112,6 +121,43 @@ class TSOOFlaskApp:
             # 向客戶端發送一個回應事件
             response_data = {"message": "Hello from Flask!"}
             self.socketio.emit("server_message", response_data)
+
+    def _setup_unit_config_api(self):
+        @self.app.route("/api/unit_config")
+        def get_unit_config():
+            """提供單元配置的 API 端點"""
+            try:
+                config = Config(
+                    data_dict={"unit_config": {"area_size": (8, 4), "units": []}},
+                    config_file_name="unit_config.json",
+                )
+
+                return config.data_dict, 200
+            except Exception as e:
+                print(f"Error fetching unit config: {e}")
+                return {"status": "error", "message": str(e)}, 500
+
+        @self.app.route("/api/update_unit_config", methods=["POST", "OPTIONS"])
+        def update_unit_config():
+            """更新單元配置的 API 端點"""
+            if request.method == "OPTIONS":
+                return ("", 204)  # CORS preflight response
+            try:
+                data = request.json
+                # self.artnet.update_unit_config(data)
+                self._save_unit_config(data)
+                return {"status": "success"}, 200
+            except Exception as e:
+                print(f"Error updating unit config: {e}")
+                return {"status": "error", "message": str(e)}, 500
+
+    def _save_unit_config(self, data):
+        try:
+            config = Config(data_dict=data, config_file_name="unit_config.json")
+            config.save(data)
+            print("Configuration saved successfully.")
+        except Exception as e:
+            print(f"Error saving configuration: {e}")
 
     def start_server(self):
         """啟動 Flask 伺服器"""

@@ -48,6 +48,7 @@ module.exports = (env, argv) => {
         template: "src/configuration.html",
         chunks: ["configuration"],
       }),
+
       new CopyPlugin({
         patterns: [{ from: "public/assets", to: "assets" }],
       }),
@@ -58,7 +59,7 @@ module.exports = (env, argv) => {
       hot: true,
       proxy: [
         {
-          context: ["/socket.io", "/static"],
+          context: ["/socket.io", "/static", "/api"],
           target: "http://127.0.0.1:5000",
           ws: true,
         },

@@ -3,6 +3,8 @@ from time import sleep
 import random
 import threading
 
+from config import Config
+
 
 class ArtNetSender:
     def __init__(
@@ -22,14 +24,20 @@ class ArtNetSender:
             fps=fps,
             even_packet_size=even_packet_size,
         )
+        self.config = Config(
+            data_dict={"unit_config": {"area_size": block_shape, "units": []}},
+            config_file_name="unit_config.json",
+        )
+
         self.packet_size = channels
         self.packet = bytearray(512)
         self.block_order = block_order
-        self.block_shape = block_shape
+        self.block_shape = self.config.data_dict["unit_config"]["area_size"]
         self.block_count = len([x for sublist in self.block_order for x in sublist])
         self.block_channels_count = self.block_shape[0] * self.block_shape[1]
         self.__print_block_order_graph()
         self.channel_order = [i for i in range(0, len(self.packet))]
+
         self.__caculate_remap_order()
 
     def start(self):

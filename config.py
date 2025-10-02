@@ -12,7 +12,7 @@ class Config:
         self.data_dict = data_dict
         self.config_file_path = os.path.join(os.getcwd(), self.config_file_name)
         self.loaded_config = self.load()
-        print(self.loaded_config)
+        # print(self.loaded_config)
 
     def load(self):
         """
@@ -35,12 +35,14 @@ class Config:
             json.dump(self.data_dict, file, indent=4, ensure_ascii=False)
         print(f"Default configuration created at {self.config_file_name}")
 
-    def save(self):
+    def save(self, new_data=None):
         """
         Save the current configuration to the config file.
         """
+        if new_data == None:
+            new_data = self.data_dict
         with open(self.config_file_path, "w", encoding="utf-8") as file:
-            json.dump(self.data_dict, file, indent=4, ensure_ascii=False)
+            json.dump(new_data, file, indent=4, ensure_ascii=False)
         print(f"Configuration saved to {self.config_file_name}")
 
 

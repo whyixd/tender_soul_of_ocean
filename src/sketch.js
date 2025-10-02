@@ -37,10 +37,12 @@ const sketch = (p) => {
   let lightColor = [255, 150, 6];
   let lightValues = [];
   let lightRawData = { matrix: [] };
-  for (let i = 0; i < 8; i++) {
+  let dataShape = { x: 48, y: 12 };
+  let unitShape = { x: 8, y: 4 };
+  for (let i = 0; i < dataShape.y; i++) {
     let newRow = [];
 
-    for (let j = 0; j < 16; j++) {
+    for (let j = 0; j < dataShape.x; j++) {
       newRow.push(0);
     }
     lightValues.push(newRow);
@@ -71,6 +73,8 @@ const sketch = (p) => {
     effect_vector: 0,
     effect_angle: 0,
   };
+  let unitHigh;
+  let unitConfig;
   // let sinOffset = 0;
   // let sinLength = 1;
   // let sinScale = 1;
@@ -80,7 +84,21 @@ const sketch = (p) => {
       process.env.NODE_ENV === "production"
         ? "/static/assets/20250616_linz.obj" // 生產環境路徑 (build 後)
         : "assets/20250616_linz.obj"; // 開發環境路徑 (npm start)
+    let unit_high_path =
+      process.env.NODE_ENV === "production"
+        ? "/static/assets/unit_high.json" // 生產環境路徑 (build 後)
+        : "assets/unit_high.json"; // 開發環境路徑 (npm start)
+    p.loadJSON(unit_high_path, (data) => {
+      console.log("Loaded highs:", data);
+      unitHigh = data;
+    });
 
+    fetch("/api/unit_config")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Loaded unit config:", data);
+        unitConfig = data.unit_config;
+      });
     p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
     p.angleMode(p.RADIANS);
     const gui = new GUI();
@@ -117,16 +135,16 @@ const sketch = (p) => {
     gui.add(settings, "useEase").name("使用Ease函數利於顯示");
     gui.add(settings, "showControlPoints").name("顯示控制點");
     const matrixFolder = gui.addFolder("8x16 Matrix (Display Only)");
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < dataShape.y; i++) {
       const rowFolder = matrixFolder.addFolder(`Row ${i}`);
 
       // 🔥 關鍵點 1: 預設關閉資料夾，保持 UI 乾淨
       rowFolder.close();
 
-      for (let j = 0; j < 16; j++) {
+      for (let j = 0; j < dataShape.x; j++) {
         const controller = rowFolder
           .add(lightRawData.matrix[i], j)
-          .name(`Col ${i * 16 + j + 1}`)
+          .name(`Col ${i * dataShape.x + j + 1}`)
           .listen();
 
         // 🔥 關鍵點 2: 禁用控制器，使其不可互動
@@ -202,7 +220,7 @@ const sketch = (p) => {
       settings.isConnected = false;
     });
     socket.on("tsoo_param", (data) => {
-      console.log("Received tsoo_param:", data);
+      // console.log("Received tsoo_param:", data);
       tsooParam["people_count_max"] = data.people_count_max;
       tsooParam["wind_speed"] = data.wind_speed;
       tsooParam["area_people_count"] = data.area_people_count;
@@ -230,7 +248,7 @@ const sketch = (p) => {
     });
 
     socket.on("server_message", (data) => {
-      console.log("📬 Message from server:", data.message);
+      // console.log("📬 Message from server:", data.message);
       // 收到伺服器訊息時，隨機改變背景顏色來測試
       settings.background = p.color(
         p.random(255),
@@ -242,8 +260,8 @@ const sketch = (p) => {
       // 更新 lightValues
       for (let i = 0; i < lightValues.length; i++) {
         for (let j = 0; j < lightValues[i].length; j++) {
-          lightValues[i][j] = data.value[i * 16 + j] / 255; // 假設數據是 0-255 範圍
-          lightRawData.matrix[i][j] = data.value[i * 16 + j]; // 更新原始數據
+          lightValues[i][j] = data.value[i * dataShape.x + j] / 255; // 假設數據是 0-255 範圍
+          lightRawData.matrix[i][j] = data.value[i * dataShape.x + j]; // 更新原始數據
         }
       }
     });
@@ -265,27 +283,27 @@ const sketch = (p) => {
     p.lights();
     p.noStroke();
     let orthoScale = 8;
-    p.ortho(
-      -p.width / orthoScale,
-      p.width / orthoScale,
-      -p.height / orthoScale,
-      p.height / orthoScale,
-      0,
-      1000
-    );
+    // p.ortho(
+    //   -p.width / orthoScale,
+    //   p.width / orthoScale,
+    //   -p.height / orthoScale,
+    //   p.height / orthoScale,
+    //   0,
+    //   1000
+    // );
     p.rotateX(p.PI / 2);
     // p.rotateZ(-p.PI / 2);
     if (shape) {
       p.scale(1, -1, 1);
-      p.model(shape);
+      // p.model(shape);
     }
     p.push();
     let unitSize = 5;
     let contrast = 2;
     p.translate(50, -50, -100);
-    for (let i = 0; i < 16; i++) {
-      for (let j = 0; j < 8; j++) {
-        p.fill(lightRawData.matrix[j][i] * contrast);
+    for (let i = 0; i < dataShape.x; i++) {
+      for (let j = 0; j < dataShape.y; j++) {
+        // p.fill(lightRawData.matrix[j][i] * contrast);
         p.square((8 - j) * unitSize, (16 - i) * unitSize, unitSize);
       }
     }
@@ -358,43 +376,72 @@ const sketch = (p) => {
     }
     // create light cylinder
     p.push();
-    p.fill(255, 0, 255);
+    let unit_color = [
+      p.color(255, 255, 255),
+      p.color(255, 0, 0),
+      p.color(0, 255, 0),
+      p.color(0, 0, 255),
+      p.color(255, 255, 0),
+      p.color(0, 255, 255),
+      p.color(255, 0, 255),
+      p.color(200, 200, 200),
+      p.color(100, 100, 100),
+    ];
+    let gap = 8;
+    p.noStroke();
     p.rotateX(p.PI / 2);
-    for (let i = 0; i < startPosition.length; i++) {
-      p.translate(startPosition[i].x, startPosition[i].y, startPosition[i].z);
-      let firstColumnValus = lightValues[startPosition.length - 1 - i][0];
-      firstColumnValus = settings.useEase
-        ? easeOutExpo(firstColumnValus)
-        : firstColumnValus;
-
-      p.fill(
-        firstColumnValus * lightColor[0],
-        firstColumnValus * lightColor[1],
-        firstColumnValus * lightColor[2]
+    p.translate(0, 0, 200);
+    unitHigh.units.forEach((unit, unitIdx) => {
+      let x = unitConfig.units[unitIdx].cord.x;
+      let z = unitConfig.units[unitIdx].cord.z;
+      p.translate(z * gap * unitShape.y, 0, (-x / 2) * gap * unitShape.x);
+      drawUnit(
+        p,
+        unit.highs,
+        unit_color[unitIdx % unit_color.length],
+        unitShape,
+        gap
       );
-      p.cylinder(0.5, 25.6);
-      for (let j = 1; j < 16; j++) {
-        // 使用 sinParams[i]
-        p.translate(
-          0,
-          p.sin(j * sinParams[i].sinLength + sinParams[i].sinOffset) *
-            sinParams[i].sinScale +
-            sinParams[i].sinYOffset,
-          11.12
-        );
-        let lightValue = lightValues[startPosition.length - 1 - i][j];
+      p.translate(-z * gap * unitShape.y, 0, (x / 2) * gap * unitShape.x);
+    });
 
-        lightValue = settings.useEase ? easeOutExpo(lightValue) : lightValue;
-        // 使用 light
-        p.fill(
-          lightValue * lightColor[0],
-          lightValue * lightColor[1],
-          lightValue * lightColor[2]
-        );
-        print;
-        p.cylinder(0.5, 25.6);
-      }
-    }
+    // p.fill(255, 0, 255);
+    // p.rotateX(p.PI / 2);
+    // for (let i = 0; i < startPosition.length; i++) {
+    //   p.translate(startPosition[i].x, startPosition[i].y, startPosition[i].z);
+    //   let firstColumnValus = lightValues[startPosition.length - 1 - i][0];
+    //   firstColumnValus = settings.useEase
+    //     ? easeOutExpo(firstColumnValus)
+    //     : firstColumnValus;
+
+    //   p.fill(
+    //     firstColumnValus * lightColor[0],
+    //     firstColumnValus * lightColor[1],
+    //     firstColumnValus * lightColor[2]
+    //   );
+    //   // p.cylinder(0.5, 25.6);
+    //   for (let j = 1; j < dataShape.x; j++) {
+    //     // 使用 sinParams[i]
+    //     p.translate(
+    //       0,
+    //       p.sin(j * sinParams[i].sinLength + sinParams[i].sinOffset) *
+    //         sinParams[i].sinScale +
+    //         sinParams[i].sinYOffset,
+    //       11.12
+    //     );
+    //     let lightValue = lightValues[startPosition.length - 1 - i][j];
+
+    //     lightValue = settings.useEase ? easeOutExpo(lightValue) : lightValue;
+    //     // 使用 light
+    //     p.fill(
+    //       lightValue * lightColor[0],
+    //       lightValue * lightColor[1],
+    //       lightValue * lightColor[2]
+    //     );
+    //     print;
+    //     // p.cylinder(0.5, 25.6);
+    //   }
+    // }
 
     p.pop();
     // p.push();
@@ -430,13 +477,31 @@ const sketch = (p) => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
   p.keyReleased = () => {
-    console.log(pos);
+    // console.log(pos);
   };
 };
 
 // 啟動 p5 sketch
 new p5(sketch);
 
+/////////////////////////////////////////////////////////
+
+function drawUnit(p, highs, color, unitShape = { x: 8, y: 4 }, gap = 5) {
+  p.fill(color);
+  let highFactor = 20;
+  highs.forEach((high, highIdx) => {
+    p.translate(gap, 0, 0);
+    high.forEach((h, hIdx) => {
+      p.translate(0, 0, -gap);
+      p.translate(0, h / highFactor, 0);
+      p.cylinder(0.5, 23.5);
+      p.translate(0, -h / highFactor, 0);
+    });
+    p.translate(0, 0, gap * unitShape.x);
+  });
+  p.translate(-gap * unitShape.y, 0, 0);
+  // p.translate(0, 0, -unitShape.x * gap);
+}
 function easeOutExpo(x) {
   return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
 }
