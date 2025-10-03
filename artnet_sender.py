@@ -26,7 +26,7 @@ class ArtNetSender:
         )
         self.config = Config(
             data_dict={"unit_config": {"area_size": block_shape, "units": []}},
-            config_file_name="unit_config.json",
+            config_file_name="config/unit_config.json",
         )
 
         self.packet_size = channels
@@ -39,6 +39,7 @@ class ArtNetSender:
         self.channel_order = [i for i in range(0, len(self.packet))]
 
         self.__caculate_remap_order()
+        print(f"channel_order: {self.channel_order}")
 
     def start(self):
         self.artnet.start()
@@ -119,6 +120,7 @@ class ArtNetSender:
         return packet
 
     def __print_block_order_graph(self):
+        print(self.block_order)
         print(
             f"1 --→ {self.block_shape[0]*len(self.block_order[0])}\n↓\n{self.block_shape[0]*len(self.block_order[0])+1} --→ {self.block_shape[0]*len(self.block_order[0])+1+self.block_shape[0]*len(self.block_order[0])}"
         )
@@ -149,38 +151,3 @@ def split_list(list, n):
     """將list分為n個元素組成的子列表"""
     for idx in range(0, len(list), n):
         yield list[idx : idx + n]
-
-
-# artnet = ArtNetSender(
-#     "127.0.0.1",
-#     universe=0,
-#     channels=128,
-#     block_order=[[1, 2], [3, 4]],
-#     block_shape=(8, 4),
-# )
-
-# artnet.start()
-
-# matrix = []
-# for i in range(0, 128):
-#     matrix.append(0)
-# artnet.set_packet(matrix)  # 設定初始數據包
-# count = 0
-
-# try:
-#     while True:
-#         # matrix[random.randint(0, 127)] = random.randint(0, 255)
-#         if matrix[count] == 0:
-#             matrix[count] = 255
-#         else:
-#             matrix[count] = 0
-#         artnet.set_packet(matrix)
-#         count += 1
-#         if count >= 128:
-#             count = 0
-#         sleep(0.1)
-
-# except KeyboardInterrupt:
-#     print("Stopping ArtNet sender...")
-#     artnet.stop()
-#     print("ArtNet sender stopped.")

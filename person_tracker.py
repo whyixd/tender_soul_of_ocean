@@ -36,7 +36,7 @@ class PersonTracker(threading.Thread):
                     [(100, 100), (200, 100), (200, 200), (100, 200)],
                 ],
             },
-            config_file_name="person_tracker_config.json",
+            config_file_name="config/person_tracker_config.json",
         )
         # Video settings
         self.video_source = video_source
@@ -145,12 +145,16 @@ class PersonTracker(threading.Thread):
                 if cap0 and cap0.isOpened():
                     print("Successfully opened camera 0.")
                     break
-                print(f"Attempt {i+1}/5 to open camera 0 failed. Retrying in 1 second...")
+                print(
+                    f"Attempt {i+1}/5 to open camera 0 failed. Retrying in 1 second..."
+                )
                 time.sleep(1)
                 cap0 = None  # Reset to None if failed
 
             if not cap0:
-                print("Error: Could not open camera 0 after 5 attempts. Exiting thread.")
+                print(
+                    "Error: Could not open camera 0 after 5 attempts. Exiting thread."
+                )
                 self.running = False
                 return
 
@@ -163,12 +167,16 @@ class PersonTracker(threading.Thread):
                 if cap1 and cap1.isOpened():
                     print("Successfully opened camera 1.")
                     break
-                print(f"Attempt {i+1}/5 to open camera 1 failed. Retrying in 1 second...")
+                print(
+                    f"Attempt {i+1}/5 to open camera 1 failed. Retrying in 1 second..."
+                )
                 time.sleep(1)
                 cap1 = None  # Reset to None if failed
 
             if not cap1:
-                print("Error: Could not open camera 1 after 5 attempts. Exiting thread.")
+                print(
+                    "Error: Could not open camera 1 after 5 attempts. Exiting thread."
+                )
                 self.running = False
                 return  # The finally block will still execute
 
@@ -245,7 +253,7 @@ class PersonTracker(threading.Thread):
                         self.area_polygons = [
                             np.array(area, dtype=np.int32) for area in self.areas
                         ]
-                    
+
                     # Update FPS calculation if visualization is enabled
                     if self.show_visualization:
                         self.frame_count_for_fps += 1
@@ -280,7 +288,6 @@ class PersonTracker(threading.Thread):
                         )
                     # Process detections
                     self._process_detections(result, processed_frame)
-                    
 
                     # Put the processed frame in the result queue
                     if not self.result_queue.full():
@@ -328,7 +335,6 @@ class PersonTracker(threading.Thread):
                         self.active_tracks[track_id]["misses"] = 0  # Reset misses
 
         # Draw areas
-      
 
         # Update tracking info and remove old tracks
         self._update_tracking(current_track_ids_in_frame)
@@ -344,33 +350,31 @@ class PersonTracker(threading.Thread):
         # if self.show_visualization:
         overlay = frame.copy()
         colors = [(65, 255, 0), (255, 0, 208), (0, 255, 221), (242, 255, 0)]
-            # Draw areas based on edit mode
+        # Draw areas based on edit mode
         for idx, area in enumerate(self.areas):
             if self.area_edit_mode:
-                    # color = (
-                    #     (0, 0, 255) if idx == self.current_setting_area else (255, 0, 0)
-                    # )
-                    color = colors[idx]
-                    cv2.fillPoly(
-                        overlay,
-                        [np.array(area, dtype=np.int32)],
-                        color=color,
-                    )
-                    # Only draw corners in edit mode
-                    for corner in area:
-                        cv2.circle(overlay, corner, 5, color, -1)
+                # color = (
+                #     (0, 0, 255) if idx == self.current_setting_area else (255, 0, 0)
+                # )
+                color = colors[idx]
+                cv2.fillPoly(
+                    overlay,
+                    [np.array(area, dtype=np.int32)],
+                    color=color,
+                )
+                # Only draw corners in edit mode
+                for corner in area:
+                    cv2.circle(overlay, corner, 5, color, -1)
 
             # Apply transparency only in edit mode
         if self.area_edit_mode:
-                alpha = 0.3
-                cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
+            alpha = 0.3
+            cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
         else:
-                # Just draw outlines when not in edit mode
+            # Just draw outlines when not in edit mode
             for idx, area in enumerate(self.areas):
-                    color = colors[idx]
-                    cv2.polylines(
-                        frame, [np.array(area, dtype=np.int32)], True, color, 2
-                    )
+                color = colors[idx]
+                cv2.polylines(frame, [np.array(area, dtype=np.int32)], True, color, 2)
 
     def _update_tracking(self, current_track_ids_in_frame):
         """Update tracking information and remove stale tracks."""

@@ -21,7 +21,11 @@ class TSOOFlaskApp:
         artnet_universe=0,
         artnet_channels=128,
         block_shape=(8, 4),
-        block_order=[[1, 3], [2, 4]],
+        block_order=[
+            [1, 4, 7, 10, 13, 16],
+            [2, 5, 8, 11, 14, 17],
+            [3, 6, 9, 12, 15, 18],
+        ],
         static_folder="static",
     ):
         # Flask 應用設置
@@ -41,7 +45,11 @@ class TSOOFlaskApp:
             universe=artnet_universe,
             channels=artnet_channels,
             block_shape=block_shape,
-            block_order=block_order,
+            block_order=[
+                [1, 4, 7],
+                [2, 5, 8],
+                [3, 6, 9],
+            ],
         )
 
         # 服務器配置

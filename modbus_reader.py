@@ -13,7 +13,7 @@ modbus_logger.propagate = False
 modbus_stream_handler = logging.StreamHandler()
 
 modbus_rotating_file_handler = logging.handlers.RotatingFileHandler(
-    "modbus_reader.log", maxBytes=5 * 1024 * 1024, backupCount=10, encoding="utf-8"
+    "log/modbus_reader.log", maxBytes=5 * 1024 * 1024, backupCount=10, encoding="utf-8"
 )
 modbus_stream_handler.setLevel(logging.DEBUG)
 modbus_rotating_file_handler.setLevel(logging.DEBUG)
@@ -41,10 +41,10 @@ class ModbusReader:
         )
         self.connection = self.client.connect()
         self.data = None
+
     def read_sensor_data_threaded(self):
-        self.read_thread = threading.Thread(target=self.read_sensor_data,daemon=True)
+        self.read_thread = threading.Thread(target=self.read_sensor_data, daemon=True)
         self.read_thread.start()
-    
 
     def read_sensor_data(self):
         if not self.client.connected:
@@ -78,7 +78,14 @@ class ModbusReader:
                 modbus_logger.info(
                     f"風速: {wind_speed} m/s, 風級: {wind_level}, 風向角度: {wind_angle}, 風向: {wind_direction}, 濕度: {humidity}%, 溫度: {temperature}°C"
                 )
-                self.data = [wind_speed, wind_level, wind_angle, wind_direction, humidity, temperature]
+                self.data = [
+                    wind_speed,
+                    wind_level,
+                    wind_angle,
+                    wind_direction,
+                    humidity,
+                    temperature,
+                ]
                 return self.data
             except ModbusException as e:
                 modbus_logger.error(f"讀取 Modbus 失敗: {e}")
@@ -137,24 +144,22 @@ class ModbusReader:
     def close(self):
         self.client.close()
 
-# if __name__ == "__main__":
-#     com_port = find_usb_serial_device(vid="0403", pid="6001")
-#     if com_port is None:
-#         modbus_logger.warning("找不到 風速計 設備")
-#     else:
-#         modbus_logger.info(f"找到 風速計 設備: {com_port}")
-#     modbus = ModbusReader(com_port=com_port)
 
+if __name__ == "__main__":
+    com_port = find_usb_serial_device(vid="0403", pid="6001")
+    if com_port is None:
+        modbus_logger.warning("找不到 風速計 設備")
+    else:
+        modbus_logger.info(f"找到 風速計 設備: {com_port}")
+    modbus = ModbusReader(com_port=com_port)
 
-#     def continuous_read():
-#         import time
+    def continuous_read():
+        import time
 
-#         while True:
-#             modbus.read_sensor_data()
-#             time.sleep(3)
+        while True:
+            modbus.read_sensor_data()
+            time.sleep(3)
 
+    continuous_read()
 
-#     continuous_read()
-
-
-#     modbus.close()
+    modbus.close()

@@ -9,6 +9,7 @@ dependencies = [
     "flask-socketio>=5.5.1",
     "lap>=0.5.12",
     "noise>=1.2.2",
+    "numpy>=2.2.6",
     "pyinstaller>=6.15.0",
     "pymodbus>=3.9.2",
     "pyserial>=3.5",

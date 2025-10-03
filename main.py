@@ -17,6 +17,7 @@ from osc_reciver import OSCReceiver
 
 from param_processer import ease_in_out_circ
 
+
 def send_osc_message(
     client: udp_client.SimpleUDPClient, tsoo_param: TSOOParamProcesser
 ):
@@ -67,7 +68,7 @@ def send_osc_message(
     client.send_message("/whyixd/wind/interper/angle", inter_param["wind_angle"])
     client.send_message("/whyixd/wind/interper/vector", inter_param["wind_vector"])
     # ---------------------
-    
+
 
 # 將 effect_thread 函數移到 main() 外部，並接收所需的參數
 def effect_process(
@@ -129,8 +130,8 @@ def effect_process(
     flask_app.socketio.emit("dmx_data", {"value": matrix})  # 初始發送
     last_pluck_trigger_time = 0
     last_matrix_update_time = 0
-    last_glitch_update_time =0
-    
+    last_glitch_update_time = 0
+
     try:
         while True:  # 主循環
             try:
@@ -139,7 +140,9 @@ def effect_process(
                     address, args, trigger = osc_receiver.received.get_nowait()
                     intensity = trigger
 
-                    intensity = ease_in_out_circ(min(max((trigger - 0.004) / 0.2, 0), 1))
+                    intensity = ease_in_out_circ(
+                        min(max((trigger - 0.004) / 0.2, 0), 1)
+                    )
                     param_processor.target_tsoo_param["rain_intensity"] = intensity
 
             except Exception as e:
@@ -148,7 +151,9 @@ def effect_process(
                 if not people_queue.empty():
                     people_counts = people_queue.get_nowait()
                     # print(f"Effect process - Person in area: {people_counts}")
-                    param_processor.target_tsoo_param["area_people_count"] = people_counts
+                    param_processor.target_tsoo_param["area_people_count"] = (
+                        people_counts
+                    )
                     # 不做 caculate_param()，只更新人數
             except Exception as e:
                 print(f"Error getting data from queue: {e}")
@@ -164,7 +169,9 @@ def effect_process(
                     param_processor.update_wind_speed(natural_data[0])
                     param_processor.update_wind_angle(natural_data[2])
                     param_processor.caculate_param()
-                    print("Effect process: parameters recalculated (natural_data updated)")
+                    print(
+                        "Effect process: parameters recalculated (natural_data updated)"
+                    )
                     param_processor.params_updated = True
             except Exception as e:
                 print(f"Error updating natural data: {e}")
@@ -172,7 +179,7 @@ def effect_process(
                 try:
                     if param_processor.glitch_frame is not None:
                         glitch_flaten = param_processor.glitch_frame.flatten().tolist()
-                        
+
                         # print("Glitch frame detected:", glitch_flaten)
                         osc_client.send_message("/whyixd/light/glitch", glitch_flaten)
                 except:
@@ -214,7 +221,7 @@ def effect_process(
                     )
                     send_osc_message(osc_client, param_processor)
                     osc_client.send_message("/whyixd/light/dmx", matrix)
-                    
+
                     # count += 1
 
                     flask_app.artnet.set_packet(
@@ -236,7 +243,7 @@ def effect_process(
 
 def main():
     osc_config = {"address": "127.0.0.1", "port": 5005}
-    osc_config_instance = Config(osc_config, "osc_config.json")
+    osc_config_instance = Config(osc_config, "config/osc_config.json")
     osc_config = osc_config_instance.load()
 
     general_config = {
@@ -244,7 +251,7 @@ def main():
         "light_intensity": 1,
         "wind_speed_factor": 10,  # 默認風速因子
     }
-    general_config_instance = Config(general_config, "general_config.json")
+    general_config_instance = Config(general_config, "config/general_config.json")
     general_config = general_config_instance.load()
     # 創建一個隊列用於在進程之間傳遞人員追蹤數據
     people_queue = Queue(maxsize=5)  # 限制隊列大小，防止內存溢出
