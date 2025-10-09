@@ -120,7 +120,7 @@ def effect_process(
     flask_app.start_server()
 
     # effect
-    matrix = [0] * 128
+    matrix = [0] * artnet_channels
 
     time_val = 0
     off = 1
@@ -191,8 +191,8 @@ def effect_process(
                 try:
                     # 使用新的組合效果方法，避免梯度遮罩影響雨滴效果
                     matrix_data = param_processor.get_combined_effects(
-                        16,
-                        8,
+                        48,
+                        12,
                         scale=7,
                         z=time_val,
                         gradient_vector=(
@@ -224,9 +224,10 @@ def effect_process(
 
                     # count += 1
 
-                    flask_app.artnet.set_packet(
-                        matrix, general_config.get("light_intensity", 2)
-                    )
+                    # flask_app.artnet.set_packet(
+                    #     matrix, general_config.get("light_intensity", 2)
+                    # )
+                    flask_app.artnet.set_packet(matrix)
                 except Exception as e:
                     print(f"Error in effect : {e}")
                 finally:
@@ -280,7 +281,7 @@ def main():
     artnet_host = general_config.get("artnet_target", "2.0.0.100")
     # artnet_host = "127.0.0.1"；
     artnet_universe = 0
-    artnet_channels = 128
+    artnet_channels = 512
     block_shape = (8, 4)
     block_order = [[1, 3], [2, 4]]
 

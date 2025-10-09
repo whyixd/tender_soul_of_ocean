@@ -43,9 +43,9 @@ class TSOOFlaskApp:
         self.artnet = ArtNetSender(
             artnet_host,
             universe=artnet_universe,
-            channels=artnet_channels,
-            block_shape=block_shape,
-            block_order=[
+            # channels=artnet_channels,
+            unit_shape=block_shape,
+            unit_order=[
                 [1, 4, 7],
                 [2, 5, 8],
                 [3, 6, 9],
@@ -137,7 +137,7 @@ class TSOOFlaskApp:
             try:
                 config = Config(
                     data_dict={"unit_config": {"area_size": (8, 4), "units": []}},
-                    config_file_name="unit_config.json",
+                    config_file_name="config/unit_config.json",
                 )
 
                 return config.data_dict, 200
@@ -217,13 +217,13 @@ class TSOOFlaskApp:
 
         def test_thread():
             nonlocal count, off
-            matrix = [0] * 128
+            matrix = [0] * 512
             while True:
-                for i in range(128):
+                for i in range(512):
 
                     matrix[i] = 255 * off  # 點亮當前通道
                     self.socketio.emit("dmx_data", {"value": matrix})
-                    self.artnet.set_packet(matrix, 1)
+                    self.artnet.set_packet(matrix)
                     count += 1
                     sleep(0.05)  # 每個通道點亮後等待一段時間
                 off = 1 - off  # 切換點亮狀態

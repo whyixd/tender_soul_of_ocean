@@ -8,7 +8,10 @@ class NaturalTracker:
     """Data structure is  [wind_speed, wind_level, wind_direction, wind_direction_compass]"""
 
     def __init__(
-        self, vid="0403", pid="6001", history_file_path="[2025-07-10]modbus_reader.log"
+        self,
+        vid="0403",
+        pid="6001",
+        history_file_path="log/[2025-07-10]modbus_reader.log",
     ):
         """
         初始化 NaturalTracker 類
@@ -38,9 +41,11 @@ class NaturalTracker:
         if self.serial is not None:
             print(f"找到 風速計 設備: {self.serial}")
             self.modbus = ModbusReader(com_port=self.serial)
+
             def read_data():
                 self.modbus.read_sensor_data_threaded()
                 return self.modbus.data
+
             self.read_wind_data = read_data
         else:
             print("找不到 風速計 設備，使用歷史數據")

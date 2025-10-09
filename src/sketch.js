@@ -89,8 +89,8 @@ const sketch = (p) => {
         ? "/static/assets/unit_high.json" // 生產環境路徑 (build 後)
         : "assets/unit_high.json"; // 開發環境路徑 (npm start)
     p.loadJSON(unit_high_path, (data) => {
-      console.log("Loaded highs:", data);
       unitHigh = data;
+      console.log("Loaded highs:", unitHigh);
     });
 
     fetch("/api/unit_config")
@@ -98,6 +98,248 @@ const sketch = (p) => {
       .then((data) => {
         console.log("Loaded unit config:", data);
         unitConfig = data.unit_config;
+      })
+      .catch((error) => {
+        console.error("Error loading unit config:", error);
+        unitConfig = {
+          area_size: [12, 4],
+          units: [
+            {
+              id: 0,
+              name: "Unit 1",
+              position: {
+                x: -125,
+                y: -25,
+                z: -37.5,
+              },
+              cord: {
+                x: 0,
+                z: 0,
+              },
+            },
+            {
+              id: 1,
+              name: "Unit 2",
+              position: {
+                x: -75,
+                y: -25,
+                z: -37.5,
+              },
+              cord: {
+                x: 2,
+                z: 0,
+              },
+            },
+            {
+              id: 2,
+              name: "Unit 3",
+              position: {
+                x: -25,
+                y: -25,
+                z: -37.5,
+              },
+              cord: {
+                x: 4,
+                z: 0,
+              },
+            },
+            {
+              id: 3,
+              name: "Unit 4",
+              position: {
+                x: -125,
+                y: -25,
+                z: -12.5,
+              },
+              cord: {
+                x: 0,
+                z: 1,
+              },
+            },
+            {
+              id: 4,
+              name: "Unit 5",
+              position: {
+                x: -75,
+                y: -25,
+                z: -12.5,
+              },
+              cord: {
+                x: 2,
+                z: 1,
+              },
+            },
+            {
+              id: 5,
+              name: "Unit 6",
+              position: {
+                x: -25,
+                y: -25,
+                z: -12.5,
+              },
+              cord: {
+                x: 4,
+                z: 1,
+              },
+            },
+            {
+              id: 6,
+              name: "Unit 7",
+              position: {
+                x: -125,
+                y: -25,
+                z: 12.5,
+              },
+              cord: {
+                x: 0,
+                z: 2,
+              },
+            },
+            {
+              id: 7,
+              name: "Unit 8",
+              position: {
+                x: -75,
+                y: -25,
+                z: 12.5,
+              },
+              cord: {
+                x: 2,
+                z: 2,
+              },
+            },
+            {
+              id: 8,
+              name: "Unit 9",
+              position: {
+                x: -25,
+                y: -25,
+                z: 12.5,
+              },
+              cord: {
+                x: 4,
+                z: 2,
+              },
+            },
+            {
+              id: 9,
+              name: "Unit 10",
+              position: {
+                x: 25,
+                y: -25,
+                z: -37.5,
+              },
+              cord: {
+                x: 6,
+                z: 0,
+              },
+            },
+            {
+              id: 10,
+              name: "Unit 11",
+              position: {
+                x: 75,
+                y: -25,
+                z: -37.5,
+              },
+              cord: {
+                x: 8,
+                z: 0,
+              },
+            },
+            {
+              id: 11,
+              name: "Unit 12",
+              position: {
+                x: 125,
+                y: -25,
+                z: -37.5,
+              },
+              cord: {
+                x: 10,
+                z: 0,
+              },
+            },
+            {
+              id: 12,
+              name: "Unit 13",
+              position: {
+                x: 25,
+                y: -25,
+                z: -12.5,
+              },
+              cord: {
+                x: 6,
+                z: 1,
+              },
+            },
+            {
+              id: 13,
+              name: "Unit 14",
+              position: {
+                x: 75,
+                y: -25,
+                z: -12.5,
+              },
+              cord: {
+                x: 8,
+                z: 1,
+              },
+            },
+            {
+              id: 14,
+              name: "Unit 15",
+              position: {
+                x: 125,
+                y: -25,
+                z: -12.5,
+              },
+              cord: {
+                x: 10,
+                z: 1,
+              },
+            },
+            {
+              id: 15,
+              name: "Unit 16",
+              position: {
+                x: 25,
+                y: -25,
+                z: 12.5,
+              },
+              cord: {
+                x: 6,
+                z: 2,
+              },
+            },
+            {
+              id: 16,
+              name: "Unit 17",
+              position: {
+                x: 75,
+                y: -25,
+                z: 12.5,
+              },
+              cord: {
+                x: 8,
+                z: 2,
+              },
+            },
+            {
+              id: 17,
+              name: "Unit 18",
+              position: {
+                x: 125,
+                y: -25,
+                z: 12.5,
+              },
+              cord: {
+                x: 10,
+                z: 2,
+              },
+            },
+          ],
+        }; // 預設值以防錯誤
       });
     p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
     p.angleMode(p.RADIANS);
@@ -282,7 +524,7 @@ const sketch = (p) => {
     p.orbitControl();
     p.lights();
     p.noStroke();
-    let orthoScale = 8;
+    let orthoScale = 5;
     // p.ortho(
     //   -p.width / orthoScale,
     //   p.width / orthoScale,
@@ -298,12 +540,13 @@ const sketch = (p) => {
       // p.model(shape);
     }
     p.push();
-    let unitSize = 5;
+    let unitSize = 8;
     let contrast = 2;
-    p.translate(50, -50, -100);
+    p.translate(80, -60, -80);
+    p.rotateZ(p.PI);
     for (let i = 0; i < dataShape.x; i++) {
       for (let j = 0; j < dataShape.y; j++) {
-        // p.fill(lightRawData.matrix[j][i] * contrast);
+        p.fill(lightRawData.matrix[j][i] * contrast);
         p.square((8 - j) * unitSize, (16 - i) * unitSize, unitSize);
       }
     }
@@ -397,13 +640,20 @@ const sketch = (p) => {
       p.translate(z * gap * unitShape.y, 0, (-x / 2) * gap * unitShape.x);
       drawUnit(
         p,
+        unitConfig,
+        settings,
+        lightRawData,
+        unitIdx,
         unit.highs,
-        unit_color[unitIdx % unit_color.length],
+        // unit_color[unitIdx % unit_color.length],
+        lightColor,
+
         unitShape,
         gap
       );
       p.translate(-z * gap * unitShape.y, 0, (x / 2) * gap * unitShape.x);
     });
+    p.pop();
 
     // p.fill(255, 0, 255);
     // p.rotateX(p.PI / 2);
@@ -443,7 +693,6 @@ const sketch = (p) => {
     //   }
     // }
 
-    p.pop();
     // p.push();
     // p.fill(255);
     // p.rotateY(p.PI / 2);
@@ -486,15 +735,37 @@ new p5(sketch);
 
 /////////////////////////////////////////////////////////
 
-function drawUnit(p, highs, color, unitShape = { x: 8, y: 4 }, gap = 5) {
-  p.fill(color);
+function drawUnit(
+  p,
+  unitConfig,
+  settings,
+  lightRawData,
+  unitIdx,
+  highs,
+  color,
+  unitShape = { x: 8, y: 4 },
+  gap = 5
+) {
   let highFactor = 20;
   highs.forEach((high, highIdx) => {
     p.translate(gap, 0, 0);
     high.forEach((h, hIdx) => {
       p.translate(0, 0, -gap);
       p.translate(0, h / highFactor, 0);
-      p.cylinder(0.5, 23.5);
+      let valueCord = [
+        unitConfig.units[unitIdx].cord.x / 2,
+        unitConfig.units[unitIdx].cord.z,
+      ];
+      valueCord = [valueCord[0] * 8 + hIdx, valueCord[1] * 4 + highIdx];
+      // console.log(lightRawData.matrix);
+      // console.log(valueCord);
+      let value = lightRawData.matrix[valueCord[1]][valueCord[0]];
+      value = value / 255;
+      let c = p.color(color[0] * value, color[1] * value, color[2] * value);
+      // console.log(valueCord, value, c);
+      value = settings.useEase ? easeOutExpo(value) : value;
+      p.fill(color[0] * value, color[1] * value, color[2] * value);
+      p.cylinder(0.5, 23.5, 5, 1);
       p.translate(0, -h / highFactor, 0);
     });
     p.translate(0, 0, gap * unitShape.x);
