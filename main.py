@@ -84,6 +84,7 @@ def effect_process(
     general_config,
     # update_person_track_data=lambda data: None,
 ):
+    print("block_order:", block_order)
     # 創建自己的對象實例，而不是使用主進程的實例
     flask_app = TSOOFlaskApp(
         host="127.0.0.1",

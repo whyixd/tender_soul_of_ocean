@@ -207,6 +207,8 @@ class TSOOFlaskApp:
         self.is_running = False
         print("Server has been stopped")
 
+    test_thread_event = threading.Event()
+
     def test_channel_check(self):
         """依序點亮所有通道以檢查 ArtNet 設置"""
         if not self.is_running:
@@ -217,16 +219,46 @@ class TSOOFlaskApp:
 
         def test_thread():
             nonlocal count, off
-            matrix = [0] * 512
-            while True:
-                for i in range(512):
+            matrix = [0] * 576
+            try:
+                while not self.test_thread_event.is_set():
+                    for i in range(512):
 
-                    matrix[i] = 255 * off  # 點亮當前通道
-                    self.socketio.emit("dmx_data", {"value": matrix})
-                    self.artnet.set_packet(matrix)
-                    count += 1
-                    sleep(0.05)  # 每個通道點亮後等待一段時間
-                off = 1 - off  # 切換點亮狀態
+                        matrix[i] = 255 * off  # 點亮當前通道
+                        self.socketio.emit("dmx_data", {"value": matrix})
+                        self.artnet.set_packet(matrix)
+                        count += 1
+                        sleep(0.05)  # 每個通道點亮後等待一段時間
+                    off = 1 - off  # 切換點亮狀態
+            except Exception as e:
+                print(f"Error in test thread: {e}")
 
         test_thread_instance = threading.Thread(target=test_thread, daemon=True)
         test_thread_instance.start()
+
+        return test_thread_instance
+
+
+flask_app = TSOOFlaskApp(
+    artnet_host="2.56.31.102",
+    artnet_universe=1,
+    artnet_channels=512,
+    block_order=[[1, 4, 7, 10, 13, 16], [2, 5, 8, 11, 14, 17], [3, 6, 9, 12, 15, 18]],
+    block_shape=(8, 6),
+)
+
+flask_app.start_server()
+test_thread = flask_app.test_channel_check()
+
+
+import sys
+
+try:
+    while True:
+        sleep(1)
+except KeyboardInterrupt:
+    print("Interrupted by user")
+    flask_app.test_thread_event.set()
+    test_thread.join(timeout=1)
+    flask_app.stop_server()
+    sys.exit(0)
