@@ -2,6 +2,8 @@ from ultralytics import YOLO
 import cv2
 import logging
 import time
+import os
+from typing import Dict
 
 import numpy as np
 import threading

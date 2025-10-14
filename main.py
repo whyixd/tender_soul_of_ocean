@@ -1,5 +1,6 @@
 from person_tracker import PersonTracker
 from mock_person_tracker import MockPersonTracker
+from rtsp_person_tracker import RTSPPersonTracker
 
 # from mock_person_tracker import MockPersonTracker
 from param_processer import TSOOParamProcesser
@@ -81,6 +82,7 @@ def effect_process(
     update_signal_queue,
     osc_config,
     general_config,
+    # update_person_track_data=lambda data: None,
 ):
     # 創建自己的對象實例，而不是使用主進程的實例
     flask_app = TSOOFlaskApp(
@@ -100,6 +102,8 @@ def effect_process(
     param_processor = TSOOParamProcesser(interpolation_speed=0.005)
     param_processor.wind_speed_factor = general_config.get("wind_speed_factor", 10)
     natural_tracker = NaturalTracker()
+    # flask_app.update_person_track_data = update_person_track_data
+    # print(f"Effect process received person track data: {data}")
 
     # 初始化參數
     param_processor.target_tsoo_param["area_people_count"] = [0, 0, 0, 0]
@@ -265,13 +269,33 @@ def main():
     #     width=640,
     #     height=360,
     # )
-    person_tracker = PersonTracker(
-        video_source="people_top.mp4",  # or 0 for webcam
-        width=640,
-        height=360,
+    # person_tracker = PersonTracker(
+    #     video_source="people_top.mp4",  # or 0 for webcam
+    #     width=640,
+    #     height=360,
+    # )
+    ffmpeg_opts = {
+        "rtsp_transport": "tcp",
+        "fflags": "nobuffer",
+        "flags": "low_delay",
+        "max_delay": "500000",
+        "stimeout": "5000000",
+        "reorder_queue_size": "0",
+        "probesize": "320000",
+        "analyzeduration": "0",
+    }
+    person_tracker = RTSPPersonTracker(
+        sources={
+            "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+            "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+            "cam C (desk)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+        },
+        ffmpeg_options=ffmpeg_opts,
     )
     # 使用新方法，在背景執行 tracking 和 display
-    person_tracker.start_all_in_background()
+    # person_tracker.start_all_in_background()
+
+    person_tracker.start()
 
     sleep(10)  # 等待追蹤器初始化
     # natural_tracker = NaturalTracker()
@@ -284,6 +308,7 @@ def main():
     artnet_channels = 512
     block_shape = (8, 4)
     block_order = [[1, 3], [2, 4]]
+    person_data = [0] * 4
 
     # 創建並啟動效果進程
     effect_thread_instance = Process(
@@ -298,6 +323,7 @@ def main():
             update_signal_queue,
             osc_config,
             general_config,  # 默認值為1
+            # update_person_track_data,
         ),
     )
     effect_thread_instance.start()
@@ -318,6 +344,7 @@ def main():
 
                 # 獲取最新的人員追蹤數據
                 people_counts = person_tracker.inside_area_counts
+                # people_counts = person_data
 
                 # 嘗試將數據放入隊列，但不阻塞
                 try:

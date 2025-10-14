@@ -546,8 +546,8 @@ const sketch = (p) => {
     p.rotateZ(p.PI);
     for (let i = 0; i < dataShape.x; i++) {
       for (let j = 0; j < dataShape.y; j++) {
-        p.fill(lightRawData.matrix[j][i] * contrast);
-        p.square((8 - j) * unitSize, (16 - i) * unitSize, unitSize);
+        // p.fill(lightRawData.matrix[j][i] * contrast);
+        // p.square((8 - j) * unitSize, (16 - i) * unitSize, unitSize);
       }
     }
     p.pop();
@@ -577,6 +577,7 @@ const sketch = (p) => {
         lightCornerPos[0] * tsooParam["wind_vector"][1] * -1,
         lightCornerPos[1] * tsooParam["wind_vector"][0],
       ];
+
       p.push();
       p.sphere(1);
       p.strokeWeight(0.1);
