@@ -23,7 +23,9 @@ class ArtNetSender:
         even_packet_size=True,
         unit_order=[[1, 2], [3, 4]],
         unit_shape=(8, 4),
+        artnet_index=0,  # TODO:暫時改為多arnet
     ):
+        self.artnet_index = artnet_index
         self.artnet = StupidArtnet(
             ip,
             universe,
@@ -91,6 +93,8 @@ class ArtNetSender:
             return unit_ch_setup_flatten.reshape(4, 8)
 
         cords = self.cords[:9]
+        if self.artnet_index == 1:
+            cords = self.cords[9:]
         for cord in cords:
             self.blocks_ch_orders.append(get_block_ch_order(len(self.blocks_ch_orders)))
         return self.blocks_ch_orders
@@ -105,6 +109,8 @@ class ArtNetSender:
         packet_copy = np.array(packet).reshape(4 * 3, 8 * 6)
         data_packets = np.zeros(512)
         cords = self.cords[:9]
+        if self.artnet_index == 1:
+            cords = self.cords[9:]
         for idx, cord in enumerate(cords):
             block_data = get_block_data(cord[0], cord[1], packet_copy)
             ch_order = self.blocks_ch_orders[idx]

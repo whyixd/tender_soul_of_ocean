@@ -233,6 +233,7 @@ def effect_process(
                     #     matrix, general_config.get("light_intensity", 2)
                     # )
                     flask_app.artnet.set_packet(matrix)
+                    flask_app.artnet2.set_packet(matrix)
                 except Exception as e:
                     print(f"Error in effect : {e}")
                 finally:
@@ -265,11 +266,11 @@ def main():
     # 創建一個新的隊列，用於接收參數可以更新的信號
     update_signal_queue = Queue(maxsize=1)
 
-    person_tracker = MockPersonTracker(
-        video_source="people_top.mp4",  # or 0 for webcam
-        width=640,
-        height=360,
-    )
+    # person_tracker = MockPersonTracker(
+    #     video_source="people_top.mp4",  # or 0 for webcam
+    #     width=640,
+    #     height=360,
+    # )
     # person_tracker = PersonTracker(
     #     video_source="people_top.mp4",  # or 0 for webcam
     #     width=640,
@@ -285,20 +286,20 @@ def main():
         "probesize": "320000",
         "analyzeduration": "0",
     }
-    # person_tracker = RTSPPersonTracker(
-    #     sources={
-    #         "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-    #         "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-    #         "cam C (desk)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-    #     },
-    #     ffmpeg_options=ffmpeg_opts,
-    # )
+    person_tracker = RTSPPersonTracker(
+        sources={
+            # "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+            # "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+            "cam C (desk)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+        },
+        ffmpeg_options=ffmpeg_opts,
+    )
     # 使用新方法，在背景執行 tracking 和 display
-    person_tracker.start_all_in_background()
+    # person_tracker.start_all_in_background()
 
-    # person_tracker.start()
+    person_tracker.start()
 
-    sleep(10)  # 等待追蹤器初始化
+    # sleep(10)  # 等待追蹤器初始化
     # natural_tracker = NaturalTracker()
 
     # 獲取必要的參數以啟動效果進程

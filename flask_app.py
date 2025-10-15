@@ -50,6 +50,19 @@ class TSOOFlaskApp:
                 [2, 5, 8],
                 [3, 6, 9],
             ],
+            artnet_index=0,
+        )
+        self.artnet2 = ArtNetSender(
+            "2.0.0.101",
+            universe=artnet_universe,
+            # channels=artnet_channels,
+            unit_shape=block_shape,
+            unit_order=[
+                [1, 4, 7],
+                [2, 5, 8],
+                [3, 6, 9],
+            ],
+            artnet_index=1,
         )
 
         # 服務器配置
@@ -192,6 +205,7 @@ class TSOOFlaskApp:
 
         # 啟動 ArtNet
         self.artnet.start()
+        self.artnet2.start()
 
     def stop_server(self):
         """停止 Flask 伺服器"""
@@ -201,6 +215,7 @@ class TSOOFlaskApp:
 
         # 停止 ArtNet
         self.artnet.stop()
+        self.artnet2.stop()
 
         # Flask 和 SocketIO 沒有優雅的停止方法，因為我們使用 daemon=True
         # 所以當主程序結束時，這些線程會自動終止
@@ -239,26 +254,26 @@ class TSOOFlaskApp:
         return test_thread_instance
 
 
-flask_app = TSOOFlaskApp(
-    artnet_host="2.56.31.102",
-    artnet_universe=1,
-    artnet_channels=512,
-    block_order=[[1, 4, 7, 10, 13, 16], [2, 5, 8, 11, 14, 17], [3, 6, 9, 12, 15, 18]],
-    block_shape=(8, 6),
-)
+# flask_app = TSOOFlaskApp(
+#     artnet_host="2.0.0.100",
+#     artnet_universe=0,
+#     artnet_channels=512,
+#     block_order=[[1, 4, 7, 10, 13, 16], [2, 5, 8, 11, 14, 17], [3, 6, 9, 12, 15, 18]],
+#     block_shape=(8, 6),
+# )
 
-flask_app.start_server()
-test_thread = flask_app.test_channel_check()
+# flask_app.start_server()
+# test_thread = flask_app.test_channel_check()
 
 
-import sys
+# import sys
 
-try:
-    while True:
-        sleep(1)
-except KeyboardInterrupt:
-    print("Interrupted by user")
-    flask_app.test_thread_event.set()
-    test_thread.join(timeout=1)
-    flask_app.stop_server()
-    sys.exit(0)
+# try:
+#     while True:
+#         sleep(1)
+# except KeyboardInterrupt:
+#     print("Interrupted by user")
+#     flask_app.test_thread_event.set()
+#     test_thread.join(timeout=1)
+#     flask_app.stop_server()
+#     sys.exit(0)

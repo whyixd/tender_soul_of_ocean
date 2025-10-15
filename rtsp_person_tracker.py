@@ -11,7 +11,7 @@ class RTSPPersonTracker:
     def __init__(
         self,
         sources: Dict[str, str],
-        model_path: str = "yolo11n.pt",
+        model_path: str = "yolo11s.pt",
         target_class: str = "person",
         display_size: tuple[int, int] = (960, 540),
         confidence_threshold: float = 0.4,
@@ -87,11 +87,11 @@ class RTSPPersonTracker:
         print(f"[{camera_name}] Thread started, connecting to {rtsp_url}...")
         try:
             model = YOLO(self.model_path)
-            if self.use_cuda:
-                try:
-                    model.to("cuda")
-                except Exception as exc:
-                    print(f"[{camera_name}] CUDA unavailable: {exc}")
+            # if self.use_cuda:
+            #     try:
+            #         model.to("cuda")
+            #     except Exception as exc:
+            #         print(f"[{camera_name}] CUDA unavailable: {exc}")
 
             try:
                 person_class_id = list(model.names.keys())[
@@ -227,22 +227,30 @@ class RTSPPersonTracker:
     #             print(f"Socket.IO emit failed: {exc}")
 
 
-# def main():
-#     ffmpeg_opts = {
-#         "rtsp_transport": "udp",
-#         "fflags": "nobuffer",
-#         "flags": "low_delay",
-#         "max_delay": "500000",
-#     }
-#     tracker = RTSPPersonTracker(
-#         sources={
-#             "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-#             "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-#             "cam C (desk)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-#         },
-#         ffmpeg_options=ffmpeg_opts,
-#     )
-#     tracker.start()
+def main():
+    ffmpeg_opts = {
+        "rtsp_transport": "udp",
+        "fflags": "nobuffer",
+        "flags": "low_delay",
+        "max_delay": "500000",
+    }
+    tracker = RTSPPersonTracker(
+        sources={
+            # "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+            # "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+            "cam C (desk)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=1_stream=0&amp;onvif=0.sdp?real_st",
+        },
+        ffmpeg_options=ffmpeg_opts,
+        use_cuda=False,
+    )
+    tracker.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("Interrupted by user.")
+    finally:
+        tracker.stop()
 
 
 # if __name__ == "__main__":
