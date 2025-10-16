@@ -14,7 +14,7 @@ class RTSPPersonTracker:
         model_path: str = "yolo11s.pt",
         target_class: str = "person",
         display_size: tuple[int, int] = (960, 540),
-        confidence_threshold: float = 0.25,
+        confidence_threshold: float = 0.35,
         ffmpeg_options: Dict[str, str] | None = None,
         use_cuda: bool = True,
     ):
@@ -36,7 +36,9 @@ class RTSPPersonTracker:
         self._display_thread: threading.Thread | None = None
 
         self.inside_area_counts = [0] * 4
-        self.person_pos: Dict[int, tuple[int, int]] = {}
+        self.person_pos: list[tuple[int, int]] = []
+        self.x_limit = (915, 1370)
+        self.y_limit = (50, 1080)
         # self._socketio_client = socketio.Client(reconnection=True)
         # self._socketio_url = "http://127.0.0.1:5000"
         # self._last_socketio_attempt = 0.0
@@ -121,15 +123,21 @@ class RTSPPersonTracker:
                         current_person_count += 1
                         x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
                         label = f"{self.target_class} {confidence:.2f}"
-                        cv2.circle(
-                            frame, ((x1 + x2) // 2, (y1 + y2) // 2), 5, (0, 255, 0), -1
-                        )
 
                         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                        self.person_pos[current_person_count] = (
-                            (x1 + x2) // 2,
-                            (y1 + y2) // 2,
+                        center_x = (x1 + x2) // 2
+                        center_y = (y1 + y2) // 2
+                        bottom_y = y2
+                        cv2.circle(
+                            frame, (center_x, bottom_y), 5, (0, 255, 0), -1
                         )
+                        self.person_pos.append(
+                            (normalize(center_x, self.x_limit[0], self.x_limit[1]),
+                            normalize(bottom_y, self.y_limit[0], self.y_limit[1]),))
+                        # print(normalize(center_x, self.y_limit[0], self.y_limit[1]),center_x)
+
+                        # self.person_pos.append(
+                        #     (center_x,center_y))
                         (label_w, label_h), _ = cv2.getTextSize(
                             label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2
                         )
@@ -233,7 +241,10 @@ class RTSPPersonTracker:
     #             self._socketio_client.emit("person_tracker_data", counts)
     #         except Exception as exc:
     #             print(f"Socket.IO emit failed: {exc}")
-
+def normalize(value, min_val, max_val):
+    if max_val - min_val == 0:
+        return 0.0
+    return min(max((value - min_val) / (max_val - min_val), 0.0), 1.0)
 
 def main():
     ffmpeg_opts = {
@@ -255,12 +266,12 @@ def main():
     try:
         while True:
             time.sleep(0.1)
-            print(tracker.person_pos)
+            # print(tracker.person_pos)
     except KeyboardInterrupt:
         print("Interrupted by user.")
     finally:
         tracker.stop()
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

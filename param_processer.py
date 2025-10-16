@@ -5,7 +5,7 @@ from scipy.ndimage import gaussian_filter
 import random
 
 
-def draw_circle(center_x, center_y, radius, shape):
+def draw_circle(center_x, center_y, radius, shape, fill=False):
     """
     Generate coordinates of pixels on the circle circumference.
 
@@ -13,6 +13,7 @@ def draw_circle(center_x, center_y, radius, shape):
     center_x, center_y: Center coordinates of the circle
     radius: Radius of the circle
     shape: Shape of the image (height, width)
+    fill: Whether to return the filled circle (True) or just the circumference (False)
 
     Returns:
     rr, cc: Row and column coordinates of pixels on the circle circumference
@@ -25,10 +26,14 @@ def draw_circle(center_x, center_y, radius, shape):
     # Calculate distance from center
     dist_from_center = np.sqrt((x - center_x) ** 2 + (y - center_y) ** 2)
 
-    # Find pixels on the circle circumference (within a small tolerance)
-    # Use a tolerance to account for discrete pixel positions
-    tolerance = 1.2
-    mask = np.abs(dist_from_center - radius) <= tolerance
+    if fill:
+        # Include all pixels whose distance from center is within the radius
+        mask = dist_from_center <= radius
+    else:
+        # Find pixels on the circle circumference (within a small tolerance)
+        # Use a tolerance to account for discrete pixel positions
+        tolerance = 1.2
+        mask = np.abs(dist_from_center - radius) <= tolerance
 
     # Get row and column indices
     rr, cc = np.where(mask)
@@ -43,6 +48,7 @@ class TSOOParamProcesser:
             "people_natrual_weight_level": 0,
             "people_natrual_weight_level_threshold": [0, 0.3, 0.8, 1],
             "area_people_count": [],
+            "person_pos": [],
             "people_count_max": 16,  # set by guess
             "people_vector": (0.0, 0.0),  # 人數向量
             "wind_speed": 0.0,
@@ -153,6 +159,8 @@ class TSOOParamProcesser:
 
     def update_wind_angle(self, angle):
         self.target_tsoo_param["wind_angle"] = angle
+    def update_person_pos(self, pos_list):
+        self.target_tsoo_param["person_pos"] = pos_list
 
     def get_tsoo_param(self):
         self.caculate_param()
@@ -163,8 +171,7 @@ class TSOOParamProcesser:
         # 對每個數值類型的參數進行插值
         for key, target_value in self.target_tsoo_param.items():
             if key in self.interper_tsoo_param:
-                prev_value = self.interper_tsoo_param[key]
-
+                prev_value = self.interper_tsoo_param[key]                        
                 # 根據不同類型進行不同的插值
                 if isinstance(target_value, (int, float)) and isinstance(
                     prev_value, (int, float)
@@ -187,6 +194,8 @@ class TSOOParamProcesser:
                 ):
                     # 二维向量插值
                     fix_interprolation_speed = self.interpolation_speed
+                    if key == "person_pos":
+                        fix_interprolation_speed = 0.001
                     if key == "wind_vector":
                         fix_interprolation_speed = 0.01
                     x = self._interpolate_value(
@@ -425,6 +434,14 @@ class TSOOParamProcesser:
             0,
             255,
         )
+        # combined[:] =0
+        if len(self.interper_tsoo_param["person_pos"])>0:
+            for pos in self.interper_tsoo_param["person_pos"]:
+                circle_x = round(combined.shape[1]*(1-pos[1]))
+                circle_y = round(combined.shape[0]-combined.shape[0]//3)
+                circle_size = 5 *(1- pos[0])
+                rr,cc = draw_circle(circle_x,circle_y,circle_size,combined.shape,fill=True) 
+                combined[rr,cc] = np.random.randint(0, 10, size=rr.shape)
 
         return combined.astype(np.uint8)
 

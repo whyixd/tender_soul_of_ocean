@@ -154,15 +154,18 @@ def effect_process(
                 print(f"Error getting data from OSC receiver: {e}")
             try:
                 if not people_queue.empty():
-                    people_counts = people_queue.get_nowait()
+                    people_data = people_queue.get_nowait()
+                    people_counts = people_data["counts"]
+                    people_pos = people_data["pos"]
                     # print(f"Effect process - Person in area: {people_counts}")
                     param_processor.target_tsoo_param["area_people_count"] = (
                         people_counts
                     )
+                    param_processor.target_tsoo_param["person_pos"] = people_pos
+
                     # 不做 caculate_param()，只更新人數
             except Exception as e:
                 print(f"Error getting data from queue: {e}")
-
             # 2. 只在允許參數更新時才更新 natural_data 與計算參數
             try:
                 if not update_signal_queue.empty():
@@ -288,7 +291,7 @@ def main():
     }
     person_tracker = RTSPPersonTracker(
         sources={
-            "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+            # "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
             # "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
             "cam C (desk)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
         },
@@ -341,24 +344,25 @@ def main():
             current_time = time.time()
 
             # 每1秒更新一次人員追蹤數據
-            if current_time - last_people_data_update >= 3:
+            if current_time - last_people_data_update >= 0.1:
                 last_people_data_update = current_time
 
                 # 獲取最新的人員追蹤數據
                 people_counts = person_tracker.inside_area_counts
+                person_pos = person_tracker.person_pos
                 # people_counts = person_data
 
                 # 嘗試將數據放入隊列，但不阻塞
                 try:
                     if not people_queue.full():
-                        people_queue.put_nowait(people_counts)
+                        people_queue.put_nowait({"counts": people_counts, "pos": person_pos})
                         # print("Person data sent to effect process")
                     else:
                         # 隊列已滿，清空後再放入新數據
                         try:
                             while not people_queue.empty():
                                 people_queue.get_nowait()
-                            people_queue.put_nowait(people_counts)
+                            people_queue.put_nowait({"counts": people_counts, "pos": person_pos})
                             print(
                                 "Person data sent to effect process (after queue clear)"
                             )
