@@ -224,8 +224,8 @@ def effect_process(
                     flask_app.socketio.emit(
                         "tsoo_param", param_processor.interper_tsoo_param
                     )
-                    send_osc_message(osc_client, param_processor)
-                    osc_client.send_message("/whyixd/light/dmx", matrix)
+                    # send_osc_message(osc_client, param_processor)
+                    # osc_client.send_message("/whyixd/light/dmx", matrix)
 
                     # count += 1
 
@@ -254,7 +254,7 @@ def main():
     osc_config = osc_config_instance.load()
 
     general_config = {
-        "artnet_target": "2.0.0.105",
+        "artnet_target": "2.0.0.100",
         "light_intensity": 1,
         "wind_speed_factor": 10,  # 默認風速因子
     }
@@ -288,7 +288,7 @@ def main():
     }
     person_tracker = RTSPPersonTracker(
         sources={
-            # "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+            "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
             # "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
             "cam C (desk)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
         },

@@ -14,7 +14,7 @@ class RTSPPersonTracker:
         model_path: str = "yolo11s.pt",
         target_class: str = "person",
         display_size: tuple[int, int] = (960, 540),
-        confidence_threshold: float = 0.4,
+        confidence_threshold: float = 0.25,
         ffmpeg_options: Dict[str, str] | None = None,
         use_cuda: bool = True,
     ):
