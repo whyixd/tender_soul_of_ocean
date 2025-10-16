@@ -36,6 +36,7 @@ class RTSPPersonTracker:
         self._display_thread: threading.Thread | None = None
 
         self.inside_area_counts = [0] * 4
+        self.person_pos: Dict[int, tuple[int, int]] = {}
         # self._socketio_client = socketio.Client(reconnection=True)
         # self._socketio_url = "http://127.0.0.1:5000"
         # self._last_socketio_attempt = 0.0
@@ -108,7 +109,7 @@ class RTSPPersonTracker:
 
                 frame = r.orig_img.copy()
                 current_person_count = 0
-
+                self.person_pos.clear()
                 for box in r.boxes:
                     class_id = int(box.cls.item())
                     confidence = float(box.conf.item())
@@ -120,8 +121,15 @@ class RTSPPersonTracker:
                         current_person_count += 1
                         x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
                         label = f"{self.target_class} {confidence:.2f}"
-                        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                        cv2.circle(
+                            frame, ((x1 + x2) // 2, (y1 + y2) // 2), 5, (0, 255, 0), -1
+                        )
 
+                        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                        self.person_pos[current_person_count] = (
+                            (x1 + x2) // 2,
+                            (y1 + y2) // 2,
+                        )
                         (label_w, label_h), _ = cv2.getTextSize(
                             label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2
                         )
@@ -246,12 +254,13 @@ def main():
     tracker.start()
     try:
         while True:
-            time.sleep(1)
+            time.sleep(0.1)
+            print(tracker.person_pos)
     except KeyboardInterrupt:
         print("Interrupted by user.")
     finally:
         tracker.stop()
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
