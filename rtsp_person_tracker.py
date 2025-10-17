@@ -38,7 +38,7 @@ class RTSPPersonTracker:
         self.inside_area_counts = [0] * 4
         self.person_pos: list[tuple[int, int]] = []
         self.x_limit = (915, 1370)
-        self.y_limit = (50, 1080)
+        self.y_limit = (10, 1080)
         # self._socketio_client = socketio.Client(reconnection=True)
         # self._socketio_url = "http://127.0.0.1:5000"
         # self._last_socketio_attempt = 0.0
@@ -133,7 +133,7 @@ class RTSPPersonTracker:
                         )
                         self.person_pos.append(
                             (normalize(center_x, self.x_limit[0], self.x_limit[1]),
-                            normalize(bottom_y, self.y_limit[0], self.y_limit[1]),))
+                            normalize(bottom_y-70, self.y_limit[0], self.y_limit[1]),))
                         # print(normalize(center_x, self.y_limit[0], self.y_limit[1]),center_x)
 
                         # self.person_pos.append(

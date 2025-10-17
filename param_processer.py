@@ -41,6 +41,12 @@ def draw_circle(center_x, center_y, radius, shape, fill=False):
     return rr, cc
 
 
+def draw_circle_growth(center_x, center_y, start_radius, end_radius, step, shape, fill=False):
+    """Yield circle coordinates while the diameter expands."""
+    for radius in np.arange(start_radius, end_radius + step, step):
+        yield draw_circle(center_x, center_y, radius, shape, fill=fill)
+
+
 class TSOOParamProcesser:
     def __init__(self, interpolation_speed=0.2):
         self.target_tsoo_param = {
@@ -436,12 +442,20 @@ class TSOOParamProcesser:
         )
         # combined[:] =0
         if len(self.interper_tsoo_param["person_pos"])>0:
-            for pos in self.interper_tsoo_param["person_pos"]:
+            for pos in self.target_tsoo_param["person_pos"]:
                 circle_x = round(combined.shape[1]*(1-pos[1]))
                 circle_y = round(combined.shape[0]-combined.shape[0]//3)
-                circle_size = 5 *(1- pos[0])
-                rr,cc = draw_circle(circle_x,circle_y,circle_size,combined.shape,fill=True) 
-                combined[rr,cc] = np.random.randint(0, 10, size=rr.shape)
+                circle_size = 7 *(1- pos[0])
+                for rr, cc in draw_circle_growth(
+                    center_x=circle_x,
+                    center_y=circle_y,
+                    start_radius=0.1,
+                    end_radius=circle_size,
+                    step=1,
+                    shape=combined.shape,
+                    fill=True
+                ):
+                    combined[rr,cc] = np.random.randint(0, 10, size=rr.shape)
 
         return combined.astype(np.uint8)
 
@@ -552,7 +566,7 @@ class TSOOParamProcesser:
         Z = np.zeros((height, width))
         # 隨機生成雨滴
         if len(self.rain_drops) < 1:
-            corners = [(0, 0), (width - 1, 0), (width - 1, height - 1), (0, height - 1)]
+            corners = [(0, 0), (width - 1, 0), (width // 2, 0), (width // 2, height - 1), (width - 1, height - 1), (0, height - 1)]
             corner = random.choice(corners)
             self.rain_drops.append(
                 self.RainDrop(
@@ -575,7 +589,7 @@ class TSOOParamProcesser:
                 print("移除雨滴", self.rain_drops)
             else:
                 # print(f"drop:{idx} - {drop.x}, {drop.y}, {drop.radius}")
-                rr, cc = draw_circle(drop.x, drop.y, drop.radius, Z.shape)
+                rr, cc = draw_circle(drop.x, drop.y, drop.radius, Z.shape,fill=False)
                 value = 1 - ease_out_expo(drop.radius / drop.end_radius)
                 Z[rr, cc] = value  # 在雨滴位置生成圓點
                 # 擴展雨滴半徑
