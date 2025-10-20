@@ -5,7 +5,7 @@ from ultralytics import YOLO
 from typing import Dict, Any
 import os
 import socketio
-
+import numpy as np
 
 class RTSPPersonTracker:
     def __init__(
@@ -37,8 +37,8 @@ class RTSPPersonTracker:
 
         self.inside_area_counts = [0] * 4
         self.person_pos: list[tuple[int, int]] = []
-        self.x_limit = (915, 1370)
-        self.y_limit = (10, 1080)
+        self.x_limit = (650, 950)
+        self.y_limit = (90, 680)
         # self._socketio_client = socketio.Client(reconnection=True)
         # self._socketio_url = "http://127.0.0.1:5000"
         # self._last_socketio_attempt = 0.0
@@ -110,6 +110,10 @@ class RTSPPersonTracker:
                     break
 
                 frame = r.orig_img.copy()
+                frame = frame * (100/127+1)
+                frame = np.clip(frame, 0, 255)
+                frame = frame.astype(np.uint8)
+
                 current_person_count = 0
                 self.person_pos.clear()
                 for box in r.boxes:
@@ -122,18 +126,21 @@ class RTSPPersonTracker:
                     ):
                         current_person_count += 1
                         x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
-                        label = f"{self.target_class} {confidence:.2f}"
 
                         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                         center_x = (x1 + x2) // 2
                         center_y = (y1 + y2) // 2
-                        bottom_y = y2
+                        y_offset = (y1-y2)// 3
+                        y_result =center_y
+                        nor_y_result = normalize(y_result, self.y_limit[0], self.y_limit[1])
+                        nor_x_result = normalize(center_x, self.x_limit[0], self.x_limit[1])
+                        label = f"{self.target_class} {confidence:.2f}/{center_x}/{nor_x_result:.2f}"
                         cv2.circle(
-                            frame, (center_x, bottom_y), 5, (0, 255, 0), -1
+                            frame, (center_x, y_result), 5, (0, 255, 0), -1
                         )
                         self.person_pos.append(
                             (normalize(center_x, self.x_limit[0], self.x_limit[1]),
-                            normalize(bottom_y-70, self.y_limit[0], self.y_limit[1]),))
+                            normalize(y_result+100, self.y_limit[0], self.y_limit[1]),))
                         # print(normalize(center_x, self.y_limit[0], self.y_limit[1]),center_x)
 
                         # self.person_pos.append(

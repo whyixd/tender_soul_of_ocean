@@ -48,6 +48,8 @@ def send_osc_message(
         param["people_vector"],
     )
     client.send_message("/whyixd/people/interper/vector", inter_param["people_vector"])
+    # client.send_message(
+    #     "/whyixd/people/pos", param["person_pos"])
     # ---------------------light----------------------#
     client.send_message(
         "/whyixd/light/vector",
@@ -69,6 +71,7 @@ def send_osc_message(
     client.send_message("/whyixd/wind/interper/angle", inter_param["wind_angle"])
     client.send_message("/whyixd/wind/interper/vector", inter_param["wind_vector"])
     # ---------------------
+
 
 
 # 將 effect_thread 函數移到 main() 外部，並接收所需的參數
@@ -227,8 +230,8 @@ def effect_process(
                     flask_app.socketio.emit(
                         "tsoo_param", param_processor.interper_tsoo_param
                     )
-                    # send_osc_message(osc_client, param_processor)
-                    # osc_client.send_message("/whyixd/light/dmx", matrix)
+                    send_osc_message(osc_client, param_processor)
+                    osc_client.send_message("/whyixd/light/dmx", matrix)
 
                     # count += 1
 
@@ -293,7 +296,7 @@ def main():
         sources={
             # "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
             # "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-            "cam C (desk)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+            "cam C (main)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=0_stream=0&onvif=0.sdp?real_st",
         },
         ffmpeg_options=ffmpeg_opts,
     )
@@ -343,8 +346,8 @@ def main():
         while True:
             current_time = time.time()
 
-            # 每1秒更新一次人員追蹤數據
-            if current_time - last_people_data_update >= 0.1:
+            # 每0.1秒更新一次人員追蹤數據
+            if current_time - last_people_data_update >= 0.05:
                 last_people_data_update = current_time
 
                 # 獲取最新的人員追蹤數據

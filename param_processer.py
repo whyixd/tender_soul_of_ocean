@@ -440,18 +440,20 @@ class TSOOParamProcesser:
             0,
             255,
         )
-        # combined[:] =0
+        # combined[:] =50
         if len(self.interper_tsoo_param["person_pos"])>0:
             for pos in self.target_tsoo_param["person_pos"]:
                 circle_x = round(combined.shape[1]*(1-pos[1]))
                 circle_y = round(combined.shape[0]-combined.shape[0]//3)
-                circle_size = 7 *(1- pos[0])
+                circle_size = 2.5 *(1- pos[0])
+
+                # circle_size =0
                 for rr, cc in draw_circle_growth(
                     center_x=circle_x,
                     center_y=circle_y,
                     start_radius=0.1,
                     end_radius=circle_size,
-                    step=1,
+                    step=0.01,
                     shape=combined.shape,
                     fill=True
                 ):
@@ -519,7 +521,7 @@ class TSOOParamProcesser:
             self.y = y
             self.radius = radius
             self.expansion_rate = expansion_rate
-            self.end_radius = 25  # 最大半徑
+            self.end_radius = 90  # 最大半徑
 
     rain_drops = []
 
