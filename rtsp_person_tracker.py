@@ -14,7 +14,7 @@ class RTSPPersonTracker:
         model_path: str = "yolo11s.pt",
         target_class: str = "person",
         display_size: tuple[int, int] = (960, 540),
-        confidence_threshold: float = 0.35,
+        confidence_threshold: float = 0.5,
         ffmpeg_options: Dict[str, str] | None = None,
         use_cuda: bool = True,
     ):
@@ -37,8 +37,8 @@ class RTSPPersonTracker:
 
         self.inside_area_counts = [0] * 4
         self.person_pos: list[tuple[int, int]] = []
-        self.x_limit = (650, 950)
-        self.y_limit = (90, 680)
+        self.x_limit = (635,740)
+        self.y_limit = (90, 650)
         # self._socketio_client = socketio.Client(reconnection=True)
         # self._socketio_url = "http://127.0.0.1:5000"
         # self._last_socketio_attempt = 0.0
@@ -110,7 +110,7 @@ class RTSPPersonTracker:
                     break
 
                 frame = r.orig_img.copy()
-                frame = frame * (100/127+1)
+                frame = frame * (60/127+1)
                 frame = np.clip(frame, 0, 255)
                 frame = frame.astype(np.uint8)
 

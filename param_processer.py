@@ -55,7 +55,7 @@ class TSOOParamProcesser:
             "people_natrual_weight_level_threshold": [0, 0.3, 0.8, 1],
             "area_people_count": [],
             "person_pos": [],
-            "people_count_max": 16,  # set by guess
+            "people_count_max": 10,  # set by guess
             "people_vector": (0.0, 0.0),  # 人數向量
             "wind_speed": 0.0,
             "wind_speed_max": 6.0,  # get from https://www.timeanddate.com/weather/austria/linz/climate
@@ -164,7 +164,10 @@ class TSOOParamProcesser:
         self.target_tsoo_param["wind_speed"] = speed
 
     def update_wind_angle(self, angle):
-        self.target_tsoo_param["wind_angle"] = angle
+        fix_angle = angle+75
+        if fix_angle > 360:
+            fix_angle = fix_angle -360
+        self.target_tsoo_param["wind_angle"] = fix_angle
     def update_person_pos(self, pos_list):
         self.target_tsoo_param["person_pos"] = pos_list
 
@@ -424,7 +427,7 @@ class TSOOParamProcesser:
         # 可以根據需要調整雨滴的強度
         rain_intensity = self.target_tsoo_param["rain_intensity"]  # 可調整雨滴強度
         rain_drop_effect = np.zeros((height, width), dtype=np.uint8)
-        glitch_effect = self.glitch_effect(width, height, z)
+        # glitch_effect = self.glitch_effect(width, height, z)
         if rain_intensity > 0:
             rain_drop_effect = self.rain_drop_effect(width, height)
         else:
@@ -435,17 +438,22 @@ class TSOOParamProcesser:
 
         combined = np.clip(
             basic_effect.astype(np.float32)
-            + rain_drop_effect.astype(np.float32) * rain_intensity
-            + glitch_effect.astype(np.float32),
+            + rain_drop_effect.astype(np.float32) * rain_intensity,
+            # + glitch_effect.astype(np.float32),
             0,
             255,
         )
+        glitch_Z = np.zeros((height, width), dtype=np.uint8)
         # combined[:] =50
         if len(self.interper_tsoo_param["person_pos"])>0:
             for pos in self.target_tsoo_param["person_pos"]:
                 circle_x = round(combined.shape[1]*(1-pos[1]))
                 circle_y = round(combined.shape[0]-combined.shape[0]//3)
                 circle_size = 2.5 *(1- pos[0])
+                # if pos[0] <0.15:
+                #     circle_size = 2.5
+                # if pos[0] >0.3:
+                #     circle_size = 0
 
                 # circle_size =0
                 for rr, cc in draw_circle_growth(
@@ -457,8 +465,10 @@ class TSOOParamProcesser:
                     shape=combined.shape,
                     fill=True
                 ):
-                    combined[rr,cc] = np.random.randint(0, 10, size=rr.shape)
-
+                    random_value = np.random.randint(0, 10, size=rr.shape)
+                    combined[rr,cc] = random_value
+                    glitch_Z[rr, cc] = random_value
+        self.glitch_frame = glitch_Z.astype(np.uint8)
         return combined.astype(np.uint8)
 
     def get_effects_separately(

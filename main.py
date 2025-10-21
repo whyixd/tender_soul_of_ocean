@@ -16,6 +16,7 @@ from pythonosc import udp_client
 from config import Config
 from osc_reciver import OSCReceiver
 from pythonosc import osc_bundle_builder,osc_message_builder
+import numpy as np  
 
 from param_processer import ease_in_out_circ
 
@@ -49,16 +50,19 @@ def send_osc_message(
         param["people_vector"],
     )
     client.send_message("/whyixd/people/interper/vector", inter_param["people_vector"])
-
-    bundle_builder = osc_bundle_builder.OscBundleBuilder(
-        osc_bundle_builder.IMMEDIATELY)
-    msg = osc_message_builder.OscMessageBuilder(address="/whyixd/people/pos")
-    for pos in param["person_pos"]:
-        msg.add_arg([float(pos[0]), float(pos[1])])
-    bundle_builder.add_content(msg.build())
-    pos_message = bundle_builder.build()
-    # print("Sending person positions:", person_pos)
-    client.send( pos_message)
+    # people_pos = []
+    # bundle_builder = osc_bundle_builder.OscBundleBuilder(
+    #     osc_bundle_builder.IMMEDIATELY)
+    # msg = osc_message_builder.OscMessageBuilder(address="/whyixd/people/pos")
+    # sorted_pos = sorted(param["person_pos"], key=lambda x: x[0])
+    # for idx, pos in enumerate(sorted_pos):
+    #     msg.add_arg(idx)
+    #     msg.add_arg(pos[0])
+    #     msg.add_arg(pos[1])
+    
+    # bundle_builder.add_content(msg.build())
+    # pos_message = bundle_builder.build()
+    # client.send(pos_message)
     # ---------------------light----------------------#
     client.send_message(
         "/whyixd/light/vector",
@@ -80,7 +84,24 @@ def send_osc_message(
     client.send_message("/whyixd/wind/interper/angle", inter_param["wind_angle"])
     client.send_message("/whyixd/wind/interper/vector", inter_param["wind_vector"])
     # ---------------------
-
+def send_pos_update(osc_client, person_pos):
+    bundle_builder = osc_bundle_builder.OscBundleBuilder(
+        osc_bundle_builder.IMMEDIATELY)
+    msg = osc_message_builder.OscMessageBuilder(address="/whyixd/people/pos")
+    sorted_pos = sorted(person_pos, key=lambda x: x[0])
+    for idx, pos in enumerate(sorted_pos):
+        msg.add_arg(idx)
+        msg.add_arg(pos[0])
+        msg.add_arg(pos[1])
+    
+    if len(person_pos) ==0:
+        msg.add_arg(0)
+        msg.add_arg(0.0)
+        msg.add_arg(0.0)
+    bundle_builder.add_content(msg.build())
+    pos_message = bundle_builder.build()
+    osc_client.send(pos_message)
+    # print(msg)
 
 
 # 將 effect_thread 函數移到 main() 外部，並接收所需的參數
@@ -148,6 +169,7 @@ def effect_process(
     last_pluck_trigger_time = 0
     last_matrix_update_time = 0
     last_glitch_update_time = 0
+    last_pos_update_time =0
 
     try:
         while True:  # 主循環
@@ -168,6 +190,7 @@ def effect_process(
                 if not people_queue.empty():
                     people_data = people_queue.get_nowait()
                     people_counts = people_data["counts"]
+                    # people_counts = [6,0,0,0]
                     people_pos = people_data["pos"]
                     # print(f"Effect process - Person in area: {people_counts}")
                     param_processor.target_tsoo_param["area_people_count"] = (
@@ -195,7 +218,7 @@ def effect_process(
                     param_processor.params_updated = True
             except Exception as e:
                 print(f"Error updating natural data: {e}")
-            if time.time() - last_glitch_update_time > 0.008:
+            if time.time() - last_glitch_update_time > 0.01:
                 try:
                     if param_processor.glitch_frame is not None:
                         glitch_flaten = param_processor.glitch_frame.flatten().tolist()
@@ -206,6 +229,13 @@ def effect_process(
                     pass
                 finally:
                     last_glitch_update_time = time.time()
+            if time.time() - last_pos_update_time>0.1:
+                try:
+                    send_pos_update(osc_client, param_processor.target_tsoo_param["person_pos"])
+                except Exception as e:
+                    print(f"Error sending position update: {e}")
+                finally:
+                    last_pos_update_time = time.time()
             # effect
             if time.time() - last_matrix_update_time > 0.03:
                 try:
@@ -239,8 +269,9 @@ def effect_process(
                     flask_app.socketio.emit(
                         "tsoo_param", param_processor.interper_tsoo_param
                     )
-                    send_osc_message(osc_client, param_processor)
-                    osc_client.send_message("/whyixd/light/dmx", matrix)
+                    if osc_client is not None:
+                        send_osc_message(osc_client, param_processor)
+                        osc_client.send_message("/whyixd/light/dmx", matrix)
 
                     # count += 1
 
