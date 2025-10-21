@@ -134,7 +134,7 @@ class RTSPPersonTracker:
                         y_result =center_y
                         nor_y_result = normalize(y_result, self.y_limit[0], self.y_limit[1])
                         nor_x_result = normalize(center_x, self.x_limit[0], self.x_limit[1])
-                        label = f"{self.target_class} {confidence:.2f}/{center_x}/{nor_x_result:.2f}"
+                        label = f"con:{confidence:.2f}/X:{center_x}/{nor_x_result:.2f}/Y:{y_result}/{nor_y_result:.2f}"
                         cv2.circle(
                             frame, (center_x, y_result), 5, (0, 255, 0), -1
                         )

@@ -15,6 +15,7 @@ from multiprocessing import Queue, Process
 from pythonosc import udp_client
 from config import Config
 from osc_reciver import OSCReceiver
+from pythonosc import osc_bundle_builder,osc_message_builder
 
 from param_processer import ease_in_out_circ
 
@@ -48,8 +49,16 @@ def send_osc_message(
         param["people_vector"],
     )
     client.send_message("/whyixd/people/interper/vector", inter_param["people_vector"])
-    # client.send_message(
-    #     "/whyixd/people/pos", param["person_pos"])
+
+    bundle_builder = osc_bundle_builder.OscBundleBuilder(
+        osc_bundle_builder.IMMEDIATELY)
+    msg = osc_message_builder.OscMessageBuilder(address="/whyixd/people/pos")
+    for pos in param["person_pos"]:
+        msg.add_arg([float(pos[0]), float(pos[1])])
+    bundle_builder.add_content(msg.build())
+    pos_message = bundle_builder.build()
+    # print("Sending person positions:", person_pos)
+    client.send( pos_message)
     # ---------------------light----------------------#
     client.send_message(
         "/whyixd/light/vector",
