@@ -1,11 +1,22 @@
 import cv2
 import threading
 import time
+from dataclasses import dataclass
 from ultralytics import YOLO
 from typing import Dict, Any
 import os
 import socketio
 import numpy as np
+
+
+@dataclass
+class DetectionState:
+    bbox: tuple[int, int, int, int]
+    first_seen: float
+    last_seen: float
+    confirmed: bool
+    position: tuple[float, float]
+    confidence: float
 
 class RTSPPersonTracker:
     def __init__(
@@ -37,11 +48,16 @@ class RTSPPersonTracker:
 
         self.inside_area_counts = [0] * 4
         self.person_pos: list[tuple[int, int]] = []
-        self.x_limit = (635,740)
+        self.person_pos_by_camera: dict[str, list[tuple[int, int]]] = {}
+        self.x_limit = (635, 740)
         self.y_limit = (90, 650)
-        # self._socketio_client = socketio.Client(reconnection=True)
-        # self._socketio_url = "http://127.0.0.1:5000"
-        # self._last_socketio_attempt = 0.0
+
+        self.detect_time_threshold = 0.8
+        self.lost_time_threshold = 0.8
+        self.match_iou_threshold = 0.3
+        self._next_detection_id = 0
+        self.detections: dict[str, dict[int, DetectionState]] = {}
+
         if ffmpeg_options:
             os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "|".join(
                 f"{key};{value}" for key, value in ffmpeg_options.items()
@@ -114,56 +130,65 @@ class RTSPPersonTracker:
                 frame = np.clip(frame, 0, 255)
                 frame = frame.astype(np.uint8)
 
-                current_person_count = 0
-                self.person_pos.clear()
+                camera_states = self.detections.setdefault(camera_name, {})
+                used_state_ids: set[int] = set()
+
                 for box in r.boxes:
                     class_id = int(box.cls.item())
                     confidence = float(box.conf.item())
 
                     if (
-                        class_id == person_class_id
-                        and confidence >= self.confidence_threshold
+                        class_id != person_class_id
+                        or confidence < self.confidence_threshold
                     ):
-                        current_person_count += 1
-                        x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
+                        continue
 
-                        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                        center_x = (x1 + x2) // 2
-                        center_y = (y1 + y2) // 2
-                        y_offset = (y1-y2)// 3
-                        y_result =center_y
-                        nor_y_result = normalize(y_result, self.y_limit[0], self.y_limit[1])
-                        nor_x_result = normalize(center_x, self.x_limit[0], self.x_limit[1])
-                        label = f"con:{confidence:.2f}/X:{center_x}/{nor_x_result:.2f}/Y:{y_result}/{nor_y_result:.2f}"
-                        cv2.circle(
-                            frame, (center_x, y_result), 5, (0, 255, 0), -1
-                        )
-                        self.person_pos.append(
-                            (normalize(center_x, self.x_limit[0], self.x_limit[1]),
-                            normalize(y_result+100, self.y_limit[0], self.y_limit[1]),))
-                        # print(normalize(center_x, self.y_limit[0], self.y_limit[1]),center_x)
+                    x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
+                    bbox = (x1, y1, x2, y2)
+                    center_x = (x1 + x2) // 2
+                    center_y = (y1 + y2) // 2
+                    norm_x = normalize(center_x, self.x_limit[0], self.x_limit[1])
+                    norm_y = normalize(center_y + 100, self.y_limit[0], self.y_limit[1])
 
-                        # self.person_pos.append(
-                        #     (center_x,center_y))
-                        (label_w, label_h), _ = cv2.getTextSize(
-                            label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2
+                    now = time.time()
+                    matched_id = self._match_detection(camera_states, bbox, used_state_ids)
+                    if matched_id is None:
+                        matched_id = self._next_detection_id
+                        self._next_detection_id += 1
+                        camera_states[matched_id] = DetectionState(
+                            bbox=bbox,
+                            first_seen=now,
+                            last_seen=now,
+                            confirmed=False,
+                            position=(norm_x, norm_y),
+                            confidence=confidence,
                         )
-                        cv2.rectangle(
-                            frame,
-                            (x1, y1 - label_h - 10),
-                            (x1 + label_w, y1),
-                            (0, 255, 0),
-                            -1,
-                        )
-                        cv2.putText(
-                            frame,
-                            label,
-                            (x1, y1 - 5),
-                            cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5,
-                            (0, 0, 0),
-                            1,
-                        )
+                    state = camera_states[matched_id]
+                    state.bbox = bbox
+                    state.last_seen = now
+                    state.position = (norm_x, norm_y)
+                    state.confidence = confidence
+                    used_state_ids.add(matched_id)
+
+                    if not state.confirmed and now - state.first_seen >= self.detect_time_threshold:
+                        state.confirmed = True
+
+                now = time.time()
+                active_states: list[DetectionState] = []
+                drawable_states: list[DetectionState] = []
+                for state_id, state in list(camera_states.items()):
+                    if now - state.last_seen > self.lost_time_threshold:
+                        camera_states.pop(state_id)
+                        continue
+                    drawable_states.append(state)
+                    if state.confirmed:
+                        active_states.append(state)
+
+                for state in drawable_states:
+                    self._draw_detection(frame, state)
+
+                camera_positions = [state.position for state in active_states]
+                current_person_count = len(camera_positions)
 
                 with self._lock:
                     self.frame_buffer[camera_name] = frame
@@ -171,6 +196,12 @@ class RTSPPersonTracker:
                     index = self._source_index.get(camera_name)
                     if index is not None and index < len(self.inside_area_counts):
                         self.inside_area_counts[index] = current_person_count
+                    self.person_pos_by_camera[camera_name] = camera_positions
+                    self.person_pos = [
+                        pos
+                        for positions in self.person_pos_by_camera.values()
+                        for pos in positions
+                    ]
                     counts_payload = list(self.inside_area_counts)
                 # self._emit_person_tracker_data(counts_payload)
         except Exception as exc:
@@ -179,12 +210,92 @@ class RTSPPersonTracker:
             with self._lock:
                 self.frame_buffer.pop(camera_name, None)
                 self.person_counts.pop(camera_name, None)
+                self.person_pos_by_camera.pop(camera_name, None)
                 index = self._source_index.get(camera_name)
                 if index is not None and index < len(self.inside_area_counts):
                     self.inside_area_counts[index] = 0
+                self.person_pos = [
+                    pos
+                    for positions in self.person_pos_by_camera.values()
+                    for pos in positions
+                ]
                 counts_payload = list(self.inside_area_counts)
+            self.detections.pop(camera_name, None)
             print(f"[{camera_name}] Thread stopped.")
         # self._emit_person_tracker_data(counts_payload)
+
+    def _match_detection(
+        self,
+        camera_states: dict[int, DetectionState],
+        bbox: tuple[int, int, int, int],
+        used_ids: set[int],
+    ) -> int | None:
+        best_id: int | None = None
+        best_iou = 0.0
+        for state_id, state in camera_states.items():
+            if state_id in used_ids:
+                continue
+            iou = self._bbox_iou(state.bbox, bbox)
+            if iou > best_iou:
+                best_iou = iou
+                best_id = state_id
+        if best_id is not None and best_iou >= self.match_iou_threshold:
+            return best_id
+        return None
+
+    @staticmethod
+    def _bbox_iou(
+        box_a: tuple[int, int, int, int], box_b: tuple[int, int, int, int]
+    ) -> float:
+        x_left = max(box_a[0], box_b[0])
+        y_top = max(box_a[1], box_b[1])
+        x_right = min(box_a[2], box_b[2])
+        y_bottom = min(box_a[3], box_b[3])
+
+        inter_width = max(0, x_right - x_left)
+        inter_height = max(0, y_bottom - y_top)
+        inter_area = float(inter_width * inter_height)
+        if inter_area <= 0:
+            return 0.0
+
+        area_a = float(max(0, box_a[2] - box_a[0]) * max(0, box_a[3] - box_a[1]))
+        area_b = float(max(0, box_b[2] - box_b[0]) * max(0, box_b[3] - box_b[1]))
+        denom = area_a + area_b - inter_area
+        if denom <= 0:
+            return 0.0
+        return inter_area / denom
+
+    def _draw_detection(self, frame: np.ndarray, state: DetectionState) -> None:
+        x1, y1, x2, y2 = state.bbox
+        center_x = (x1 + x2) // 2
+        center_y = (y1 + y2) // 2
+        norm_y_for_label = normalize(center_y, self.y_limit[0], self.y_limit[1])
+        label = (
+            f"con:{state.confidence:.2f}/X:{center_x}/{state.position[0]:.2f}/"
+            f"Y:{center_y}/{norm_y_for_label:.2f}"
+        )
+        color = (0, 255, 0) if state.confirmed else (0, 255, 255)
+        cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+        cv2.circle(frame, (center_x, center_y), 5, color, -1)
+        (label_w, label_h), _ = cv2.getTextSize(
+            label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2
+        )
+        cv2.rectangle(
+            frame,
+            (x1, y1 - label_h - 10),
+            (x1 + label_w, y1),
+            color,
+            -1,
+        )
+        cv2.putText(
+            frame,
+            label,
+            (x1, y1 - 5),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.5,
+            (0, 0, 0),
+            1,
+        )
 
     def _display_loop(self):
         print("Press 'q' to exit all windows.")

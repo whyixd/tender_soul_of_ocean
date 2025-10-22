@@ -55,7 +55,7 @@ class TSOOParamProcesser:
             "people_natrual_weight_level_threshold": [0, 0.3, 0.8, 1],
             "area_people_count": [],
             "person_pos": [],
-            "people_count_max": 10,  # set by guess
+            "people_count_max": 5,  # set by guess
             "people_vector": (0.0, 0.0),  # 人數向量
             "wind_speed": 0.0,
             "wind_speed_max": 6.0,  # get from https://www.timeanddate.com/weather/austria/linz/climate
@@ -324,7 +324,7 @@ class TSOOParamProcesser:
             wv = self.cached_wind_vector
         # wv = self.target_tsoo_param["wind_vector"]
         ws = self.target_tsoo_param["wind_speed"]
-        ws = ease_in_out_circ(ws) * self.wind_speed_factor
+        ws = ws * self.wind_speed_factor
 
         # 使用相對時間計算位移，避免大跳變
         relative_time = z - self.last_update_time
@@ -531,7 +531,7 @@ class TSOOParamProcesser:
             self.y = y
             self.radius = radius
             self.expansion_rate = expansion_rate
-            self.end_radius = 90  # 最大半徑
+            self.end_radius = 200  # 最大半徑
 
     rain_drops = []
 

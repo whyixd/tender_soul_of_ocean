@@ -20,6 +20,7 @@ import numpy as np
 
 from param_processer import ease_in_out_circ
 
+import traceback
 
 def send_osc_message(
     client: udp_client.SimpleUDPClient, tsoo_param: TSOOParamProcesser
@@ -281,7 +282,7 @@ def effect_process(
                     flask_app.artnet.set_packet(matrix)
                     flask_app.artnet2.set_packet(matrix)
                 except Exception as e:
-                    print(f"Error in effect : {e}")
+                    print(f"Error in effect : {traceback.format_exc()}")
                 finally:
                     last_matrix_update_time = time.time()
                     time.sleep(0.001)
