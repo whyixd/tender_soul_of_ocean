@@ -51,19 +51,7 @@ def send_osc_message(
         param["people_vector"],
     )
     client.send_message("/whyixd/people/interper/vector", inter_param["people_vector"])
-    # people_pos = []
-    # bundle_builder = osc_bundle_builder.OscBundleBuilder(
-    #     osc_bundle_builder.IMMEDIATELY)
-    # msg = osc_message_builder.OscMessageBuilder(address="/whyixd/people/pos")
-    # sorted_pos = sorted(param["person_pos"], key=lambda x: x[0])
-    # for idx, pos in enumerate(sorted_pos):
-    #     msg.add_arg(idx)
-    #     msg.add_arg(pos[0])
-    #     msg.add_arg(pos[1])
-    
-    # bundle_builder.add_content(msg.build())
-    # pos_message = bundle_builder.build()
-    # client.send(pos_message)
+
     # ---------------------light----------------------#
     client.send_message(
         "/whyixd/light/vector",
@@ -79,9 +67,6 @@ def send_osc_message(
         param["wind_vector"],
     )
     client.send_message("/whyixd/wind/interper/speed", inter_param["wind_speed"])
-    # client.send_message(
-    #     "/whyixd/wind/interper/speed/normalized", inter_param["wind_speed_normalized"]
-    # )
     client.send_message("/whyixd/wind/interper/angle", inter_param["wind_angle"])
     client.send_message("/whyixd/wind/interper/vector", inter_param["wind_vector"])
     # ---------------------
@@ -90,15 +75,18 @@ def send_pos_update(osc_client, person_pos):
         osc_bundle_builder.IMMEDIATELY)
     msg = osc_message_builder.OscMessageBuilder(address="/whyixd/people/pos")
     sorted_pos = sorted(person_pos, key=lambda x: x[0])
+    if len(sorted_pos) <1:
+        sorted_pos = [(0.0,0.0)]
+    # print("Sending person positions:", sorted_pos)
     for idx, pos in enumerate(sorted_pos):
         msg.add_arg(idx)
         msg.add_arg(pos[0])
         msg.add_arg(pos[1])
     
-    if len(person_pos) ==0:
-        msg.add_arg(0)
-        msg.add_arg(0.0)
-        msg.add_arg(0.0)
+    # if len(person_pos) ==0:
+    #     msg.add_arg(0)
+    #     msg.add_arg(0.0)
+    #     msg.add_arg(0.0)
     bundle_builder.add_content(msg.build())
     pos_message = bundle_builder.build()
     osc_client.send(pos_message)
@@ -171,6 +159,7 @@ def effect_process(
     last_matrix_update_time = 0
     last_glitch_update_time = 0
     last_pos_update_time =0
+    last_param_update_time = 0
 
     try:
         while True:  # 主循環
@@ -270,8 +259,13 @@ def effect_process(
                     flask_app.socketio.emit(
                         "tsoo_param", param_processor.interper_tsoo_param
                     )
-                    if osc_client is not None:
+                    if time.time() - last_param_update_time > 1:
+                        flask_app.socketio.emit(
+                            "tsoo_param_target", param_processor.target_tsoo_param
+                        )
+                        last_param_update_time = time.time()
                         send_osc_message(osc_client, param_processor)
+                    if osc_client is not None:
                         osc_client.send_message("/whyixd/light/dmx", matrix)
 
                     # count += 1

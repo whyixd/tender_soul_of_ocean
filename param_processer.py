@@ -449,13 +449,8 @@ class TSOOParamProcesser:
             for pos in self.target_tsoo_param["person_pos"]:
                 circle_x = round(combined.shape[1]*(1-pos[1]))
                 circle_y = round(combined.shape[0]-combined.shape[0]//3)
-                circle_size = 2.5 *(1- pos[0])
-                # if pos[0] <0.15:
-                #     circle_size = 2.5
-                # if pos[0] >0.3:
-                #     circle_size = 0
-
-                # circle_size =0
+                circle_size = 2.2*(1- pos[0])
+                
                 for rr, cc in draw_circle_growth(
                     center_x=circle_x,
                     center_y=circle_y,

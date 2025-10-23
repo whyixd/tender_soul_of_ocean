@@ -170,10 +170,11 @@ class RTSPPersonTracker:
                     state.confidence = confidence
                     used_state_ids.add(matched_id)
 
-                    if not state.confirmed and now - state.first_seen >= self.detect_time_threshold:
+                    if not state.confirmed and now - state.first_seen >= self.detect_time_threshold and state.position[1] > 0.15:
                         state.confirmed = True
 
                 now = time.time()
+
                 active_states: list[DetectionState] = []
                 drawable_states: list[DetectionState] = []
                 for state_id, state in list(camera_states.items()):
@@ -183,7 +184,6 @@ class RTSPPersonTracker:
                     drawable_states.append(state)
                     if state.confirmed:
                         active_states.append(state)
-
                 for state in drawable_states:
                     self._draw_detection(frame, state)
 
