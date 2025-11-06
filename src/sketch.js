@@ -37,7 +37,7 @@ const sketch = (p) => {
   let lightColor = [255, 150, 6];
   let lightValues = [];
   let lightRawData = { matrix: [] };
-  let dataShape = { x: 48, y: 12 };
+  let dataShape = { x: 8 * 8, y: 4 * 5 };
   let unitShape = { x: 8, y: 4 };
   for (let i = 0; i < dataShape.y; i++) {
     let newRow = [];
@@ -635,23 +635,32 @@ const sketch = (p) => {
     p.noStroke();
     p.rotateX(p.PI / 2);
     p.translate(0, 0, 200);
+
+    let wantedHighsIdx = [1, 2, 3, 4, 6, 7, 8, 31, 34, 35, 36, 37, 38, 39, 40];
+    let fixUnits = [];
+    for (let i = 0; i < unitHigh.units.length; i++) {
+      if (wantedHighsIdx.includes(unitHigh.units[i].id)) {
+        fixUnits.push(unitHigh.units[i]);
+      }
+    }
     unitHigh.units.forEach((unit, unitIdx) => {
       let x = unitConfig.units[unitIdx].cord.x;
       let z = unitConfig.units[unitIdx].cord.z;
       p.translate(z * gap * unitShape.y, 0, (-x / 2) * gap * unitShape.x);
-      drawUnit(
-        p,
-        unitConfig,
-        settings,
-        lightRawData,
-        unitIdx,
-        unit.highs,
-        // unit_color[unitIdx % unit_color.length],
-        lightColor,
-
-        unitShape,
-        gap
-      );
+      if (wantedHighsIdx.includes(unit.id + 1)) {
+        drawUnit(
+          p,
+          unitConfig,
+          settings,
+          lightRawData,
+          unitIdx,
+          unit.highs,
+          // unit_color[unitIdx % unit_color.length],
+          lightColor,
+          unitShape,
+          gap
+        );
+      }
       p.translate(-z * gap * unitShape.y, 0, (x / 2) * gap * unitShape.x);
     });
     p.pop();

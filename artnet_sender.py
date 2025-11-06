@@ -50,7 +50,6 @@ class ArtNetSender:
         for unit in self.config.data_dict["unit_config"]["units"]:
             self.cords.append((int(unit["cord"]["x"] / 2), unit["cord"]["z"]))
         self.cords = np.array(self.cords)
-
         self.blocks_ch_orders = []  # 單元頻道順序
 
         self.__print_block_order_graph()
@@ -92,9 +91,15 @@ class ArtNetSender:
             unit_ch_setup_flatten += cord_idx * 36 + 4
             return unit_ch_setup_flatten.reshape(4, 8)
 
-        cords = self.cords[:9]
-        if self.artnet_index == 1:
-            cords = self.cords[9:]
+        wantedUnit = [1, 2, 3, 4, 6, 7, 8, 31, 34, 35, 36, 37, 38, 39, 40]
+        cords = []
+        for idx, cord in enumerate(self.cords):
+            if (idx + 1) in wantedUnit:
+                cords.append(cord)
+        # cords = self.cords[:7]
+        # if self.artnet_index == 1:
+        #     cords = self.cords[8:]
+        self.cords = cords
         for cord in cords:
             self.blocks_ch_orders.append(get_block_ch_order(len(self.blocks_ch_orders)))
         return self.blocks_ch_orders
@@ -106,11 +111,13 @@ class ArtNetSender:
             block_data_order = data[y * 4 : (y + 1) * 4, x * 8 : (x + 1) * 8].flatten()
             return block_data_order
 
-        packet_copy = np.array(packet).reshape(4 * 3, 8 * 6)
+        # packet_copy = np.array(packet).reshape(4 * 3, 8 * 6)
+        packet_copy = np.array(packet).reshape(4 * 5, 8 * 8)
         data_packets = np.zeros(512)
-        cords = self.cords[:9]
+        cords = self.cords[:7]
         if self.artnet_index == 1:
-            cords = self.cords[9:]
+            cords = self.cords[8:]
+
         for idx, cord in enumerate(cords):
             block_data = get_block_data(cord[0], cord[1], packet_copy)
             ch_order = self.blocks_ch_orders[idx]
@@ -147,3 +154,38 @@ class ArtNetSender:
 
 def clamp(n, min_val, max_val):
     return max(min_val, min(n, max_val))
+
+
+# if __name__ == "__main__":
+#     artnet = ArtNetSender(
+#         ip="2.0.0.100",
+#         universe=0,
+#         # channels=artnet_channels,
+#         unit_shape=(8, 4),
+#         unit_order=[
+#             [1, 2, 3, 4],
+#             [5, 6, 7],
+#         ],
+#         artnet_index=0,
+#     )
+
+# artnet.start()
+# artnet2 = ArtNetSender(
+#     ip="2.0.0.101",
+#     universe=0,
+#     # channels=artnet_channels,
+#     unit_shape=(8, 4),
+#     unit_order=[
+#         [8],
+#         [9, 10, 11],
+#         [12, 13, 14, 15, 16],
+#     ],
+#     artnet_index=1,
+# )
+
+# artnet2.start()
+# data = [0] * 512
+# for i in range(512):
+#     data[i] = i
+# artnet.set_packet(data)
+# artnet2.set_packet(data)

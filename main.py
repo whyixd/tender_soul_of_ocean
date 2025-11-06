@@ -15,12 +15,13 @@ from multiprocessing import Queue, Process
 from pythonosc import udp_client
 from config import Config
 from osc_reciver import OSCReceiver
-from pythonosc import osc_bundle_builder,osc_message_builder
-import numpy as np  
+from pythonosc import osc_bundle_builder, osc_message_builder
+import numpy as np
 
 from param_processer import ease_in_out_circ
 
 import traceback
+
 
 def send_osc_message(
     client: udp_client.SimpleUDPClient, tsoo_param: TSOOParamProcesser
@@ -70,19 +71,20 @@ def send_osc_message(
     client.send_message("/whyixd/wind/interper/angle", inter_param["wind_angle"])
     client.send_message("/whyixd/wind/interper/vector", inter_param["wind_vector"])
     # ---------------------
+
+
 def send_pos_update(osc_client, person_pos):
-    bundle_builder = osc_bundle_builder.OscBundleBuilder(
-        osc_bundle_builder.IMMEDIATELY)
+    bundle_builder = osc_bundle_builder.OscBundleBuilder(osc_bundle_builder.IMMEDIATELY)
     msg = osc_message_builder.OscMessageBuilder(address="/whyixd/people/pos")
     sorted_pos = sorted(person_pos, key=lambda x: x[0])
-    if len(sorted_pos) <1:
-        sorted_pos = [(0.0,0.0)]
+    if len(sorted_pos) < 1:
+        sorted_pos = [(0.0, 0.0)]
     # print("Sending person positions:", sorted_pos)
     for idx, pos in enumerate(sorted_pos):
         msg.add_arg(idx)
         msg.add_arg(pos[0])
         msg.add_arg(pos[1])
-    
+
     # if len(person_pos) ==0:
     #     msg.add_arg(0)
     #     msg.add_arg(0.0)
@@ -158,7 +160,7 @@ def effect_process(
     last_pluck_trigger_time = 0
     last_matrix_update_time = 0
     last_glitch_update_time = 0
-    last_pos_update_time =0
+    last_pos_update_time = 0
     last_param_update_time = 0
 
     try:
@@ -219,20 +221,22 @@ def effect_process(
                     pass
                 finally:
                     last_glitch_update_time = time.time()
-            if time.time() - last_pos_update_time>0.1:
-                try:
-                    send_pos_update(osc_client, param_processor.target_tsoo_param["person_pos"])
-                except Exception as e:
-                    print(f"Error sending position update: {e}")
-                finally:
-                    last_pos_update_time = time.time()
+            # if time.time() - last_pos_update_time > 0.1:
+            #     try:
+            #         send_pos_update(
+            #             osc_client, param_processor.target_tsoo_param["person_pos"]
+            #         )
+            #     except Exception as e:
+            #         print(f"Error sending position update: {e}")
+            #     finally:
+            #         last_pos_update_time = time.time()
             # effect
             if time.time() - last_matrix_update_time > 0.03:
                 try:
                     # 使用新的組合效果方法，避免梯度遮罩影響雨滴效果
                     matrix_data = param_processor.get_combined_effects(
-                        48,
-                        12,
+                        8 * 8,
+                        4 * 5,
                         scale=7,
                         z=time_val,
                         gradient_vector=(
@@ -264,9 +268,9 @@ def effect_process(
                             "tsoo_param_target", param_processor.target_tsoo_param
                         )
                         last_param_update_time = time.time()
-                        send_osc_message(osc_client, param_processor)
-                    if osc_client is not None:
-                        osc_client.send_message("/whyixd/light/dmx", matrix)
+                        # send_osc_message(osc_client, param_processor)
+                    # if osc_client is not None:
+                    #     osc_client.send_message("/whyixd/light/dmx", matrix)
 
                     # count += 1
 
@@ -393,14 +397,18 @@ def main():
                 # 嘗試將數據放入隊列，但不阻塞
                 try:
                     if not people_queue.full():
-                        people_queue.put_nowait({"counts": people_counts, "pos": person_pos})
+                        people_queue.put_nowait(
+                            {"counts": people_counts, "pos": person_pos}
+                        )
                         # print("Person data sent to effect process")
                     else:
                         # 隊列已滿，清空後再放入新數據
                         try:
                             while not people_queue.empty():
                                 people_queue.get_nowait()
-                            people_queue.put_nowait({"counts": people_counts, "pos": person_pos})
+                            people_queue.put_nowait(
+                                {"counts": people_counts, "pos": person_pos}
+                            )
                             print(
                                 "Person data sent to effect process (after queue clear)"
                             )

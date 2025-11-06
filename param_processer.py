@@ -41,7 +41,9 @@ def draw_circle(center_x, center_y, radius, shape, fill=False):
     return rr, cc
 
 
-def draw_circle_growth(center_x, center_y, start_radius, end_radius, step, shape, fill=False):
+def draw_circle_growth(
+    center_x, center_y, start_radius, end_radius, step, shape, fill=False
+):
     """Yield circle coordinates while the diameter expands."""
     for radius in np.arange(start_radius, end_radius + step, step):
         yield draw_circle(center_x, center_y, radius, shape, fill=fill)
@@ -164,10 +166,11 @@ class TSOOParamProcesser:
         self.target_tsoo_param["wind_speed"] = speed
 
     def update_wind_angle(self, angle):
-        fix_angle = angle+75
+        fix_angle = angle + 75
         if fix_angle > 360:
-            fix_angle = fix_angle -360
+            fix_angle = fix_angle - 360
         self.target_tsoo_param["wind_angle"] = fix_angle
+
     def update_person_pos(self, pos_list):
         self.target_tsoo_param["person_pos"] = pos_list
 
@@ -180,7 +183,7 @@ class TSOOParamProcesser:
         # 對每個數值類型的參數進行插值
         for key, target_value in self.target_tsoo_param.items():
             if key in self.interper_tsoo_param:
-                prev_value = self.interper_tsoo_param[key]                        
+                prev_value = self.interper_tsoo_param[key]
                 # 根據不同類型進行不同的插值
                 if isinstance(target_value, (int, float)) and isinstance(
                     prev_value, (int, float)
@@ -444,13 +447,13 @@ class TSOOParamProcesser:
             255,
         )
         glitch_Z = np.zeros((height, width), dtype=np.uint8)
-        # combined[:] =50
-        if len(self.interper_tsoo_param["person_pos"])>0:
+        # combined[:] = 50
+        if len(self.interper_tsoo_param["person_pos"]) > 0:
             for pos in self.target_tsoo_param["person_pos"]:
-                circle_x = round(combined.shape[1]*(1-pos[1]))
-                circle_y = round(combined.shape[0]-combined.shape[0]//3)
-                circle_size = 2.2*(1- pos[0])
-                
+                circle_x = round(combined.shape[1] * (1 - pos[1]))
+                circle_y = round(combined.shape[0] - combined.shape[0] // 3)
+                circle_size = 2.2 * (1 - pos[0])
+
                 for rr, cc in draw_circle_growth(
                     center_x=circle_x,
                     center_y=circle_y,
@@ -458,10 +461,10 @@ class TSOOParamProcesser:
                     end_radius=circle_size,
                     step=0.01,
                     shape=combined.shape,
-                    fill=True
+                    fill=True,
                 ):
                     random_value = np.random.randint(0, 10, size=rr.shape)
-                    combined[rr,cc] = random_value
+                    combined[rr, cc] = random_value
                     glitch_Z[rr, cc] = random_value
         self.glitch_frame = glitch_Z.astype(np.uint8)
         return combined.astype(np.uint8)
@@ -573,7 +576,14 @@ class TSOOParamProcesser:
         Z = np.zeros((height, width))
         # 隨機生成雨滴
         if len(self.rain_drops) < 1:
-            corners = [(0, 0), (width - 1, 0), (width // 2, 0), (width // 2, height - 1), (width - 1, height - 1), (0, height - 1)]
+            corners = [
+                (0, 0),
+                (width - 1, 0),
+                (width // 2, 0),
+                (width // 2, height - 1),
+                (width - 1, height - 1),
+                (0, height - 1),
+            ]
             corner = random.choice(corners)
             self.rain_drops.append(
                 self.RainDrop(
@@ -596,7 +606,7 @@ class TSOOParamProcesser:
                 print("移除雨滴", self.rain_drops)
             else:
                 # print(f"drop:{idx} - {drop.x}, {drop.y}, {drop.radius}")
-                rr, cc = draw_circle(drop.x, drop.y, drop.radius, Z.shape,fill=False)
+                rr, cc = draw_circle(drop.x, drop.y, drop.radius, Z.shape, fill=False)
                 value = 1 - ease_out_expo(drop.radius / drop.end_radius)
                 Z[rr, cc] = value  # 在雨滴位置生成圓點
                 # 擴展雨滴半徑
