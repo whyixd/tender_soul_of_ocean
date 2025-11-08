@@ -283,12 +283,12 @@ const sketch = (p) => {
     p.textSize(24);
     p.textFont(boldFont);
     p.fill(255)
-    p.text("Tender Soul of Ocean : recall", -205, -10);
+    // p.text("Tender Soul of Ocean : recall", -205, -10);
     p.textSize(13/2);
     p.fill(255)
-    p.rect(235, 0, 200, 20);
+    // p.rect(235, 0, 200, 20);
     p.fill(0)
-    p.text("WHYIXD x KLING KLANG KLONG", 280, 0);
+    // p.text("WHYIXD x KLING KLANG KLONG", 280, 0);
     p.pop();
 
     // 繪製 DMX 資料，最新資料在最下方
@@ -375,10 +375,10 @@ const sketch = (p) => {
         ];
         //11.12
         p.translate(a[0], a[1], a[2]);
-        p.box(0.2);
+        // p.box(0.2);
         let dmxValue =
           dmx_data[i * 16 + j] === undefined ? 0 : dmx_data[i * 16 + j];
-        p.box((dmxValue / 255) * boxSize);
+        // p.box((dmxValue / 255) * boxSize);
         if (dmxValue > 10) {
           p.stroke(255);
           p.strokeWeight(0.01);
