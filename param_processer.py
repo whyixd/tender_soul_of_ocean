@@ -447,7 +447,7 @@ class TSOOParamProcesser:
             255,
         )
         glitch_Z = np.zeros((height, width), dtype=np.uint8)
-        # combined[:] = 50
+        combined[:] = 0
         if len(self.interper_tsoo_param["person_pos"]) > 0:
             for pos in self.target_tsoo_param["person_pos"]:
                 circle_x = round(combined.shape[1] * (1 - pos[1]))

@@ -116,7 +116,13 @@ class TSOOFlaskApp:
             except Exception as e:
                 print(f"Error serving show_case.html: {e}")
                 return "Error serving the page", 500
-
+        @self.app.route("/configuration")
+        def configuration():
+            try:
+                return send_from_directory(self.app.static_folder, "configuration.html")
+            except Exception as e:
+                print(f"Error serving configuration.html: {e}")
+                return "Error serving the page", 500
         @self.app.route("/static/<path:path>")
         def serve_static(path):
             try:

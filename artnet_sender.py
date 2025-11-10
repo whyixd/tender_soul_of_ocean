@@ -103,8 +103,10 @@ class ArtNetSender:
         for cord in cords:
             self.blocks_ch_orders.append(get_block_ch_order(len(self.blocks_ch_orders)))
         return self.blocks_ch_orders
-
-    def __packet_remap(self, packet):
+    def packet_remap(self, packet):
+        """重新映射封包內容，依照單元排列方式與單元大小"""
+        return self.__packet_remap(packet, to_bytes=False)
+    def __packet_remap(self, packet,to_bytes=True):
         """重新映射封包內容，依照單元排列方式與單元大小"""
 
         def get_block_data(x, y, data):
@@ -125,12 +127,15 @@ class ArtNetSender:
                 data_packets[ch] = clamp(
                     round(block_data[idx] * self.intensity), 0, 255
                 )
-        data_packets = data_packets.astype(np.uint8).tobytes()
+        if to_bytes == True:
+            data_packets = data_packets.astype(np.uint8).tobytes()
+        if to_bytes == False:
+            data_packets = data_packets.astype(np.uint8).tolist()
         return data_packets
 
-    def packet_remap(self, packet):
-        """重新映射封包內容，依照單元排列方式與單元大小"""
-        return self.__packet_remap(packet)
+    # def packet_remap(self, packet):
+    #     """重新映射封包內容，依照單元排列方式與單元大小"""
+    #     return self.__packet_remap(packet)
 
     def __print_block_order_graph(self):
         """印出單元排列方式"""

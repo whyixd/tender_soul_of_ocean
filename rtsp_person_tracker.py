@@ -374,8 +374,8 @@ def main():
     tracker = RTSPPersonTracker(
         sources={
             # "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-            # "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-            "cam C (desk)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=1_stream=0&amp;onvif=0.sdp?real_st",
+            "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+            # "cam C (desk)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=1_stream=0&amp;onvif=0.sdp?real_st",
         },
         ffmpeg_options=ffmpeg_opts,
         use_cuda=False,

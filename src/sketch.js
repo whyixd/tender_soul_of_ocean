@@ -33,7 +33,7 @@ const sketch = (p) => {
     { sinOffset: 4.7, sinLength: 0.33, sinScale: 8.05, sinYOffset: 1.53 },
   ];
 
-  let lightCornerPos = [-38.9, -83.4];
+  let lightCornerPos = [75, 260];
   let lightColor = [255, 150, 6];
   let lightValues = [];
   let lightRawData = { matrix: [] };
@@ -56,6 +56,8 @@ const sketch = (p) => {
     sinYOffset: 0,
     useEase: true,
     showControlPoints: false,
+    spaceOffsetX: 85, // 空間範圍 X 軸偏移
+    spaceOffsetZ: 70, // 空間範圍 Z 軸偏移
   };
   let pos = { x: 0, y: 0, z: 0 };
   let posIncrement = 0.1;
@@ -68,6 +70,7 @@ const sketch = (p) => {
     people_natrual_weight: 0,
     people_natrual_weight_level: 0,
     people_natrual_weight_level_threshold: 0.5,
+    person_pos: [],
     wind_angle: 0,
     wind_vector: 0,
     effect_vector: 0,
@@ -376,6 +379,19 @@ const sketch = (p) => {
       });
     gui.add(settings, "useEase").name("使用Ease函數利於顯示");
     gui.add(settings, "showControlPoints").name("顯示控制點");
+
+    // 添加空間偏移控制
+    const spaceFolder = gui.addFolder("空間範圍偏移");
+    spaceFolder
+      .add(settings, "spaceOffsetX", -100, 100)
+      .name("X 軸偏移")
+      .step(0.1);
+    spaceFolder
+      .add(settings, "spaceOffsetZ", -100, 100)
+      .name("Z 軸偏移")
+      .step(0.1);
+    spaceFolder.open();
+
     const matrixFolder = gui.addFolder("8x16 Matrix (Display Only)");
     for (let i = 0; i < dataShape.y; i++) {
       const rowFolder = matrixFolder.addFolder(`Row ${i}`);
@@ -475,6 +491,7 @@ const sketch = (p) => {
         data.people_natrual_weight_level;
       tsooParam["people_natrual_weight_level_threshold"] =
         data.people_natrual_weight_level_threshold;
+      tsooParam["person_pos"] = data.person_pos;
       tsooParam["wind_angle"] = roundToTwoDecimalPlaces(data.wind_angle);
       tsooParam["wind_vector"] = [
         roundToTwoDecimalPlaces(data.wind_vector[0]),
@@ -618,6 +635,104 @@ const sketch = (p) => {
       p.sphere(1);
       p.pop();
     }
+
+    // 繪製 person_pos 的空間範圍
+    p.push();
+    p.stroke(100, 200, 255, 150); // 淡藍色邊框
+    p.strokeWeight(0.5);
+    p.noFill();
+
+    // 計算空間範圍的四個角落（應用偏移）
+    let spaceMinX = lightCornerPos[0] + settings.spaceOffsetX;
+    let spaceMaxX = -lightCornerPos[0] + settings.spaceOffsetX;
+    let spaceMinZ = lightCornerPos[1] + settings.spaceOffsetZ;
+    let spaceMaxZ = -lightCornerPos[1] + settings.spaceOffsetZ;
+    let spaceWidth = spaceMaxX - spaceMinX;
+    let spaceHeight = spaceMaxZ - spaceMinZ;
+
+    // 在地面上繪製空間範圍矩形
+    p.push();
+    p.translate((spaceMinX + spaceMaxX) / 2, (spaceMinZ + spaceMaxZ) / 2, 0);
+    p.rotateX(p.PI / 2);
+    p.rect(-spaceWidth / 2, -spaceHeight / 2, spaceWidth, spaceHeight);
+    p.pop();
+
+    // 繪製四個角落的垂直線柱
+    let cornerHeight = 50;
+    p.stroke(100, 200, 255, 100);
+    p.strokeWeight(0.3);
+    // 左上角
+    p.line(spaceMinX, spaceMinZ, 0, spaceMinX, spaceMinZ, cornerHeight);
+    // 右上角
+    p.line(spaceMaxX, spaceMinZ, 0, spaceMaxX, spaceMinZ, cornerHeight);
+    // 左下角
+    p.line(spaceMinX, spaceMaxZ, 0, spaceMinX, spaceMaxZ, cornerHeight);
+    // 右下角
+    p.line(spaceMaxX, spaceMaxZ, 0, spaceMaxX, spaceMaxZ, cornerHeight);
+
+    // 在頂部也繪製一個矩形框架
+    p.push();
+    p.translate(
+      (spaceMinX + spaceMaxX) / 2,
+      (spaceMinZ + spaceMaxZ) / 2,
+      cornerHeight
+    );
+    p.rotateX(p.PI / 2);
+    p.stroke(100, 200, 255, 80);
+    p.rect(-spaceWidth / 2, -spaceHeight / 2, spaceWidth, spaceHeight);
+    p.pop();
+
+    p.pop();
+
+    // 繪製 person_pos 中每個人的位置
+    if (tsooParam.person_pos && tsooParam.person_pos.length > 0) {
+      p.push();
+      p.noStroke();
+
+      tsooParam.person_pos.forEach((pos, idx) => {
+        // pos[0] 和 pos[1] 是 normalized 的座標 (0-1)
+        // 將 normalized 座標映射到實際的矩陣空間（應用偏移）
+        // 假設空間範圍基於 lightCornerPos 定義的區域
+        let x =
+          p.map(pos[0], 0, 1, lightCornerPos[0], -lightCornerPos[0]) +
+          settings.spaceOffsetX;
+        let z =
+          p.map(pos[1], 0, 1, lightCornerPos[1], -lightCornerPos[1]) +
+          settings.spaceOffsetZ;
+
+        // p.push();
+        // p.translate(x, z, 150); // 在空間中的高度位置
+
+        // // 繪製一個發光的球體代表人的位置
+        // p.fill(255, 200, 0, 200); // 橙黃色，半透明
+        // p.sphere(3);
+
+        // // 繪製一條垂直線連接到地面
+        // p.stroke(255, 200, 0, 150);
+        // p.strokeWeight(0.5);
+        // p.line(0, 0, 0, 0, 0, -150);
+
+        // p.pop();
+
+        // 在地面上繪製投影圓圈
+        p.push();
+        p.translate(x, z, 0);
+        p.rotateX(p.PI / 2);
+        p.fill(255, 200, 0, 100);
+        p.noStroke();
+        p.circle(0, 0, 10);
+
+        // 繪製索引編號
+        p.fill(255, 255, 255);
+        p.textSize(3);
+        p.textAlign(p.CENTER, p.CENTER);
+        p.text(idx, 0, 0);
+        p.pop();
+      });
+
+      p.pop();
+    }
+
     // create light cylinder
     p.push();
     let unit_color = [

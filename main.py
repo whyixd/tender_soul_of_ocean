@@ -12,87 +12,14 @@ import threading
 from config import Config
 
 from multiprocessing import Queue, Process
-from pythonosc import udp_client
 from config import Config
 from osc_reciver import OSCReceiver
-from pythonosc import osc_bundle_builder, osc_message_builder
+from osc_sender import OSCSender
 import numpy as np
 
 from param_processer import ease_in_out_circ
 
 import traceback
-
-
-def send_osc_message(
-    client: udp_client.SimpleUDPClient, tsoo_param: TSOOParamProcesser
-):
-    param = tsoo_param.target_tsoo_param
-    inter_param = tsoo_param.interper_tsoo_param
-    # -------------------composite--------------------#
-    client.send_message(
-        "/whyixd/composite/weight",
-        param["people_natrual_weight"],
-    )
-    client.send_message(
-        "/whyixd/composite/level",
-        param["people_natrual_weight_level"],
-    )
-    client.send_message(
-        "/whyixd/composite/threshold",
-        param["people_natrual_weight_level_threshold"],
-    )
-    client.send_message(
-        "/whyixd/composite/interper/weight", inter_param["people_natrual_weight"]
-    )
-
-    # ---------------------people---------------------#
-    client.send_message("/whyixd/people/counts", param["area_people_count"])
-    client.send_message(
-        "/whyixd/people/vector",
-        param["people_vector"],
-    )
-    client.send_message("/whyixd/people/interper/vector", inter_param["people_vector"])
-
-    # ---------------------light----------------------#
-    client.send_message(
-        "/whyixd/light/vector",
-        param["effect_vector"],
-    )
-    client.send_message("/whyixd/light/interper/vector", inter_param["effect_vector"])
-    # ---------------------wind-----------------------#
-    client.send_message("/whyixd/wind/speed", inter_param["wind_speed"])
-    # client.send_message("/whyixd/wind/speed/normalized", param["wind_speed_normalized"])
-    client.send_message("/whyixd/wind/angle", param["wind_angle"])
-    client.send_message(
-        "/whyixd/wind/vector",
-        param["wind_vector"],
-    )
-    client.send_message("/whyixd/wind/interper/speed", inter_param["wind_speed"])
-    client.send_message("/whyixd/wind/interper/angle", inter_param["wind_angle"])
-    client.send_message("/whyixd/wind/interper/vector", inter_param["wind_vector"])
-    # ---------------------
-
-
-def send_pos_update(osc_client, person_pos):
-    bundle_builder = osc_bundle_builder.OscBundleBuilder(osc_bundle_builder.IMMEDIATELY)
-    msg = osc_message_builder.OscMessageBuilder(address="/whyixd/people/pos")
-    sorted_pos = sorted(person_pos, key=lambda x: x[0])
-    if len(sorted_pos) < 1:
-        sorted_pos = [(0.0, 0.0)]
-    # print("Sending person positions:", sorted_pos)
-    for idx, pos in enumerate(sorted_pos):
-        msg.add_arg(idx)
-        msg.add_arg(pos[0])
-        msg.add_arg(pos[1])
-
-    # if len(person_pos) ==0:
-    #     msg.add_arg(0)
-    #     msg.add_arg(0.0)
-    #     msg.add_arg(0.0)
-    bundle_builder.add_content(msg.build())
-    pos_message = bundle_builder.build()
-    osc_client.send(pos_message)
-    # print(msg)
 
 
 # 將 effect_thread 函數移到 main() 外部，並接收所需的參數
@@ -119,7 +46,7 @@ def effect_process(
         block_shape=block_shape,
         block_order=block_order,
     )
-    osc_client = udp_client.SimpleUDPClient(
+    osc_sender = OSCSender(
         address=osc_config["address"], port=osc_config["port"]
     )
     osc_receiver = OSCReceiver(ip="0.0.0.0", port=57121)
@@ -213,23 +140,24 @@ def effect_process(
             if time.time() - last_glitch_update_time > 0.01:
                 try:
                     if param_processor.glitch_frame is not None:
-                        glitch_flaten = param_processor.glitch_frame.flatten().tolist()
-
-                        # print("Glitch frame detected:", glitch_flaten)
-                        osc_client.send_message("/whyixd/light/glitch", glitch_flaten)
+                        glitchA = flask_app.artnet.packet_remap(param_processor.glitch_frame).flatten().tolist()
+                        glitchB = flask_app.artnet2.packet_remap(param_processor.glitch_frame).flatten().tolist()
+                        osc_sender.send_message("/whyixd/light/glitchA", glitchA)
+                        osc_sender.send_message("/whyixd/light/glitchB", glitchB)
+                        
                 except:
                     pass
                 finally:
                     last_glitch_update_time = time.time()
-            # if time.time() - last_pos_update_time > 0.1:
-            #     try:
-            #         send_pos_update(
-            #             osc_client, param_processor.target_tsoo_param["person_pos"]
-            #         )
-            #     except Exception as e:
-            #         print(f"Error sending position update: {e}")
-            #     finally:
-            #         last_pos_update_time = time.time()
+            if time.time() - last_pos_update_time > 0.1:
+                try:
+                    osc_sender.send_positions(
+                        param_processor.target_tsoo_param["person_pos"]
+                    )
+                except Exception as e:
+                    print(f"Error sending position update: {e}")
+                finally:
+                    last_pos_update_time = time.time()
             # effect
             if time.time() - last_matrix_update_time > 0.03:
                 try:
@@ -255,6 +183,7 @@ def effect_process(
                     #     ),
                     # )
                     # matrix_data = basic
+                    # print(matrix_data.shape)
                     matrix = matrix_data.flatten().tolist()
 
                     time_val += 0.002
@@ -268,15 +197,20 @@ def effect_process(
                             "tsoo_param_target", param_processor.target_tsoo_param
                         )
                         last_param_update_time = time.time()
-                        # send_osc_message(osc_client, param_processor)
-                    # if osc_client is not None:
-                    #     osc_client.send_message("/whyixd/light/dmx", matrix)
+                        osc_sender.send_parameters(param_processor)
+                    # osc_sender.send_message("/whyixd/light/dmx", matrix)
 
                     # count += 1
 
                     # flask_app.artnet.set_packet(
                     #     matrix, general_config.get("light_intensity", 2)
                     # )
+                    
+                    matrixA =flask_app.artnet.packet_remap(matrix)
+                    matrixB =flask_app.artnet2.packet_remap(matrix)
+                    matrix_all =matrixA+matrixB
+
+                    osc_sender.send_message("/whyixd/light/dmx", matrix_all)
                     flask_app.artnet.set_packet(matrix)
                     flask_app.artnet2.set_packet(matrix)
                 except Exception as e:
@@ -311,11 +245,11 @@ def main():
     # 創建一個新的隊列，用於接收參數可以更新的信號
     update_signal_queue = Queue(maxsize=1)
 
-    # person_tracker = MockPersonTracker(
-    #     video_source="people_top.mp4",  # or 0 for webcam
-    #     width=640,
-    #     height=360,
-    # )
+    person_tracker = MockPersonTracker(
+        video_source="people_top.mp4",  # or 0 for webcam
+        width=640,
+        height=360,
+    )
     # person_tracker = PersonTracker(
     #     video_source="people_top.mp4",  # or 0 for webcam
     #     width=640,
@@ -331,18 +265,18 @@ def main():
         "probesize": "320000",
         "analyzeduration": "0",
     }
-    person_tracker = RTSPPersonTracker(
-        sources={
-            # "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-            # "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-            "cam C (main)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=0_stream=0&onvif=0.sdp?real_st",
-        },
-        ffmpeg_options=ffmpeg_opts,
-    )
+    # person_tracker = RTSPPersonTracker(
+    #     sources={
+    #         # "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+    #         "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+    #         # "cam C (main)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=0_stream=0&onvif=0.sdp?real_st",
+    #     },
+    #     ffmpeg_options=ffmpeg_opts,
+    # )
     # 使用新方法，在背景執行 tracking 和 display
-    # person_tracker.start_all_in_background()
+    person_tracker.start_all_in_background()
 
-    person_tracker.start()
+    # person_tracker.start()
 
     # sleep(10)  # 等待追蹤器初始化
     # natural_tracker = NaturalTracker()

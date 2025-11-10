@@ -37,7 +37,7 @@ class NaturalTracker:
         """初始化風速計設備或準備歷史數據"""
         print_all_ports()
         self.serial = find_usb_serial_device(vid=self.vid, pid=self.pid)
-        self.serial = "COM1"  # for test
+        # self.serial = "COM1"  # for test
         if self.serial is not None:
             print(f"找到 風速計 設備: {self.serial}")
             self.modbus = ModbusReader(com_port=self.serial)
