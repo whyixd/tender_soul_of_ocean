@@ -140,8 +140,9 @@ def effect_process(
             if time.time() - last_glitch_update_time > 0.01:
                 try:
                     if param_processor.glitch_frame is not None:
-                        glitchA = flask_app.artnet.packet_remap(param_processor.glitch_frame).flatten().tolist()
-                        glitchB = flask_app.artnet2.packet_remap(param_processor.glitch_frame).flatten().tolist()
+
+                        glitchA = flask_app.artnet.packet_remap(param_processor.glitch_frame)
+                        glitchB = flask_app.artnet2.packet_remap(param_processor.glitch_frame)
                         osc_sender.send_message("/whyixd/light/glitchA", glitchA)
                         osc_sender.send_message("/whyixd/light/glitchB", glitchB)
                         

@@ -447,13 +447,15 @@ class TSOOParamProcesser:
             255,
         )
         glitch_Z = np.zeros((height, width), dtype=np.uint8)
-        combined[:] = 0
+        # combined[:] = 0
         if len(self.interper_tsoo_param["person_pos"]) > 0:
             for pos in self.target_tsoo_param["person_pos"]:
                 circle_x = round(combined.shape[1] * (1 - pos[1]))
                 circle_y = round(combined.shape[0] - combined.shape[0] // 3)
+                
                 circle_size = 2.2 * (1 - pos[0])
-
+                if circle_x< combined.shape[1] //2:
+                    circle_y = combined.shape[0] // 3
                 for rr, cc in draw_circle_growth(
                     center_x=circle_x,
                     center_y=circle_y,

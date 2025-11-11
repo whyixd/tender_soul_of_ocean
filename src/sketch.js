@@ -563,8 +563,8 @@ const sketch = (p) => {
     p.rotateZ(p.PI);
     for (let i = 0; i < dataShape.x; i++) {
       for (let j = 0; j < dataShape.y; j++) {
-        // p.fill(lightRawData.matrix[j][i] * contrast);
-        // p.square((8 - j) * unitSize, (16 - i) * unitSize, unitSize);
+        p.fill(lightRawData.matrix[j][i] * contrast);
+        p.square((8 - j) * unitSize, (16 - i) * unitSize, unitSize);
       }
     }
     p.pop();
