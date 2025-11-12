@@ -85,7 +85,7 @@ class MockPersonTracker(threading.Thread):
         
         # Movement settings for single person
         self.person_y = 0.5  # Start at center (normalized 0-1)
-        self.movement_speed = 0.05  # Slow movement speed
+        self.movement_speed = 0.01  # Slow movement speed
         self.movement_direction = 1  # 1 for down, -1 for up
 
     def stop(self):

@@ -19,7 +19,10 @@ import numpy as np
 
 from param_processer import ease_in_out_circ
 
+from mixer_sound_scheduler import MixerSoundScheduler
 import traceback
+import asyncio
+
 
 
 # 將 effect_thread 函數移到 main() 外部，並接收所需的參數
@@ -137,7 +140,7 @@ def effect_process(
                     param_processor.params_updated = True
             except Exception as e:
                 print(f"Error updating natural data: {e}")
-            if time.time() - last_glitch_update_time > 0.01:
+            if time.time() - last_glitch_update_time > 0.04:
                 try:
                     if param_processor.glitch_frame is not None:
 
@@ -232,14 +235,28 @@ def main():
     osc_config = {"address": "127.0.0.1", "port": 5005}
     osc_config_instance = Config(osc_config, "config/osc_config.json")
     osc_config = osc_config_instance.load()
+    
+    def on_open():
+        print("Mixer opened")
+    def on_close():
+        print("Mixer closed")
 
     general_config = {
         "artnet_target": "2.0.0.100",
         "light_intensity": 1,
         "wind_speed_factor": 10,  # 默認風速因子
+        "mixer_activate_hours": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18],  # 預設啟動時間
+        "mixer_osc_ip": "127.0.0.1"  # Mixer OSC IP
     }
     general_config_instance = Config(general_config, "config/general_config.json")
     general_config = general_config_instance.load()
+    
+    # 創建並設置 MixerSoundScheduler
+    mixer_scheduler = MixerSoundScheduler(
+        osc_ip=general_config.get("mixer_osc_ip", osc_config["address"]),
+        activate_hours=general_config.get("mixer_activate_hours", [9,18])
+    )
+
     # 創建一個隊列用於在進程之間傳遞人員追蹤數據
     people_queue = Queue(maxsize=5)  # 限制隊列大小，防止內存溢出
 
@@ -310,9 +327,13 @@ def main():
     )
     effect_thread_instance.start()
 
-    # 輸出主進程中的線程
-    for thread in threading.enumerate():
-        print(thread.name)
+    # 在背景線程中啟動 MixerSoundScheduler
+    mixer_thread = threading.Thread(target=mixer_scheduler.run_blocking)
+    mixer_thread.daemon = True
+    mixer_thread.start()
+    print("MixerSoundScheduler started in background")
+
+    
 
     try:
         # 主進程監視用戶輸入和更新人員追蹤數據
@@ -358,6 +379,8 @@ def main():
         print("Main program interrupted")
     finally:
         person_tracker.stop()
+        mixer_scheduler.stop()
+        print("Stopping mixer scheduler...")
         # 終止效果進程
         # effect_thread_instance.terminate()
         effect_thread_instance.join()

@@ -95,10 +95,12 @@ class OSCSender:
         if len(sorted_pos) < 1:
             sorted_pos = [(0.0, 0.0)]
 
+
         for idx, pos in enumerate(sorted_pos):
             msg.add_arg(idx)
-            msg.add_arg(pos[0])
+            # reverse x,y for sound space match
             msg.add_arg(pos[1])
+            msg.add_arg(pos[0])
 
         bundle_builder.add_content(msg.build())
         pos_message = bundle_builder.build()
