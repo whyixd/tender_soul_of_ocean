@@ -3,5 +3,5 @@
   "light_intensity": 2,
   "wind_speed_factor": 20,
   "mixer_activate_hours": [17, 18],
-  "mixer_osc_ip": "127.0.0.1"
+  "mixer_osc_ip": "2.0.0.17"
 }
