@@ -140,7 +140,7 @@ def effect_process(
                     param_processor.params_updated = True
             except Exception as e:
                 print(f"Error updating natural data: {e}")
-            if time.time() - last_glitch_update_time > 0.04:
+            if time.time() - last_glitch_update_time > 0.01:
                 try:
                     if param_processor.glitch_frame is not None:
 

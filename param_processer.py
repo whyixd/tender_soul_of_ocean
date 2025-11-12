@@ -405,9 +405,9 @@ class TSOOParamProcesser:
             )
         self.previous_gradient_mask = gradient_mask.copy()
         # --- END OF GRADIENT LOGIC ---
-
+        gradient_mask_intensity = 0.8
         # 應用梯度遮罩和淡出效果
-        Z = Z * gradient_mask
+        Z = Z *  (gradient_mask * gradient_mask_intensity + (1 - gradient_mask_intensity))
         Z = Z * self.fade_factor
         Z = np.interp(Z, (0, 1), (0, 255)).astype(np.uint8)
 
@@ -447,7 +447,8 @@ class TSOOParamProcesser:
             255,
         )
         glitch_Z = np.zeros((height, width), dtype=np.uint8)
-        # combined[:] = 0
+        # combined[:] =0
+        # combined[16:20,40:48]=255
         if len(self.interper_tsoo_param["person_pos"]) > 0:
             for pos in self.target_tsoo_param["person_pos"]:
                 circle_x = round(combined.shape[1] * (1 - pos[1]))
