@@ -90,6 +90,6 @@ async def main():
 
 
 if __name__ == "__main__":
-   mixer = MixerSoundScheduler("192.168.1.87",[1,10])
+   mixer = MixerSoundScheduler("2.0.0.17",[1,10])
    mixer.send_off()
    
