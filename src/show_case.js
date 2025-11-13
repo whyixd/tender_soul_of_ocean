@@ -67,13 +67,30 @@ function drawAreaPeople(
 const sketch = (p) => {
   let gui;
   let socket;
-  let scroll_dmx_data = [];
   const max_lines = 54; // 最大顯示行數
+  const LOG_TEXT_SIZE = 1.8;
+  const LOG_TOKEN_REGEX =
+    /(RECEIVE|ENDPOINT|OPCODE|SEQUENCE|PHYSICAL|UNIVERSE|DATA|DMX)/;
+  const LOG_TOKEN_COLORS = {
+    RECEIVE: [0, 255, 0],
+    ENDPOINT: [0, 255, 255],
+    OPCODE: [0, 255, 255],
+    SEQUENCE: [0, 255, 255],
+    PHYSICAL: [0, 255, 255],
+    UNIVERSE: [0, 255, 255],
+    DATA: [0, 255, 255],
+    DMX: [255, 105, 180],
+    DEFAULT: [0, 0, 0],
+  };
+  const scroll_dmx_data = new Array(max_lines);
+  let logWriteIndex = 0;
+  let logCount = 0;
   let font; // 用於存放字體
   let boldFont;
   let zh_font;
   let zh_boldFont;
   let barcodeFont;
+  let logFont;
   let dmx_data = [];
   let tsooParam = {};
   let capture;
@@ -129,6 +146,7 @@ const sketch = (p) => {
         zh_boldFont = await p.loadFont("assets/NotoSansTC-Bold.ttf");
       }
       p.textFont(font); // 設定字體
+      logFont = font;
     } catch (e) {
       console.error("Font loading error:", e);
     }
@@ -145,14 +163,9 @@ const sketch = (p) => {
     socket.on("dmx_data", (data) => {
       const timestamp = new Date().toISOString(); // 生成 ISO 格式的時間碼
       dmx_data = data.value;
-      scroll_dmx_data.push(
-        `[${timestamp}] > RECEIVE..|..ENDPOINT(127.0.0.1:61373) OPCODE(DMX) SEQUENCE(0) PHYSICAL(0) UNIVERSE(0) DATA(` +
-          data.value.toString() +
-          ")\n"
-      ); // 將接收到的資料加入陣列
-      if (scroll_dmx_data.length > max_lines) {
-        scroll_dmx_data.shift(); // 移除最舊的資料
-      }
+      addScrollEntry(
+        `[${timestamp}] > RECEIVE..|..ENDPOINT(127.0.0.1:61373) OPCODE(DMX) SEQUENCE(0) PHYSICAL(0) UNIVERSE(0) DATA(${data.value.toString()})\n`
+      );
     });
     socket.on("tsoo_param", (data) => {
       previousTsooParam = tsooParam;
@@ -187,12 +200,9 @@ const sketch = (p) => {
     // capture.hide();
     setInterval(() => {
       const timestamp = new Date().toISOString(); // 生成 ISO 格式的時間碼
-      scroll_dmx_data.push(
+      addScrollEntry(
         `[${timestamp}] > RECEIVE..|..NDPOINT(127.0.0.1:6454) OPCODE(POLL)\n`
       );
-      if (scroll_dmx_data.length > max_lines) {
-        scroll_dmx_data.shift(); // 移除最舊的資料
-      }
     }, 3000);
 
     if ("geolocation" in navigator) {
@@ -207,6 +217,34 @@ const sketch = (p) => {
       console.log("geolocation IS NOT available");
     }
   };
+  function buildLogSegments(line) {
+    const cleanedLine = line.replace(/\n$/, "");
+    const segments = [];
+    p.push();
+    p.textFont(logFont || font);
+    p.textSize(LOG_TEXT_SIZE);
+    const parts = cleanedLine.split(LOG_TOKEN_REGEX);
+    for (const part of parts) {
+      if (!part) continue;
+      const color = LOG_TOKEN_COLORS[part] || LOG_TOKEN_COLORS.DEFAULT;
+      segments.push({
+        text: part,
+        fill: color,
+        width: p.textWidth(part),
+      });
+    }
+    p.pop();
+    return segments;
+  }
+
+  function addScrollEntry(line) {
+    scroll_dmx_data[logWriteIndex] = buildLogSegments(line);
+    logWriteIndex = (logWriteIndex + 1) % max_lines;
+    if (logCount < max_lines) {
+      logCount++;
+    }
+  }
+
   p.draw = () => {
     p.background("#000000ff");
     p.textAlign(p.LEFT, p.TOP);
@@ -303,40 +341,22 @@ const sketch = (p) => {
 
     // 繪製 DMX 資料，最新資料在最下方
     p.push();
-    p.textSize(1.8);
+    p.textFont(logFont || font);
+    p.textSize(LOG_TEXT_SIZE);
     p.translate(160, 50);
 
     let y = -p.height / 6 + 80;
-    for (let i = 0; i < scroll_dmx_data.length; i++) {
+    for (let i = 0; i < logCount; i++) {
+      const bufferIndex =
+        (logWriteIndex - logCount + i + max_lines) % max_lines;
+      const entry = scroll_dmx_data[bufferIndex];
+      if (!entry) continue;
       let x = -p.width / 6 + 50;
-      const line = scroll_dmx_data[i];
-
-      // 分割字串並設置顏色
-      const parts = line.split(
-        /(RECEIVE|ENDPOINT|OPCODE|SEQUENCE|PHYSICAL|UNIVERSE|DATA|DMX)/
-      );
-      parts.forEach((part) => {
-        if (part === "RECEIVE") {
-          p.fill(0, 255, 0); // 綠色
-        } else if (
-          [
-            "ENDPOINT",
-            "OPCODE",
-            "SEQUENCE",
-            "PHYSICAL",
-            "UNIVERSE",
-            "DATA",
-          ].includes(part)
-        ) {
-          p.fill(0, 255, 255); // 水藍色
-        } else if (part === "DMX") {
-          p.fill(255, 105, 180); // 桃紅色
-        } else {
-          p.fill(0); // 白色
-        }
-        p.text(part, x, y);
-        x += p.textWidth(part); // 更新 x 座標
-      });
+      for (const segment of entry) {
+        p.fill(...segment.fill);
+        p.text(segment.text, x, y);
+        x += segment.width;
+      }
 
       y += 2.1; // 每行文字的間距
     }
