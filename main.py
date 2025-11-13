@@ -24,7 +24,6 @@ import traceback
 import asyncio
 
 
-
 # 將 effect_thread 函數移到 main() 外部，並接收所需的參數
 def effect_process(
     artnet_host,
@@ -49,9 +48,7 @@ def effect_process(
         block_shape=block_shape,
         block_order=block_order,
     )
-    osc_sender = OSCSender(
-        address=osc_config["address"], port=osc_config["port"]
-    )
+    osc_sender = OSCSender(address=osc_config["address"], port=osc_config["port"])
     osc_receiver = OSCReceiver(ip="0.0.0.0", port=57121)
     osc_receiver.start()
     param_processor = TSOOParamProcesser(interpolation_speed=0.005)
@@ -144,11 +141,15 @@ def effect_process(
                 try:
                     if param_processor.glitch_frame is not None:
 
-                        glitchA = flask_app.artnet.packet_remap(param_processor.glitch_frame)
-                        glitchB = flask_app.artnet2.packet_remap(param_processor.glitch_frame)
+                        glitchA = flask_app.artnet.packet_remap(
+                            param_processor.glitch_frame
+                        )
+                        glitchB = flask_app.artnet2.packet_remap(
+                            param_processor.glitch_frame
+                        )
                         osc_sender.send_message("/whyixd/light/glitchA", glitchA)
                         osc_sender.send_message("/whyixd/light/glitchB", glitchB)
-                        
+
                 except:
                     pass
                 finally:
@@ -209,10 +210,10 @@ def effect_process(
                     # flask_app.artnet.set_packet(
                     #     matrix, general_config.get("light_intensity", 2)
                     # )
-                    
-                    matrixA =flask_app.artnet.packet_remap(matrix)
-                    matrixB =flask_app.artnet2.packet_remap(matrix)
-                    matrix_all =matrixA+matrixB
+
+                    matrixA = flask_app.artnet.packet_remap(matrix)
+                    matrixB = flask_app.artnet2.packet_remap(matrix)
+                    matrix_all = matrixA + matrixB
 
                     osc_sender.send_message("/whyixd/light/dmx", matrix_all)
                     flask_app.artnet.set_packet(matrix)
@@ -235,9 +236,10 @@ def main():
     osc_config = {"address": "127.0.0.1", "port": 5005}
     osc_config_instance = Config(osc_config, "config/osc_config.json")
     osc_config = osc_config_instance.load()
-    
+
     def on_open():
         print("Mixer opened")
+
     def on_close():
         print("Mixer closed")
 
@@ -246,15 +248,15 @@ def main():
         "light_intensity": 1,
         "wind_speed_factor": 10,  # 默認風速因子
         "mixer_activate_hours": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18],  # 預設啟動時間
-        "mixer_osc_ip": "127.0.0.1"  # Mixer OSC IP
+        "mixer_osc_ip": "127.0.0.1",  # Mixer OSC IP
     }
     general_config_instance = Config(general_config, "config/general_config.json")
     general_config = general_config_instance.load()
-    
+
     # 創建並設置 MixerSoundScheduler
     mixer_scheduler = MixerSoundScheduler(
         osc_ip=general_config.get("mixer_osc_ip", osc_config["address"]),
-        activate_hours=general_config.get("mixer_activate_hours", [9,18])
+        activate_hours=general_config.get("mixer_activate_hours", [9, 18]),
     )
 
     # 創建一個隊列用於在進程之間傳遞人員追蹤數據
@@ -263,11 +265,11 @@ def main():
     # 創建一個新的隊列，用於接收參數可以更新的信號
     update_signal_queue = Queue(maxsize=1)
 
-    person_tracker = MockPersonTracker(
-        video_source="people_top.mp4",  # or 0 for webcam
-        width=640,
-        height=360,
-    )
+    # person_tracker = MockPersonTracker(
+    #     video_source="people_top.mp4",  # or 0 for webcam
+    #     width=640,
+    #     height=360,
+    # )
     # person_tracker = PersonTracker(
     #     video_source="people_top.mp4",  # or 0 for webcam
     #     width=640,
@@ -283,18 +285,18 @@ def main():
         "probesize": "320000",
         "analyzeduration": "0",
     }
-    # person_tracker = RTSPPersonTracker(
-    #     sources={
-    #         # "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-    #         "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-    #         # "cam C (main)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=0_stream=0&onvif=0.sdp?real_st",
-    #     },
-    #     ffmpeg_options=ffmpeg_opts,
-    # )
+    person_tracker = RTSPPersonTracker(
+        sources={
+            # "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+            "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+            # "cam C (main)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=0_stream=0&onvif=0.sdp?real_st",
+        },
+        ffmpeg_options=ffmpeg_opts,
+    )
     # 使用新方法，在背景執行 tracking 和 display
-    person_tracker.start_all_in_background()
+    # person_tracker.start_all_in_background()
 
-    # person_tracker.start()
+    person_tracker.start()
 
     # sleep(10)  # 等待追蹤器初始化
     # natural_tracker = NaturalTracker()
@@ -332,8 +334,6 @@ def main():
     mixer_thread.daemon = True
     mixer_thread.start()
     print("MixerSoundScheduler started in background")
-
-    
 
     try:
         # 主進程監視用戶輸入和更新人員追蹤數據

@@ -407,7 +407,9 @@ class TSOOParamProcesser:
         # --- END OF GRADIENT LOGIC ---
         gradient_mask_intensity = 0.8
         # 應用梯度遮罩和淡出效果
-        Z = Z *  (gradient_mask * gradient_mask_intensity + (1 - gradient_mask_intensity))
+        Z = Z * (
+            gradient_mask * gradient_mask_intensity + (1 - gradient_mask_intensity)
+        )
         Z = Z * self.fade_factor
         Z = np.interp(Z, (0, 1), (0, 255)).astype(np.uint8)
 
@@ -447,16 +449,18 @@ class TSOOParamProcesser:
             255,
         )
         glitch_Z = np.zeros((height, width), dtype=np.uint8)
-        # combined[:] =0
+        # combined[:] = 255
         # combined[16:20,40:48]=255
         if len(self.interper_tsoo_param["person_pos"]) > 0:
             for pos in self.target_tsoo_param["person_pos"]:
+
                 circle_x = round(combined.shape[1] * (1 - pos[1]))
                 circle_y = round(combined.shape[0] - combined.shape[0] // 3)
-                
+
                 circle_size = 2.2 * (1 - pos[0])
-                if circle_x< combined.shape[1] //2:
+                if circle_x < combined.shape[1] // 2:
                     circle_y = combined.shape[0] // 3
+
                 for rr, cc in draw_circle_growth(
                     center_x=circle_x,
                     center_y=circle_y,
@@ -466,7 +470,7 @@ class TSOOParamProcesser:
                     shape=combined.shape,
                     fill=True,
                 ):
-                    random_value = np.random.randint(0, 10, size=rr.shape)
+                    random_value = np.random.randint(0, 15, size=rr.shape)
                     combined[rr, cc] = random_value
                     glitch_Z[rr, cc] = random_value
         self.glitch_frame = glitch_Z.astype(np.uint8)
@@ -532,7 +536,7 @@ class TSOOParamProcesser:
             self.y = y
             self.radius = radius
             self.expansion_rate = expansion_rate
-            self.end_radius = 200  # 最大半徑
+            self.end_radius = 400  # 最大半徑
 
     rain_drops = []
 
@@ -581,11 +585,11 @@ class TSOOParamProcesser:
         if len(self.rain_drops) < 1:
             corners = [
                 (0, 0),
-                (width - 1, 0),
+                # (width - 1, 0),
                 (width // 2, 0),
                 (width // 2, height - 1),
                 (width - 1, height - 1),
-                (0, height - 1),
+                # (0, height - 1),
             ]
             corner = random.choice(corners)
             self.rain_drops.append(
