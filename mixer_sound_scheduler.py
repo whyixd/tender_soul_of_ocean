@@ -91,5 +91,5 @@ async def main():
 
 if __name__ == "__main__":
    mixer = MixerSoundScheduler("2.0.0.17",[1,10])
-   mixer.send_off()
+   mixer.send_on()
    

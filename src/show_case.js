@@ -21,10 +21,10 @@ function drawAreaPeople(
   currentAreaCircleSize
 ) {
   let areaPoss = [
-    [-200*1.5, -50*1.5],
-    [80*1.5, -120*1.5],
-    [200*1.5, 120*1.5],
-    [-150*1.5, 80*1.5],
+    [-200 * 1.5, -50 * 1.5],
+    [80 * 1.5, -120 * 1.5],
+    [200 * 1.5, 120 * 1.5],
+    [-150 * 1.5, 80 * 1.5],
   ];
   let areaPos = areaPoss[areaIndex];
   let preAreaPos = areaPoss[areaIndex - 1] || areaPoss[areaPoss.length - 1];
@@ -68,9 +68,11 @@ const sketch = (p) => {
   let gui;
   let socket;
   let scroll_dmx_data = [];
-  const max_lines = 24; // 最大顯示行數
+  const max_lines = 54; // 最大顯示行數
   let font; // 用於存放字體
   let boldFont;
+  let zh_font;
+  let zh_boldFont;
   let barcodeFont;
   let dmx_data = [];
   let tsooParam = {};
@@ -117,10 +119,14 @@ const sketch = (p) => {
         barcodeFont = await p.loadFont(
           "/static/assets/LibreBarcode39Text-Regular.ttf"
         );
+        zh_font = await p.loadFont("/static/assets/NotoSansTC-Light.ttf");
+        zh_boldFont = await p.loadFont("/static/assets/NotoSansTC-Bold.ttf");
       } else {
         font = await p.loadFont("assets/Roboto_Condensed-Light.ttf"); // 載入字體檔案
         boldFont = await p.loadFont("assets/Roboto_Condensed-Medium.ttf");
         barcodeFont = await p.loadFont("assets/LibreBarcode39Text-Regular.ttf");
+        zh_font = await p.loadFont("assets/NotoSansTC-Light.ttf");
+        zh_boldFont = await p.loadFont("assets/NotoSansTC-Bold.ttf");
       }
       p.textFont(font); // 設定字體
     } catch (e) {
@@ -226,75 +232,79 @@ const sketch = (p) => {
     //   70
     // );
     // p.pop();
+    p.fill(255);
+    p.ellipse(0, 0, 250, 250, 50);
     p.push();
+    p.translate(-200, 30);
     let ws = tsooParam.wind_speed;
     let wd = tsooParam.wind_angle;
     if (wd === undefined) {
       ws = 0;
       wd = 0;
     }
-    p.fill(255);
-    p.textSize(8);
+    p.fill(0);
     p.textAlign(p.RIGHT, p.BOTTOM);
-    p.text(`#wind_speed -> ${ws} m/s`, 150*1.5, -75*1.5);
-    p.text(`#wind_direction -> ${wd} °`, 150*1.5, -70*1.5);
+    p.textSize(3.2);
+    p.textFont(zh_font);
+    p.text(`#現在風速_wind_speed -> ${ws} m/s`, 150 * 1.5, -60 * 1.5);
+    p.text(`#現在風向_wind_direction -> ${wd} °`, 149.7 * 1.5, -63 * 1.5);
 
-    p.stroke(255);
+    p.stroke(0);
     p.strokeWeight(0.08);
-    p.line(140*1.5, -71*1.5, 196*1.5, -52*1.5);
+    p.line(151 * 1.5, -60.5 * 1.5, 182 * 1.5, -56 * 1.5);
 
-    p.translate(220*1.4, -50*1.4, 0);
-    p.text(convertWindAngleToDirection(wd), -25, -7);
+    p.translate(200 * 1.4, -50 * 1.4, 0);
+    p.text(convertWindAngleToDirection(wd), -25, -12);
     p.noFill();
-    p.stroke(255);
+    p.stroke(0);
     p.strokeWeight(0.1);
     p.circle(0, 0, 32);
-    p.rotateX(p.PI / 4);
+    p.rotateX(p.PI);
     p.rotateZ(p.radians(wd));
     p.cylinder(0.75, 24, 4);
     p.translate(0, 12, 0);
     p.cone(2.5, 5, 4);
 
     p.pop();
-    for (let i = 0; i < 4; i++) {
-      drawAreaPeople(
-        p,
-        i,
-        peopleRandomPos,
-        targetAreaCircleSize,
-        currentAreaCircleSize
-      );
-    }
+    // for (let i = 0; i < 4; i++) {
+    //   drawAreaPeople(
+    //     p,
+    //     i,
+    //     peopleRandomPos,
+    //     targetAreaCircleSize,
+    //     currentAreaCircleSize
+    //   );
+    // }
 
     p.push();
-    p.textSize(8);
-    p.textFont(boldFont);
-    p.fill(255, 100);
+    p.textSize(5);
+    p.textFont(zh_boldFont);
+    p.fill(0, 100);
     p.textAlign(p.CENTER);
     let lat = p.round(p.random(-5, 5));
     let long = p.round(p.random(-5, 5));
     p.text(
-      `Linz, Austria [${(p.round(location.latitude * 10000000) + lat) / 10000000} ${
-        (p.round(location.longitude * 10000000) + long) / 10000000
-      }]`,
-      -282,
-      47
+      `台中, 勤美 [${
+        (p.round(location.latitude * 10000000) + lat) / 10000000
+      } ${(p.round(location.longitude * 10000000) + long) / 10000000}]`,
+      -66,
+      -30
     );
     p.textSize(24);
     p.textFont(boldFont);
-    p.fill(255)
+    p.fill(0);
     // p.text("Tender Soul of Ocean : recall", -205, -10);
-    p.textSize(13/2);
-    p.fill(255)
+    p.textSize(13 / 2);
+    p.fill(0);
     // p.rect(235, 0, 200, 20);
-    p.fill(0)
+    p.fill(0);
     // p.text("WHYIXD x KLING KLANG KLONG", 280, 0);
     p.pop();
 
     // 繪製 DMX 資料，最新資料在最下方
     p.push();
-    p.textSize(2.5);
-    p.translate(85, 150);
+    p.textSize(1.8);
+    p.translate(160, 50);
 
     let y = -p.height / 6 + 80;
     for (let i = 0; i < scroll_dmx_data.length; i++) {
@@ -322,13 +332,13 @@ const sketch = (p) => {
         } else if (part === "DMX") {
           p.fill(255, 105, 180); // 桃紅色
         } else {
-          p.fill(255); // 白色
+          p.fill(0); // 白色
         }
         p.text(part, x, y);
         x += p.textWidth(part); // 更新 x 座標
       });
 
-      y += 3.5; // 每行文字的間距
+      y += 2.1; // 每行文字的間距
     }
     p.fill(255, 30);
     p.textSize(10);
@@ -346,47 +356,51 @@ const sketch = (p) => {
     // p.rect(-70*1.5, -150*1.5, 140*1.5, 300*1.5);
     // p.pop();
 
-    p.push();
-    p.noStroke();
-    p.strokeWeight(0.1);
-    p.fill(255,196,0);
-    // 讓球體更靠近camera
-    p.rotateY(-p.PI / 4);
-    p.rotateX(p.PI / 2);
-    p.translate(-500, 500, 0);
-    p.rotateY(p.frameCount * 0.001);
+    // p.push();
+    // p.noStroke();
+    // p.strokeWeight(0.1);
+    // p.fill(255, 196, 0);
+    // // 讓球體更靠近camera
+    // p.rotateY(-p.PI / 4);
+    // p.rotateX(p.PI / 2);
+    // p.translate(-500, 500, 0);
+    // p.rotateY(p.frameCount * 0.001);
 
-    p.scale(1.9); // <--- 這裡調整整體大小
+    // p.scale(1.9); // <--- 這裡調整整體大小
 
-    let boxSize = 20;
-    for (let i = 0; i < startPosition.length; i++) {
-      p.translate(startPosition[i].x*1.5, startPosition[i].y*1.5, startPosition[i].z);
-      if (dmx_data[i * 16] !== undefined)
-        p.box((dmx_data[i * 16] / 255) * boxSize);
-      for (let j = 1; j < 16; j++) {
-        // 使用 sinParams[i]
-        let a = [
-          0,
-          p.sin(j * sinParams[i].sinLength + sinParams[i].sinOffset) *
-            sinParams[i].sinScale +
-            sinParams[i].sinYOffset +
-            p.random(0.05),
-          11.12,
-        ];
-        //11.12
-        p.translate(a[0], a[1], a[2]);
-        // p.box(0.2);
-        let dmxValue =
-          dmx_data[i * 16 + j] === undefined ? 0 : dmx_data[i * 16 + j];
-        // p.box((dmxValue / 255) * boxSize);
-        if (dmxValue > 10) {
-          p.stroke(255);
-          p.strokeWeight(0.01);
-          p.line(0, 0, 0, 0, 10000, 0);
-        }
-      }
-    }
-    p.pop();
+    // let boxSize = 20;
+    // for (let i = 0; i < startPosition.length; i++) {
+    //   p.translate(
+    //     startPosition[i].x * 1.5,
+    //     startPosition[i].y * 1.5,
+    //     startPosition[i].z
+    //   );
+    //   if (dmx_data[i * 16] !== undefined)
+    //     // p.box((dmx_data[i * 16] / 255) * boxSize);
+    //     for (let j = 1; j < 16; j++) {
+    //       // 使用 sinParams[i]
+    //       let a = [
+    //         0,
+    //         p.sin(j * sinParams[i].sinLength + sinParams[i].sinOffset) *
+    //           sinParams[i].sinScale +
+    //           sinParams[i].sinYOffset +
+    //           p.random(0.05),
+    //         11.12,
+    //       ];
+    //       //11.12
+    //       p.translate(a[0], a[1], a[2]);
+    //       // p.box(0.2);
+    //       let dmxValue =
+    //         dmx_data[i * 16 + j] === undefined ? 0 : dmx_data[i * 16 + j];
+    //       // p.box((dmxValue / 255) * boxSize);
+    //       if (dmxValue > 10) {
+    //         p.stroke(255);
+    //         p.strokeWeight(0.01);
+    //         p.line(0, 0, 0, 0, 10000, 0);
+    //       }
+    //     }
+    // }
+    // p.pop();
   };
 
   p.windowResized = () => {
