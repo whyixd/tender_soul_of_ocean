@@ -136,13 +136,13 @@ const sketch = (p) => {
         barcodeFont = await p.loadFont(
           "/static/assets/LibreBarcode39Text-Regular.ttf"
         );
-        zh_font = await p.loadFont("/static/assets/NotoSansTC-Light.ttf");
+        zh_font = await p.loadFont("/static/assets/Dotted Songti Circle.otf");
         zh_boldFont = await p.loadFont("/static/assets/NotoSansTC-Bold.ttf");
       } else {
         font = await p.loadFont("assets/Roboto_Condensed-Light.ttf"); // 載入字體檔案
         boldFont = await p.loadFont("assets/Roboto_Condensed-Medium.ttf");
         barcodeFont = await p.loadFont("assets/LibreBarcode39Text-Regular.ttf");
-        zh_font = await p.loadFont("assets/NotoSansTC-Light.ttf");
+        zh_font = await p.loadFont("assets/Dotted Songti Circle.otf");
         zh_boldFont = await p.loadFont("assets/NotoSansTC-Bold.ttf");
       }
       p.textFont(font); // 設定字體
@@ -316,8 +316,8 @@ const sketch = (p) => {
 
     p.push();
     p.textSize(5);
-    p.textFont(zh_boldFont);
-    p.fill(0, 100);
+    p.textFont(zh_font);
+    p.fill(0, 200);
     p.textAlign(p.CENTER);
     let lat = p.round(p.random(-5, 5));
     let long = p.round(p.random(-5, 5));
@@ -343,7 +343,7 @@ const sketch = (p) => {
     p.push();
     p.textFont(logFont || font);
     p.textSize(LOG_TEXT_SIZE);
-    p.translate(160, 50);
+    p.translate(160, 77);
 
     let y = -p.height / 6 + 80;
     for (let i = 0; i < logCount; i++) {
