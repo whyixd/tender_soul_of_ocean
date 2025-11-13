@@ -92,10 +92,10 @@ class ArtNetSender:
             return unit_ch_setup_flatten.reshape(4, 8)
 
         # wantedUnit = [1, 2, 3, 4, 6, 7, 8, 31, 34, 35, 36, 37, 38, 39, 40]
-        if self.artnet_index ==0:
-            wantedUnit = [1, 2, 3, 4, 6, 7]
-        if self.artnet_index ==1 :
-            wantedUnit =[ 31, 34, 35, 36, 37, 38, 39, 40]
+        if self.artnet_index == 0:
+            wantedUnit = [1, 2, 3, 4, 5, 6, 7]
+        if self.artnet_index == 1:
+            wantedUnit = [31, 34, 35, 36, 37, 38, 39, 40]
         # wantedUnit = [1, 2, 3, 4, 6, 7, 8, 40,39,38,37,36,35,34,31]
         cords = []
         for idx, cord in enumerate(self.cords):
@@ -108,13 +108,15 @@ class ArtNetSender:
         for cord in cords:
             self.blocks_ch_orders.append(get_block_ch_order(len(self.blocks_ch_orders)))
         return self.blocks_ch_orders
+
     def packet_remap(self, packet):
         """重新映射封包內容，依照單元排列方式與單元大小"""
         return self.__packet_remap(packet, to_bytes=False)
-    def __packet_remap(self, packet,to_bytes=True):
+
+    def __packet_remap(self, packet, to_bytes=True):
         """重新映射封包內容，依照單元排列方式與單元大小"""
 
-        def get_block_data(x, y, data,rotate_180=False):
+        def get_block_data(x, y, data, rotate_180=False):
             block_data_order = data[y * 4 : (y + 1) * 4, x * 8 : (x + 1) * 8]
             if rotate_180:
                 block_data_order = np.rot90(block_data_order, k=2)
@@ -123,8 +125,7 @@ class ArtNetSender:
 
         # packet_copy = np.array(packet).reshape(4 * 3, 8 * 6)
         packet_copy = np.array(packet).reshape(4 * 5, 8 * 8)
-        
-    
+
         data_packets = np.zeros(512)
         # print(self.cords)
         # cords = self.cords[:7]
@@ -132,15 +133,17 @@ class ArtNetSender:
         #     cords = self.cords[-1:]
         cords = self.cords
         blocks_ch_orders = self.blocks_ch_orders
-        if self.artnet_index ==1:
+        if self.artnet_index == 1:
             blocks_ch_orders = self.blocks_ch_orders[::-1]
 
         for idx, cord in enumerate(cords):
-            if self.artnet_index ==1:
-                block_data = get_block_data(cord[0], cord[1], packet_copy,rotate_180=True)
+            if self.artnet_index == 1:
+                block_data = get_block_data(
+                    cord[0], cord[1], packet_copy, rotate_180=True
+                )
             else:
                 block_data = get_block_data(cord[0], cord[1], packet_copy)
-            
+
             # print(block_data)
             ch_order = blocks_ch_orders[idx]
             # print(ch_order)

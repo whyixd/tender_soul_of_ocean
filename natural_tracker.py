@@ -9,8 +9,8 @@ class NaturalTracker:
 
     def __init__(
         self,
-        vid="0403",
-        pid="6001",
+        vid="1A87",
+        pid="7523",
         history_file_path="log/[2025-07-10]modbus_reader.log",
     ):
         """

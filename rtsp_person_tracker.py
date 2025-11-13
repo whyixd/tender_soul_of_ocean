@@ -10,6 +10,7 @@ import numpy as np
 from config import Config
 import math
 
+
 @dataclass
 class DetectionState:
     bbox: tuple[int, int, int, int]
@@ -18,6 +19,7 @@ class DetectionState:
     confirmed: bool
     position: tuple[float, float]
     confidence: float
+
 
 class RTSPPersonTracker:
     def __init__(
@@ -51,12 +53,12 @@ class RTSPPersonTracker:
         self.inside_area_counts = [0] * 4
         self.person_pos: list[tuple[int, int]] = []
         self.person_pos_by_camera: dict[str, list[tuple[int, int]]] = {}
-        self.x_limit = (635, 740)
-        self.y_limit = (340, 950)
+        self.x_limit = (700, 1200)
+        self.y_limit = (100, 780)
 
-        self.detect_time_threshold = 0.8
+        self.detect_time_threshold = 0.6
         self.lost_time_threshold = 0.8
-        self.match_iou_threshold = 0.3
+        self.match_iou_threshold = 0.2
         self._next_detection_id = 0
         self.detections: dict[str, dict[int, DetectionState]] = {}
 
@@ -158,7 +160,7 @@ class RTSPPersonTracker:
                     break
 
                 frame = r.orig_img.copy()
-                frame = frame * (60/127+1)
+                frame = frame * (60 / 127 + 1)
                 frame = np.clip(frame, 0, 255)
                 frame = frame.astype(np.uint8)
 
@@ -182,15 +184,20 @@ class RTSPPersonTracker:
 
                     polygon = self.detection_polygons.get(camera_name)
                     if polygon and len(polygon) >= 3:
-                        if not self._is_point_inside_polygon((center_x, center_y), polygon):
+                        if not self._is_point_inside_polygon(
+                            (center_x, center_y), polygon
+                        ):
                             continue
 
                     norm_x = normalize(center_x, self.x_limit[0], self.x_limit[1])
-                    norm_y = normalize(center_y + 100, self.y_limit[0], self.y_limit[1])
+                    # norm_x = 1 - norm_x  ##
+                    norm_y = normalize(center_y, self.y_limit[0], self.y_limit[1])
                     norm_y = self._apply_perspective_y_adjustment(norm_y)
 
                     now = time.time()
-                    matched_id = self._match_detection(camera_states, bbox, used_state_ids)
+                    matched_id = self._match_detection(
+                        camera_states, bbox, used_state_ids
+                    )
                     if matched_id is None:
                         matched_id = self._next_detection_id
                         self._next_detection_id += 1
@@ -209,7 +216,11 @@ class RTSPPersonTracker:
                     state.confidence = confidence
                     used_state_ids.add(matched_id)
 
-                    if not state.confirmed and now - state.first_seen >= self.detect_time_threshold and state.position[1] > 0.15:
+                    if (
+                        not state.confirmed
+                        and now - state.first_seen >= self.detect_time_threshold
+                        and state.position[1] > 0.15
+                    ):
                         state.confirmed = True
 
                 now = time.time()
@@ -317,9 +328,7 @@ class RTSPPersonTracker:
         color = (0, 255, 0) if state.confirmed else (0, 255, 255)
         cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
         cv2.circle(frame, (center_x, center_y), 5, color, -1)
-        (label_w, label_h), _ = cv2.getTextSize(
-            label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2
-        )
+        (label_w, label_h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
         cv2.rectangle(
             frame,
             (x1, y1 - label_h - 10),
@@ -342,18 +351,20 @@ class RTSPPersonTracker:
         if camera_name not in self.sources:
             print(f"摄像头 '{camera_name}' 不存在")
             return
-        
+
         self._calibration_mode = True
         self._current_calibration_camera = camera_name
         self._calibration_points = []
-        print(f"开始校准 {camera_name}，请在窗口中点击四个点(按顺序：左上、右上、右下、左下)")
+        print(
+            f"开始校准 {camera_name}，请在窗口中点击四个点(按顺序：左上、右上、右下、左下)"
+        )
         print("按 'r' 重置点，按 'c' 完成校准")
 
     def _mouse_callback(self, event, x, y, flags, param):
         """鼠标回调函数，用于点击定义梯形校正点"""
         if not self._calibration_mode:
             return
-        
+
         if event in (cv2.EVENT_MOUSEMOVE, cv2.EVENT_LBUTTONDOWN):
             self._update_mouse_positions(x, y)
 
@@ -394,12 +405,16 @@ class RTSPPersonTracker:
 
     def _apply_perspective_y_adjustment(self, norm_y: float) -> float:
         adjusted = self.easeOutCubic(norm_y)
+        # adjusted = norm_y * self.y_adjust_scale + self.y_adjust_offset
         return min(max(adjusted, 0.0), 1.0)
-    def easeOutCubic(self,number) :
+
+    def easeOutCubic(self, number):
         return 1 - math.pow(1 - number, 3)
 
     @staticmethod
-    def _is_point_inside_polygon(point: tuple[int, int], polygon: list[tuple[int, int]]) -> bool:
+    def _is_point_inside_polygon(
+        point: tuple[int, int], polygon: list[tuple[int, int]]
+    ) -> bool:
         x, y = point
         inside = False
         n = len(polygon)
@@ -422,13 +437,20 @@ class RTSPPersonTracker:
             while not self._stop_event.is_set():
                 calibration_window_name = None
                 if self._calibration_mode and self._current_calibration_camera:
-                    calibration_window_name = f"Calibration - {self._current_calibration_camera}"
+                    calibration_window_name = (
+                        f"Calibration - {self._current_calibration_camera}"
+                    )
                     if not self._calibration_window_created:
                         cv2.namedWindow(calibration_window_name)
-                        cv2.setMouseCallback(calibration_window_name, self._mouse_callback)
+                        cv2.setMouseCallback(
+                            calibration_window_name, self._mouse_callback
+                        )
                         self._calibration_window_created = True
                         self._last_calibration_window_name = calibration_window_name
-                elif self._calibration_window_created and self._last_calibration_window_name:
+                elif (
+                    self._calibration_window_created
+                    and self._last_calibration_window_name
+                ):
                     cv2.destroyWindow(self._last_calibration_window_name)
                     self._calibration_window_created = False
                     self._last_calibration_window_name = None
@@ -444,7 +466,8 @@ class RTSPPersonTracker:
 
                 for name, frame in frames_snapshot:
                     calibrating_this_camera = (
-                        self._calibration_mode and name == self._current_calibration_camera
+                        self._calibration_mode
+                        and name == self._current_calibration_camera
                     )
 
                     processed_frame = frame.copy()
@@ -468,7 +491,9 @@ class RTSPPersonTracker:
                         if len(self._calibration_points) > 1:
                             for i in range(len(self._calibration_points)):
                                 start = self._calibration_points[i]
-                                end = self._calibration_points[(i + 1) % len(self._calibration_points)]
+                                end = self._calibration_points[
+                                    (i + 1) % len(self._calibration_points)
+                                ]
                                 cv2.line(processed_frame, start, end, (0, 255, 0), 2)
 
                     polygon_overlay = self.detection_polygons.get(name)
@@ -492,7 +517,11 @@ class RTSPPersonTracker:
                         processed_frame, (self.display_width, self.display_height)
                     )
 
-                    if calibrating_this_camera and self._mouse_display_pos and self._mouse_original_pos:
+                    if (
+                        calibrating_this_camera
+                        and self._mouse_display_pos
+                        and self._mouse_original_pos
+                    ):
                         self._calibration_display_size = (
                             display_frame.shape[1],
                             display_frame.shape[0],
@@ -549,7 +578,9 @@ class RTSPPersonTracker:
                             self._mouse_display_pos = None
                             self._mouse_original_pos = None
                         else:
-                            print(f"需要4个点，目前只有 {len(self._calibration_points)} 个点")
+                            print(
+                                f"需要4个点，目前只有 {len(self._calibration_points)} 个点"
+                            )
 
                 time.sleep(0.01)
         finally:
@@ -578,10 +609,13 @@ class RTSPPersonTracker:
     #             self._socketio_client.emit("person_tracker_data", counts)
     #         except Exception as exc:
     #             print(f"Socket.IO emit failed: {exc}")
+
+
 def normalize(value, min_val, max_val):
     if max_val - min_val == 0:
         return 0.0
     return min(max((value - min_val) / (max_val - min_val), 0.0), 1.0)
+
 
 def main():
     ffmpeg_opts = {
@@ -590,12 +624,12 @@ def main():
         "flags": "low_delay",
         "max_delay": "500000",
     }
-    
+
     # 预定义的梯形校正点（可选）
     perspective_points = {
         # "cam B (desk)": [(x1, y1), (x2, y2), (x3, y3), (x4, y4)]
     }
-    
+
     tracker = RTSPPersonTracker(
         sources={
             "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
@@ -605,11 +639,11 @@ def main():
         perspective_points=perspective_points,
     )
     tracker.start()
-    
+
     # 启动校准模式
     time.sleep(2)  # 等待摄像头连接
     tracker.start_calibration("cam B (desk)")
-    
+
     try:
         while True:
             time.sleep(0.1)
