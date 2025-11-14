@@ -139,7 +139,7 @@ def effect_process(
                 print(f"Error updating natural data: {e}")
             if time.time() - last_glitch_update_time > 0.01:
                 try:
-                    if param_processor.glitch_frame is not None:
+                    # if param_processor.glitch_frame is not None:
 
                         glitchA = flask_app.artnet.packet_remap(
                             param_processor.glitch_frame

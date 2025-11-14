@@ -470,7 +470,7 @@ class TSOOParamProcesser:
                     shape=combined.shape,
                     fill=True,
                 ):
-                    random_value = np.random.randint(0, 15, size=rr.shape)
+                    random_value = np.random.randint(0, 100, size=rr.shape)
                     combined[rr, cc] = random_value
                     glitch_Z[rr, cc] = random_value
         self.glitch_frame = glitch_Z.astype(np.uint8)

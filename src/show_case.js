@@ -2,14 +2,14 @@ import p5 from "p5";
 import { GUI } from "lil-gui";
 import { io } from "socket.io-client";
 function convertWindAngleToDirection(angle) {
-  if (angle >= 337.5 || angle < 22.5) return "N";
-  if (angle >= 22.5 && angle < 67.5) return "WE";
-  if (angle >= 67.5 && angle < 112.5) return "W";
-  if (angle >= 112.5 && angle < 157.5) return "WS";
-  if (angle >= 157.5 && angle < 202.5) return "S";
-  if (angle >= 202.5 && angle < 247.5) return "SE";
-  if (angle >= 247.5 && angle < 292.5) return "SW";
-  if (angle >= 292.5 && angle < 337.5) return "NW";
+  if (angle >= 337.5 || angle < 22.5) return "北 N";
+  if (angle >= 22.5 && angle < 67.5) return "西北 NE";
+  if (angle >= 67.5 && angle < 112.5) return "西 W";
+  if (angle >= 112.5 && angle < 157.5) return "西南 WS";
+  if (angle >= 157.5 && angle < 202.5) return "南 S";
+  if (angle >= 202.5 && angle < 247.5) return "東南 SE";
+  if (angle >= 247.5 && angle < 292.5) return "東 SW";
+  if (angle >= 292.5 && angle < 337.5) return "東北 NW";
 
   return "N";
 }
@@ -163,8 +163,10 @@ const sketch = (p) => {
     socket.on("dmx_data", (data) => {
       const timestamp = new Date().toISOString(); // 生成 ISO 格式的時間碼
       dmx_data = data.value;
+      //只取前20個byte顯示
+      dmx_data = dmx_data.slice(0, 80);
       addScrollEntry(
-        `[${timestamp}] > RECEIVE..|..ENDPOINT(127.0.0.1:61373) OPCODE(DMX) SEQUENCE(0) PHYSICAL(0) UNIVERSE(0) DATA(${data.value.toString()})\n`
+        `[${timestamp}] > RECEIVE..|..ENDPOINT(127.0.0.1:61373) OPCODE(DMX) SEQUENCE(0) PHYSICAL(0) UNIVERSE(0) DATA(${dmx_data.toString()})\n`
       );
     });
     socket.on("tsoo_param", (data) => {
@@ -282,10 +284,10 @@ const sketch = (p) => {
     }
     p.fill(0);
     p.textAlign(p.RIGHT, p.BOTTOM);
-    p.textSize(3.2);
+    p.textSize(4);
     p.textFont(zh_font);
     p.text(`#現在風速_wind_speed -> ${ws} m/s`, 150 * 1.5, -60 * 1.5);
-    p.text(`#現在風向_wind_direction -> ${wd} °`, 149.7 * 1.5, -63 * 1.5);
+    p.text(`#現在風向_wind_direction -> ${wd} °`, 149.7 * 1.5, -64 * 1.5);
 
     p.stroke(0);
     p.strokeWeight(0.08);
@@ -315,18 +317,18 @@ const sketch = (p) => {
     // }
 
     p.push();
-    p.textSize(5);
+    p.textSize(7);
     p.textFont(zh_font);
     p.fill(0, 200);
     p.textAlign(p.CENTER);
     let lat = p.round(p.random(-5, 5));
     let long = p.round(p.random(-5, 5));
     p.text(
-      `台中, 勤美 [${
+      `台中, 勤美術館 [${
         (p.round(location.latitude * 10000000) + lat) / 10000000
       } ${(p.round(location.longitude * 10000000) + long) / 10000000}]`,
-      -66,
-      -30
+      -45,
+      -33
     );
     p.textSize(24);
     p.textFont(boldFont);
