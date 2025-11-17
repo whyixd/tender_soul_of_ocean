@@ -536,7 +536,7 @@ class TSOOParamProcesser:
             self.y = y
             self.radius = radius
             self.expansion_rate = expansion_rate
-            self.end_radius = 400  # 最大半徑
+            self.end_radius = 200  # 最大半徑
 
     rain_drops = []
 

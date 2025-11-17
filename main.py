@@ -256,6 +256,7 @@ def main():
     # 創建並設置 MixerSoundScheduler
     mixer_scheduler = MixerSoundScheduler(
         osc_ip=general_config.get("mixer_osc_ip", osc_config["address"]),
+        # osc_ip="127.0.0.1",
         activate_hours=general_config.get("mixer_activate_hours", [9, 18]),
     )
 
