@@ -35,6 +35,7 @@ def effect_process(
     update_signal_queue,
     osc_config,
     general_config,
+    blackout=False
     # update_person_track_data=lambda data: None,
 ):
     print("block_order:", block_order)
@@ -90,6 +91,7 @@ def effect_process(
     last_pos_update_time = 0
     last_param_update_time = 0
 
+  
     try:
         while True:  # 主循環
             try:
@@ -216,8 +218,13 @@ def effect_process(
                     matrix_all = matrixA + matrixB
 
                     osc_sender.send_message("/whyixd/light/dmx", matrix_all)
-                    flask_app.artnet.set_packet(matrix)
-                    flask_app.artnet2.set_packet(matrix)
+                    
+                    if blackout ==False:
+                        flask_app.artnet.set_packet(matrix)
+                        flask_app.artnet2.set_packet(matrix)
+                    else:
+                        flask_app.artnet.blackout()
+                        flask_app.artnet2.blackout()
                 except Exception as e:
                     print(f"Error in effect : {traceback.format_exc()}")
                 finally:
@@ -233,6 +240,7 @@ def effect_process(
 
 
 def main():
+    blackout =False
     osc_config = {"address": "127.0.0.1", "port": 5005}
     osc_config_instance = Config(osc_config, "config/osc_config.json")
     osc_config = osc_config_instance.load()
@@ -253,11 +261,20 @@ def main():
     general_config_instance = Config(general_config, "config/general_config.json")
     general_config = general_config_instance.load()
 
+    def on_open():
+        nonlocal blackout
+        blackout = False
+    def on_close():
+        nonlocal blackout
+        blackout = True
+
     # 創建並設置 MixerSoundScheduler
     mixer_scheduler = MixerSoundScheduler(
         osc_ip=general_config.get("mixer_osc_ip", osc_config["address"]),
         activate_hours=general_config.get("mixer_activate_hours", [9, 18]),
     )
+    mixer_scheduler.on_open = on_open
+    mixer_scheduler.on_close =on_close
 
     # 創建一個隊列用於在進程之間傳遞人員追蹤數據
     people_queue = Queue(maxsize=5)  # 限制隊列大小，防止內存溢出
@@ -310,7 +327,7 @@ def main():
     block_shape = (8, 4)
     block_order = [[1, 3], [2, 4]]
     person_data = [0] * 4
-
+    blackout
     # 創建並啟動效果進程
     effect_thread_instance = Process(
         target=effect_process,
@@ -324,6 +341,7 @@ def main():
             update_signal_queue,
             osc_config,
             general_config,  # 默認值為1
+            blackout
             # update_person_track_data,
         ),
     )
