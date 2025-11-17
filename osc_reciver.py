@@ -13,7 +13,7 @@ class OSCReceiver:
 
     def pluck_handler(self, address, args, trigger):
         self.received.put((address, args, trigger))
-        # print(f"Received OSC message: {address} {args} {trigger}")
+        print(f"Received OSC message: {address} {args} {trigger}")
 
     def ZIGSIM_test_handler(self, address, args, trigger):
         # print("ZIGSIM test received")
