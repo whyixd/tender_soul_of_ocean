@@ -17,6 +17,7 @@ from osc_reciver import OSCReceiver
 from osc_sender import OSCSender
 import numpy as np
 
+from browser_launcher import BrowserLauncher
 from param_processer import ease_in_out_circ
 
 from mixer_sound_scheduler import MixerSoundScheduler
@@ -405,6 +406,16 @@ def main():
         effect_thread_instance.join()
         print("Shutting down ...")
 
+async def open_browser():
+    launcher = BrowserLauncher()
 
+    # 以 kiosk 模式重新啟動指定瀏覽器並開啟網址
+    success = await launcher.open_url_with_browser(
+        "http://localhost:5000/show-case",
+        browser="chrome",
+        mode="kiosk",
+    )
+    print(f"開啟網址結果: {success}")
 if __name__ == "__main__":
+    asyncio.run(open_browser())
     main()
