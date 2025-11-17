@@ -75,11 +75,11 @@ class MixerSoundScheduler:
                 if self.last_activation_hour == self.open_hour:
                     print("Opening mixer...")
                     self.osc_sender.send_message(FADE_IN_OSC_ADDRESS, 1)
-                    # await self.on_open()
+                    self.on_open()
                 if self.last_activation_hour == self.close_hour:
                     print("Closing mixer...")
                     self.osc_sender.send_message(FADE_OUT_OSC_ADDRESS, 0)
-                    # await self.on_close()
+                    self.on_close()
 
             await asyncio.sleep(5)
 
