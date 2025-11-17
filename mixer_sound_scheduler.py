@@ -21,6 +21,8 @@ class MixerSoundScheduler:
 
         self.osc_sender = osc_sender.OSCSender(osc_ip, 7777)
 
+        
+
     def send_on(self):
         self.osc_sender.send_message(FADE_IN_OSC_ADDRESS, 1)
 
@@ -69,18 +71,19 @@ class MixerSoundScheduler:
         while self.running:
             if self.check_activation():
                 print(f"Mixer activation at hour {self.last_activation_hour}")
-                # if self.on_activate:
-                #     print("Checking mixer activation...")
-                #     await self.on_activate()
                 if self.last_activation_hour == self.open_hour:
                     print("Opening mixer...")
                     self.osc_sender.send_message(FADE_IN_OSC_ADDRESS, 1)
-                    self.on_open()
+                    if self.on_open:
+                         self.on_open()
                 if self.last_activation_hour == self.close_hour:
                     print("Closing mixer...")
                     self.osc_sender.send_message(FADE_OUT_OSC_ADDRESS, 0)
-                    self.on_close()
-
+                    if self.on_close:
+                         self.on_close()
+            else:
+                if self.on_close:
+                     self.on_close()
             await asyncio.sleep(5)
 
 
@@ -93,5 +96,7 @@ async def main():
 
 
 if __name__ == "__main__":
-    mixer = MixerSoundScheduler("2.0.0.17", [1, 10])
-    mixer.send_on()
+    mixer = MixerSoundScheduler("2.0.0.17", [1, 22])
+    mixer.on_open = lambda: print("Mixer opened callback")
+    mixer.on_close = lambda: print("Mixer closed callback")
+    mixer.run_blocking()

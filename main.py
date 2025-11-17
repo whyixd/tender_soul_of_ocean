@@ -11,7 +11,7 @@ import time
 import threading
 from config import Config
 
-from multiprocessing import Queue, Process
+from multiprocessing import Queue, Process, Event
 from config import Config
 from osc_reciver import OSCReceiver
 from osc_sender import OSCSender
@@ -23,8 +23,6 @@ from param_processer import ease_in_out_circ
 from mixer_sound_scheduler import MixerSoundScheduler
 import traceback
 import asyncio
-
-
 # 將 effect_thread 函數移到 main() 外部，並接收所需的參數
 def effect_process(
     artnet_host,
@@ -36,7 +34,7 @@ def effect_process(
     update_signal_queue,
     osc_config,
     general_config,
-    blackout=False
+    blackout_event,
     # update_person_track_data=lambda data: None,
 ):
     print("block_order:", block_order)
@@ -219,11 +217,12 @@ def effect_process(
                     matrix_all = matrixA + matrixB
 
                     osc_sender.send_message("/whyixd/light/dmx", matrix_all)
-                    
-                    if blackout ==False:
-                        flask_app.artnet.set_packet(matrix)
-                        flask_app.artnet2.set_packet(matrix)
-                    else:
+
+                    flask_app.artnet.set_packet(matrix)
+                    flask_app.artnet2.set_packet(matrix)
+
+                    current_blackout = blackout_event.is_set()
+                    if current_blackout:
                         flask_app.artnet.blackout()
                         flask_app.artnet2.blackout()
                 except Exception as e:
@@ -241,16 +240,15 @@ def effect_process(
 
 
 def main():
-    blackout =False
     osc_config = {"address": "127.0.0.1", "port": 5005}
     osc_config_instance = Config(osc_config, "config/osc_config.json")
     osc_config = osc_config_instance.load()
 
-    def on_open():
-        print("Mixer opened")
+    # def on_open():
+    #     print("Mixer opened")
 
-    def on_close():
-        print("Mixer closed")
+    # def on_close():
+    #     print("Mixer closed")
 
     general_config = {
         "artnet_target": "2.0.0.100",
@@ -262,12 +260,16 @@ def main():
     general_config_instance = Config(general_config, "config/general_config.json")
     general_config = general_config_instance.load()
 
+    blackout_event = Event()
+
     def on_open():
-        nonlocal blackout
-        blackout = False
+        # print("light opened")
+        blackout_event.clear()
+
     def on_close():
-        nonlocal blackout
-        blackout = True
+        # print("light closed")
+        blackout_event.set()
+        
 
     # 創建並設置 MixerSoundScheduler
     mixer_scheduler = MixerSoundScheduler(
@@ -276,7 +278,7 @@ def main():
         activate_hours=general_config.get("mixer_activate_hours", [9, 18]),
     )
     mixer_scheduler.on_open = on_open
-    mixer_scheduler.on_close =on_close
+    mixer_scheduler.on_close = on_close
 
     # 創建一個隊列用於在進程之間傳遞人員追蹤數據
     people_queue = Queue(maxsize=5)  # 限制隊列大小，防止內存溢出
@@ -284,11 +286,11 @@ def main():
     # 創建一個新的隊列，用於接收參數可以更新的信號
     update_signal_queue = Queue(maxsize=1)
 
-    # person_tracker = MockPersonTracker(
-    #     video_source="people_top.mp4",  # or 0 for webcam
-    #     width=640,
-    #     height=360,
-    # )
+    person_tracker = MockPersonTracker(
+        video_source="people_top.mp4",  # or 0 for webcam
+        width=640,
+        height=360,
+    )
     # person_tracker = PersonTracker(
     #     video_source="people_top.mp4",  # or 0 for webcam
     #     width=640,
@@ -304,24 +306,24 @@ def main():
         "probesize": "320000",
         "analyzeduration": "0",
     }
-    person_tracker = RTSPPersonTracker(
-        sources={
-            # "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-            "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
-            # "cam C (main)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=0_stream=0&onvif=0.sdp?real_st",
-        },
-        ffmpeg_options=ffmpeg_opts,
-    )
+    # person_tracker = RTSPPersonTracker(
+    #     sources={
+    #         # "cam A (top)": "rtsp://2.0.0.79:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+    #         "cam B (desk)": "rtsp://2.0.0.78:554/user=admin_password=tlJwpbo6_channel=1_stream=0&onvif=0.sdp?real_st",
+    #         # "cam C (main)": "rtsp://2.0.0.77:554/user=admin_password=tlJwpbo6_channel=0_stream=0&onvif=0.sdp?real_st",
+    #     },
+    #     ffmpeg_options=ffmpeg_opts,
+    # )
     # 使用新方法，在背景執行 tracking 和 display
-    # person_tracker.start_all_in_background()
+    person_tracker.start_all_in_background()
 
-    person_tracker.start()
+    # person_tracker.start()
 
     # sleep(10)  # 等待追蹤器初始化
     # natural_tracker = NaturalTracker()
 
     # 獲取必要的參數以啟動效果進程
-    # artnet_host = "2.56.31.102"
+    # artnet_host = "169.254.5.90"
     artnet_host = general_config.get("artnet_target", "2.0.0.100")
     # artnet_host = "127.0.0.1"；
     artnet_universe = 0
@@ -329,7 +331,7 @@ def main():
     block_shape = (8, 4)
     block_order = [[1, 3], [2, 4]]
     person_data = [0] * 4
-    blackout
+
     # 創建並啟動效果進程
     effect_thread_instance = Process(
         target=effect_process,
@@ -343,7 +345,8 @@ def main():
             update_signal_queue,
             osc_config,
             general_config,  # 默認值為1
-            blackout
+            blackout_event,
+            
             # update_person_track_data,
         ),
     )
@@ -417,5 +420,5 @@ async def open_browser():
     )
     print(f"開啟網址結果: {success}")
 if __name__ == "__main__":
-    asyncio.run(open_browser())
+    # asyncio.run(open_browser())
     main()
