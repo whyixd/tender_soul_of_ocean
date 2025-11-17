@@ -97,12 +97,19 @@ def effect_process(
                 # print(f"Rain : {intensity}")
                 if not osc_receiver.received.empty():
                     address, args, trigger = osc_receiver.received.get_nowait()
-                    intensity = trigger
-
-                    intensity = ease_in_out_circ(
-                        min(max((trigger - 0.004) / 0.2, 0), 1)
-                    )
-                    param_processor.target_tsoo_param["rain_intensity"] = intensity
+                    if address == "/control/light":
+                        print(f"Light control from OSC: {trigger}")
+                        if trigger == True:
+                            blackout_event.clear()
+                        else:
+                            blackout_event.set()
+                    if address == "/pluck/env":
+                        intensity = trigger
+                        # print(f"Rain intensity from OSC: {intensity}")
+                        intensity = ease_in_out_circ(
+                            min(max((trigger - 0.004) / 0.2, 0), 1)
+                        )
+                        param_processor.target_tsoo_param["rain_intensity"] = intensity
 
             except Exception as e:
                 print(f"Error getting data from OSC receiver: {e}")
@@ -217,7 +224,7 @@ def effect_process(
                     matrix_all = matrixA + matrixB
 
                     osc_sender.send_message("/whyixd/light/dmx", matrix_all)
-
+                    
                     flask_app.artnet.set_packet(matrix)
                     flask_app.artnet2.set_packet(matrix)
 

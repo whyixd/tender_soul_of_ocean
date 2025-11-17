@@ -13,7 +13,10 @@ class OSCReceiver:
 
     def pluck_handler(self, address, args, trigger):
         self.received.put((address, args, trigger))
-        print(f"Received OSC message: {address} {args} {trigger}")
+        # print(f"Received OSC message: {address} {args} {trigger}")
+    def control_handler(self, address, args, value):
+        self.received.put((address, args, value))
+        # print(f"Received OSC message: {address} {args} {value}")
 
     def ZIGSIM_test_handler(self, address, args, trigger):
         # print("ZIGSIM test received")
@@ -26,6 +29,7 @@ class OSCReceiver:
         self.dispatcher.map(
             "/ZIGSIM/miroc/touchcount", self.ZIGSIM_test_handler, "ZIGSIM"
         )
+        self.dispatcher.map("/control/*", self.control_handler, "control")
         self.received_thread = Thread(target=self.server.serve_forever, daemon=True)
         self.received_thread.start()
 

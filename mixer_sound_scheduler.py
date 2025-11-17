@@ -20,7 +20,7 @@ class MixerSoundScheduler:
         self.update_task = None
 
         self.osc_sender = osc_sender.OSCSender(osc_ip, 7777)
-
+        asyncio.run(self.check_and_invoke_callbacks())
         
 
     def send_on(self):
@@ -58,6 +58,7 @@ class MixerSoundScheduler:
             print("MixerSoundScheduler stopped")
 
     def check_activation(self):
+        print("Checking mixer activation...")
         current_hour = time.localtime().tm_hour
         if (
             current_hour in self.activate_hours
@@ -66,10 +67,9 @@ class MixerSoundScheduler:
             self.last_activation_hour = current_hour
             return True
         return False
-
-    async def check_loop(self):
-        while self.running:
-            if self.check_activation():
+    
+    async def check_and_invoke_callbacks(self):
+        if self.check_activation():
                 print(f"Mixer activation at hour {self.last_activation_hour}")
                 if self.last_activation_hour == self.open_hour:
                     print("Opening mixer...")
@@ -81,10 +81,15 @@ class MixerSoundScheduler:
                     self.osc_sender.send_message(FADE_OUT_OSC_ADDRESS, 0)
                     if self.on_close:
                          self.on_close()
-            else:
+        else:
                 if self.on_close:
                      self.on_close()
-            await asyncio.sleep(5)
+ 
+
+    async def check_loop(self):
+        while self.running:
+            await self.check_and_invoke_callbacks()
+            await asyncio.sleep(1800)  # 每30分鐘檢查一次
 
 
 async def main():
