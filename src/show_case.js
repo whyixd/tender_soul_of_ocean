@@ -80,7 +80,7 @@ const sketch = (p) => {
     UNIVERSE: [0, 255, 255],
     DATA: [0, 255, 255],
     DMX: [255, 105, 180],
-    DEFAULT: [0, 0, 0],
+    DEFAULT: [255, 255, 255],
   };
   const scroll_dmx_data = new Array(max_lines);
   let logWriteIndex = 0;
@@ -275,7 +275,7 @@ const sketch = (p) => {
     //   70
     // );
     // p.pop();
-    p.fill(255);
+    p.fill(0);
     p.ellipse(0, 0, 250, 250, 50);
     p.push();
     p.translate(-200, 30);
@@ -285,21 +285,21 @@ const sketch = (p) => {
       ws = 0;
       wd = 0;
     }
-    p.fill(0);
+    p.fill(255);
     p.textAlign(p.RIGHT, p.BOTTOM);
     p.textSize(4);
     p.textFont(zh_lightFont);
     p.text(`#現在風速_wind_speed -> ${ws} m/s`, 150 * 1.5, -60 * 1.5);
     p.text(`#現在風向_wind_direction -> ${wd} °`, 149.7 * 1.5, -64 * 1.5);
 
-    p.stroke(0);
+    p.stroke(255);
     p.strokeWeight(0.08);
     p.line(151 * 1.5, -60.5 * 1.5, 182 * 1.5, -56 * 1.5);
 
     p.translate(200 * 1.4, -50 * 1.4, 0);
     p.text(convertWindAngleToDirection(wd), -25, -12);
     p.noFill();
-    p.stroke(0);
+    p.stroke(255);
     p.strokeWeight(0.1);
     p.circle(0, 0, 32);
     p.rotateX(p.PI);
@@ -322,7 +322,7 @@ const sketch = (p) => {
     p.push();
     p.textSize(7);
     p.textFont(zh_font);
-    p.fill(0, 200);
+    p.fill(255, 200);
     p.textAlign(p.CENTER);
     let lat = p.round(p.random(-5, 5));
     let long = p.round(p.random(-5, 5));
@@ -335,12 +335,12 @@ const sketch = (p) => {
     );
     p.textSize(24);
     p.textFont(boldFont);
-    p.fill(0);
+    p.fill(255);
     // p.text("Tender Soul of Ocean : recall", -205, -10);
     p.textSize(13 / 2);
-    p.fill(0);
-    // p.rect(235, 0, 200, 20);
-    p.fill(0);
+    // p.fill(0);
+    // // p.rect(235, 0, 200, 20);
+    // p.fill(0);
     // p.text("WHYIXD x KLING KLANG KLONG", 280, 0);
     p.pop();
 
