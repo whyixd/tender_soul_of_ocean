@@ -89,6 +89,7 @@ const sketch = (p) => {
   let boldFont;
   let zh_font;
   let zh_boldFont;
+  let zh_lightFont;
   let barcodeFont;
   let logFont;
   let dmx_data = [];
@@ -138,12 +139,14 @@ const sketch = (p) => {
         );
         zh_font = await p.loadFont("/static/assets/Dotted Songti Circle.otf");
         zh_boldFont = await p.loadFont("/static/assets/NotoSansTC-Bold.ttf");
+        zh_lightFont = await p.loadFont("/static/assets/NotoSansTC-Light.ttf");
       } else {
         font = await p.loadFont("assets/Roboto_Condensed-Light.ttf"); // 載入字體檔案
         boldFont = await p.loadFont("assets/Roboto_Condensed-Medium.ttf");
         barcodeFont = await p.loadFont("assets/LibreBarcode39Text-Regular.ttf");
         zh_font = await p.loadFont("assets/Dotted Songti Circle.otf");
         zh_boldFont = await p.loadFont("assets/NotoSansTC-Bold.ttf");
+        zh_lightFont = await p.loadFont("assets/NotoSansTC-Light.ttf");
       }
       p.textFont(font); // 設定字體
       logFont = font;
@@ -285,7 +288,7 @@ const sketch = (p) => {
     p.fill(0);
     p.textAlign(p.RIGHT, p.BOTTOM);
     p.textSize(4);
-    p.textFont(zh_font);
+    p.textFont(zh_lightFont);
     p.text(`#現在風速_wind_speed -> ${ws} m/s`, 150 * 1.5, -60 * 1.5);
     p.text(`#現在風向_wind_direction -> ${wd} °`, 149.7 * 1.5, -64 * 1.5);
 

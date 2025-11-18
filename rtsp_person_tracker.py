@@ -547,7 +547,7 @@ class RTSPPersonTracker:
                     window_name = (
                         f"Calibration - {name}" if calibrating_this_camera else name
                     )
-                    cv2.imshow(window_name, display_frame)
+                    # cv2.imshow(window_name, display_frame)
 
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord("q"):
