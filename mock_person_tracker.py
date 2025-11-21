@@ -69,6 +69,7 @@ class MockPersonTracker(threading.Thread):
         self.areas = self.config.data_dict.get("area_conrners")
 
         self.inside_area_counts = [0] * len(self.areas)
+        self.person_pos: list[tuple[int, int]] = []
 
         # Display settings
         self.show_visualization = True
@@ -79,8 +80,13 @@ class MockPersonTracker(threading.Thread):
         # Mock specific settings
         self.mock_track_ids = list(range(1, 11))  # Track IDs 1-10
         self.mock_detection_probability = 0.8  # 80% chance of detection per frame
-        self.mock_fps = 30
+        self.mock_fps = 5
         self.frame_count = 0
+        
+        # Movement settings for single person
+        self.person_y = 0.5  # Start at center (normalized 0-1)
+        self.movement_speed = 0.01  # Slow movement speed
+        self.movement_direction = 1  # 1 for down, -1 for up
 
     def stop(self):
         """Stop the tracking thread."""
@@ -124,14 +130,27 @@ class MockPersonTracker(threading.Thread):
         self._draw_tracks_and_count()
     def _draw_tracks_and_count(self):
         """Simulate drawing tracks and counting people in areas."""
+        # Update person position along y-axis
+        self.person_y += self.movement_speed * self.movement_direction
+        
+        # Reverse direction at boundaries
+        if self.person_y >= 1.0:
+            self.person_y = 1.0
+            self.movement_direction = -1
+        elif self.person_y <= 0.0:
+            self.person_y = 0.0
+            self.movement_direction = 1
+        
+        # Keep x position constant at center
+        person_x = 0.5
+        
+        # Reset counts
         self.inside_area_counts = [0] * len(self.areas)
-        # self.inside_area_counts=[1,0,0,0]
-        # if time.time() - self.last_detection_time > 1:
-        for idx, area in enumerate(self.areas):
-                self.inside_area_counts[idx] = random.randint(
-                0, 4
-            )  # Mock counts for each area
-            # self.last_detection_time = time.time()
+        self.person_pos = [(0, 0)] * len(self.areas)
+        
+        # Place the single person in the first area
+        self.inside_area_counts[0] = 1
+        self.person_pos[0] = (person_x, self.person_y)
     def display_loop(self):
         pass
 

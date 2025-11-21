@@ -3,22 +3,33 @@ from pythonosc import osc_server
 
 from multiprocessing import Queue, Process
 from threading import Thread
+
+
 class OSCReceiver:
     def __init__(self, ip="0.0.0.0", port=57121):
         self.dispatcher = Dispatcher()
         self.server = osc_server.ThreadingOSCUDPServer((ip, port), self.dispatcher)
         self.received = Queue()
-        
+
     def pluck_handler(self, address, args, trigger):
         self.received.put((address, args, trigger))
         # print(f"Received OSC message: {address} {args} {trigger}")
+    def control_handler(self, address, args, value):
+        self.received.put((address, args, value))
+        # print(f"Received OSC message: {address} {args} {value}")
+
     def ZIGSIM_test_handler(self, address, args, trigger):
+        # print("ZIGSIM test received")
         self.received.put((address, args, trigger))
         # print(f"Received OSC message: {address} {args} {trigger}")
+
     def start(self):
         print(f"Starting OSC server on {self.server.server_address}")
         self.dispatcher.map("/pluck/env", self.pluck_handler, "pluck")
-        self.dispatcher.map("/ZIGSIM/miroc/touchcount", self.ZIGSIM_test_handler, "ZIGSIM")
+        self.dispatcher.map(
+            "/ZIGSIM/miroc/touchcount", self.ZIGSIM_test_handler, "ZIGSIM"
+        )
+        self.dispatcher.map("/control/*", self.control_handler, "control")
         self.received_thread = Thread(target=self.server.serve_forever, daemon=True)
         self.received_thread.start()
 
@@ -26,6 +37,7 @@ class OSCReceiver:
 
         self.server.shutdown()
         print("OSC server stopped")
+
 
 # osc_receiver = OSCReceiver()
 

@@ -41,7 +41,7 @@ class TSOOFlaskApp:
 
         # ArtNet 設置
         self.artnet = ArtNetSender(
-            artnet_host,
+            "2.0.0.101",
             universe=artnet_universe,
             # channels=artnet_channels,
             unit_shape=block_shape,
@@ -55,7 +55,7 @@ class TSOOFlaskApp:
             artnet_index=0,
         )
         self.artnet2 = ArtNetSender(
-            "169.254.55.36",
+            "2.0.0.100",
             universe=artnet_universe,
             # channels=artnet_channels,
             unit_shape=block_shape,
@@ -116,7 +116,13 @@ class TSOOFlaskApp:
             except Exception as e:
                 print(f"Error serving show_case.html: {e}")
                 return "Error serving the page", 500
-
+        @self.app.route("/configuration")
+        def configuration():
+            try:
+                return send_from_directory(self.app.static_folder, "configuration.html")
+            except Exception as e:
+                print(f"Error serving configuration.html: {e}")
+                return "Error serving the page", 500
         @self.app.route("/static/<path:path>")
         def serve_static(path):
             try:

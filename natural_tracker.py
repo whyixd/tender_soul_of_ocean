@@ -9,8 +9,8 @@ class NaturalTracker:
 
     def __init__(
         self,
-        vid="0403",
-        pid="6001",
+        vid="1A87",
+        pid="7523",
         history_file_path="log/[2025-07-10]modbus_reader.log",
     ):
         """
@@ -37,7 +37,7 @@ class NaturalTracker:
         """初始化風速計設備或準備歷史數據"""
         print_all_ports()
         self.serial = find_usb_serial_device(vid=self.vid, pid=self.pid)
-
+        # self.serial = "COM1"  # for test
         if self.serial is not None:
             print(f"找到 風速計 設備: {self.serial}")
             self.modbus = ModbusReader(com_port=self.serial)
