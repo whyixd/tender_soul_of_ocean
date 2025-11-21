@@ -82,7 +82,7 @@ class MockPersonTracker(threading.Thread):
         self.mock_detection_probability = 0.8  # 80% chance of detection per frame
         self.mock_fps = 5
         self.frame_count = 0
-        
+
         # Movement settings for single person
         self.person_y = 0.5  # Start at center (normalized 0-1)
         self.movement_speed = 0.01  # Slow movement speed
@@ -128,11 +128,12 @@ class MockPersonTracker(threading.Thread):
     ):
         """Process mock detections."""
         self._draw_tracks_and_count()
+
     def _draw_tracks_and_count(self):
         """Simulate drawing tracks and counting people in areas."""
         # Update person position along y-axis
         self.person_y += self.movement_speed * self.movement_direction
-        
+
         # Reverse direction at boundaries
         if self.person_y >= 1.0:
             self.person_y = 1.0
@@ -140,17 +141,18 @@ class MockPersonTracker(threading.Thread):
         elif self.person_y <= 0.0:
             self.person_y = 0.0
             self.movement_direction = 1
-        
+
         # Keep x position constant at center
         person_x = 0.5
-        
+
         # Reset counts
-        self.inside_area_counts = [0] * len(self.areas)
-        self.person_pos = [(0, 0)] * len(self.areas)
-        
-        # Place the single person in the first area
-        self.inside_area_counts[0] = 1
-        self.person_pos[0] = (person_x, self.person_y)
+        # self.inside_area_counts = [0] * len(self.areas)
+        # self.person_pos = [(0, 0)] * len(self.areas)
+
+        # # Place the single person in the first area
+        # self.inside_area_counts[0] = 1
+        # self.person_pos[0] = (person_x, self.person_y)
+
     def display_loop(self):
         pass
 
@@ -174,22 +176,22 @@ class MockPersonTracker(threading.Thread):
         self.display_loop()
 
 
-# Example usage
-if __name__ == "__main__":
-    # Create mock tracker instance
-    tracker = MockPersonTracker(
-        video_source="people_top.mp4",  # This is just for configuration
-        width=1280,
-        height=720,
-    )
+# # Example usage
+# if __name__ == "__main__":
+#     # Create mock tracker instance
+#     tracker = MockPersonTracker(
+#         video_source="people_top.mp4",  # This is just for configuration
+#         width=1280,
+#         height=720,
+#     )
 
-    # Start tracking in background
-    tracker.start_all_in_background()
+#     # Start tracking in background
+#     tracker.start_all_in_background()
 
-    # Keep the main thread alive
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        logger.info("Keyboard interrupt received, stopping tracker")
-        tracker.stop()
+#     # Keep the main thread alive
+#     try:
+#         while True:
+#             time.sleep(1)
+#     except KeyboardInterrupt:
+#         logger.info("Keyboard interrupt received, stopping tracker")
+#         tracker.stop()

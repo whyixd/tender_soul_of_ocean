@@ -43,6 +43,7 @@ class ModbusReader:
         )
         self.connection = self.client.connect()
         self.data = None
+        self.on_modbus_error = None
 
     def read_sensor_data_threaded(self):
         self.read_thread = threading.Thread(target=self.read_sensor_data, daemon=True)
@@ -91,10 +92,12 @@ class ModbusReader:
                 return self.data
             except ModbusException as e:
                 modbus_logger.error(f"讀取 Modbus 失敗: {e}")
-                return [0, 0, 0, "unknown"]
+                if self.on_modbus_error:
+                    self.on_modbus_error(e)
+                return None
             except Exception as e:
                 modbus_logger.error(f"發生錯誤: {e}")
-                return [0, 0, 0, "unknown"]
+                return None
 
         return None
 
@@ -144,24 +147,28 @@ class ModbusReader:
     #     return directions[index]
 
     def close(self):
+        modbus_logger.info("關閉 Modbus 連接")
         self.client.close()
 
 
-if __name__ == "__main__":
-    com_port = find_usb_serial_device(vid="0403", pid="6001")
-    if com_port is None:
-        modbus_logger.warning("找不到 風速計 設備")
-    else:
-        modbus_logger.info(f"找到 風速計 設備: {com_port}")
-    modbus = ModbusReader(com_port=com_port)
+# if __name__ == "__main__":
+#     com_port = find_usb_serial_device(vid="1A86", pid="7523")
+#     if com_port is None:
+#         modbus_logger.warning("找不到 風速計 設備")
+#     else:
+#         modbus_logger.info(f"找到 風速計 設備: {com_port}")
+#     modbus = ModbusReader(com_port=com_port)
 
-    def continuous_read():
-        import time
+#     def continuous_read():
+#         import time
 
-        while True:
-            modbus.read_sensor_data()
-            time.sleep(3)
+#         while True:
+#             modbus.read_sensor_data()
+#             time.sleep(3)
 
-    continuous_read()
-
-    modbus.close()
+#     try:
+#         continuous_read()
+#     except KeyboardInterrupt:
+#         pass
+#     finally:
+#         modbus.close()
