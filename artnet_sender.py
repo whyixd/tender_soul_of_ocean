@@ -124,7 +124,7 @@ class ArtNetSender:
             return block_data_order
 
         # packet_copy = np.array(packet).reshape(4 * 3, 8 * 6)
-        packet_copy = np.array(packet).reshape(4 * 5, 8 * 8)
+        packet_copy = np.array(packet).reshape(4 * 2, 8 * 4)
 
         data_packets = np.zeros(512)
         # print(self.cords)

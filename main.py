@@ -23,6 +23,8 @@ from param_processer import ease_in_out_circ
 from mixer_sound_scheduler import MixerSoundScheduler
 import traceback
 import asyncio
+
+
 # 將 effect_thread 函數移到 main() 外部，並接收所需的參數
 def effect_process(
     artnet_host,
@@ -90,7 +92,6 @@ def effect_process(
     last_pos_update_time = 0
     last_param_update_time = 0
 
-  
     try:
         while True:  # 主循環
             try:
@@ -149,14 +150,14 @@ def effect_process(
                 try:
                     # if param_processor.glitch_frame is not None:
 
-                        glitchA = flask_app.artnet.packet_remap(
-                            param_processor.glitch_frame
-                        )
-                        glitchB = flask_app.artnet2.packet_remap(
-                            param_processor.glitch_frame
-                        )
-                        osc_sender.send_message("/whyixd/light/glitchA", glitchA)
-                        osc_sender.send_message("/whyixd/light/glitchB", glitchB)
+                    glitchA = flask_app.artnet.packet_remap(
+                        param_processor.glitch_frame
+                    )
+                    glitchB = flask_app.artnet2.packet_remap(
+                        param_processor.glitch_frame
+                    )
+                    osc_sender.send_message("/whyixd/light/glitchA", glitchA)
+                    osc_sender.send_message("/whyixd/light/glitchB", glitchB)
 
                 except:
                     pass
@@ -176,8 +177,8 @@ def effect_process(
                 try:
                     # 使用新的組合效果方法，避免梯度遮罩影響雨滴效果
                     matrix_data = param_processor.get_combined_effects(
-                        8 * 8,
-                        4 * 5,
+                        8 * 4,
+                        4 * 2,
                         scale=7,
                         z=time_val,
                         gradient_vector=(
@@ -220,18 +221,18 @@ def effect_process(
                     # )
 
                     matrixA = flask_app.artnet.packet_remap(matrix)
-                    matrixB = flask_app.artnet2.packet_remap(matrix)
-                    matrix_all = matrixA + matrixB
+                    # matrixB = flask_app.artnet2.packet_remap(matrix)
+                    # matrix_all = matrixA + matrixB
 
-                    osc_sender.send_message("/whyixd/light/dmx", matrix_all)
-                    
+                    osc_sender.send_message("/whyixd/light/dmx", matrixA)
+
                     flask_app.artnet.set_packet(matrix)
-                    flask_app.artnet2.set_packet(matrix)
+                    # flask_app.artnet2.set_packet(matrix)
 
                     current_blackout = blackout_event.is_set()
                     if current_blackout:
                         flask_app.artnet.blackout()
-                        flask_app.artnet2.blackout()
+                        # flask_app.artnet2.blackout()
                 except Exception as e:
                     print(f"Error in effect : {traceback.format_exc()}")
                 finally:
@@ -276,7 +277,6 @@ def main():
     def on_close():
         # print("light closed")
         blackout_event.set()
-        
 
     # 創建並設置 MixerSoundScheduler
     mixer_scheduler = MixerSoundScheduler(
@@ -293,11 +293,11 @@ def main():
     # 創建一個新的隊列，用於接收參數可以更新的信號
     update_signal_queue = Queue(maxsize=1)
 
-    person_tracker = MockPersonTracker(
-        video_source="people_top.mp4",  # or 0 for webcam
-        width=640,
-        height=360,
-    )
+    # person_tracker = MockPersonTracker(
+    #     video_source="people_top.mp4",  # or 0 for webcam
+    #     width=640,
+    #     height=360,
+    # )
     # person_tracker = PersonTracker(
     #     video_source="people_top.mp4",  # or 0 for webcam
     #     width=640,
@@ -322,7 +322,8 @@ def main():
     #     ffmpeg_options=ffmpeg_opts,
     # )
     # 使用新方法，在背景執行 tracking 和 display
-    person_tracker.start_all_in_background()
+
+    # person_tracker.start_all_in_background()
 
     # person_tracker.start()
 
@@ -353,7 +354,6 @@ def main():
             osc_config,
             general_config,  # 默認值為1
             blackout_event,
-            
             # update_person_track_data,
         ),
     )
@@ -416,6 +416,7 @@ def main():
         effect_thread_instance.join()
         print("Shutting down ...")
 
+
 async def open_browser():
     launcher = BrowserLauncher()
 
@@ -426,6 +427,8 @@ async def open_browser():
         mode="kiosk",
     )
     print(f"開啟網址結果: {success}")
+
+
 if __name__ == "__main__":
     # asyncio.run(open_browser())
     main()

@@ -33,11 +33,11 @@ const sketch = (p) => {
     { sinOffset: 4.7, sinLength: 0.33, sinScale: 8.05, sinYOffset: 1.53 },
   ];
 
-  let lightCornerPos = [75, 260];
+  let lightCornerPos = [75 / 2, -130];
   let lightColor = [255, 150, 6];
   let lightValues = [];
   let lightRawData = { matrix: [] };
-  let dataShape = { x: 8 * 8, y: 4 * 5 };
+  let dataShape = { x: 8 * 4, y: 4 * 2 };
   let unitShape = { x: 8, y: 4 };
   for (let i = 0; i < dataShape.y; i++) {
     let newRow = [];
@@ -56,8 +56,8 @@ const sketch = (p) => {
     sinYOffset: 0,
     useEase: true,
     showControlPoints: false,
-    spaceOffsetX: 85, // 空間範圍 X 軸偏移
-    spaceOffsetZ: 70, // 空間範圍 Z 軸偏移
+    spaceOffsetX: 40, // 空間範圍 X 軸偏移
+    spaceOffsetZ: -60, // 空間範圍 Z 軸偏移
   };
   let pos = { x: 0, y: 0, z: 0 };
   let posIncrement = 0.1;
@@ -726,7 +726,7 @@ const sketch = (p) => {
         p.fill(255, 255, 255);
         p.textSize(3);
         p.textAlign(p.CENTER, p.CENTER);
-        p.text(idx, 0, 0);
+        // p.text(idx, 0, 0);
         p.pop();
       });
 
@@ -751,7 +751,7 @@ const sketch = (p) => {
     p.rotateX(p.PI / 2);
     p.translate(0, 0, 200);
 
-    let wantedHighsIdx = [1, 2, 3, 4, 6, 7, 8, 31, 34, 35, 36, 37, 38, 39, 40];
+    let wantedHighsIdx = [1, 2, 3, 4, 5, 6, 7, 8];
     let fixUnits = [];
     for (let i = 0; i < unitHigh.units.length; i++) {
       if (wantedHighsIdx.includes(unitHigh.units[i].id)) {

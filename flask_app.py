@@ -41,33 +41,30 @@ class TSOOFlaskApp:
 
         # ArtNet 設置
         self.artnet = ArtNetSender(
-            "2.0.0.101",
+            "2.0.0.100",
             universe=artnet_universe,
             # channels=artnet_channels,
             unit_shape=block_shape,
             unit_order=[
                 [1, 2, 3, 4],
                 [5, 6, 7, 8],
-                [9, 10, 11, 12],
-                [13, 14, 15, 16],
-                [17, 18, 19, 20],
             ],
             artnet_index=0,
         )
-        self.artnet2 = ArtNetSender(
-            "2.0.0.100",
-            universe=artnet_universe,
-            # channels=artnet_channels,
-            unit_shape=block_shape,
-            unit_order=[
-                [21, 22, 23, 24],
-                [25, 26, 27, 28],
-                [29, 30, 31, 32],
-                [33, 34, 35, 36],
-                [37, 38, 39, 40],
-            ],
-            artnet_index=1,
-        )
+        # self.artnet2 = ArtNetSender(
+        #     "2.0.0.100",
+        #     universe=artnet_universe,
+        #     # channels=artnet_channels,
+        #     unit_shape=block_shape,
+        #     unit_order=[
+        #         [21, 22, 23, 24],
+        #         [25, 26, 27, 28],
+        #         [29, 30, 31, 32],
+        #         [33, 34, 35, 36],
+        #         [37, 38, 39, 40],
+        #     ],
+        #     artnet_index=1,
+        # )
 
         # 服務器配置
         self.host = host
@@ -116,6 +113,7 @@ class TSOOFlaskApp:
             except Exception as e:
                 print(f"Error serving show_case.html: {e}")
                 return "Error serving the page", 500
+
         @self.app.route("/configuration")
         def configuration():
             try:
@@ -123,6 +121,7 @@ class TSOOFlaskApp:
             except Exception as e:
                 print(f"Error serving configuration.html: {e}")
                 return "Error serving the page", 500
+
         @self.app.route("/static/<path:path>")
         def serve_static(path):
             try:
@@ -215,7 +214,7 @@ class TSOOFlaskApp:
 
         # 啟動 ArtNet
         self.artnet.start()
-        self.artnet2.start()
+        # self.artnet2.start()
 
     def stop_server(self):
         """停止 Flask 伺服器"""
@@ -225,7 +224,7 @@ class TSOOFlaskApp:
 
         # 停止 ArtNet
         self.artnet.stop()
-        self.artnet2.stop()
+        # self.artnet2.stop()
 
         # Flask 和 SocketIO 沒有優雅的停止方法，因為我們使用 daemon=True
         # 所以當主程序結束時，這些線程會自動終止
