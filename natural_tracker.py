@@ -9,8 +9,8 @@ class NaturalTracker:
 
     def __init__(
         self,
-        vid="1A86",
-        pid="7523",
+        vid="0403",
+        pid="6001",
         history_file_path="log/[2025-07-10]modbus_reader.log",
     ):
         """
@@ -132,4 +132,4 @@ if __name__ == "__main__":
     tracker = NaturalTracker()
 
     # 開始連續更新數據
-    tracker.start_continuous_update()
+    tracker.start_continuous_update(interval=10)

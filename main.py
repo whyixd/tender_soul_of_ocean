@@ -50,7 +50,7 @@ def effect_process(
         block_shape=block_shape,
         block_order=block_order,
     )
-    osc_sender = OSCSender(address=osc_config["address"], port=osc_config["port"])
+    # osc_sender = OSCSender(address=osc_config["address"], port=osc_config["port"])
     osc_receiver = OSCReceiver(ip="0.0.0.0", port=57121)
     osc_receiver.start()
     param_processor = TSOOParamProcesser(interpolation_speed=0.005)
@@ -156,22 +156,22 @@ def effect_process(
                     glitchB = flask_app.artnet2.packet_remap(
                         param_processor.glitch_frame
                     )
-                    osc_sender.send_message("/whyixd/light/glitchA", glitchA)
-                    osc_sender.send_message("/whyixd/light/glitchB", glitchB)
+                    # osc_sender.send_message("/whyixd/light/glitchA", glitchA)
+                    # osc_sender.send_message("/whyixd/light/glitchB", glitchB)
 
                 except:
                     pass
                 finally:
                     last_glitch_update_time = time.time()
-            if time.time() - last_pos_update_time > 0.1:
-                try:
-                    osc_sender.send_positions(
-                        param_processor.target_tsoo_param["person_pos"]
-                    )
-                except Exception as e:
-                    print(f"Error sending position update: {e}")
-                finally:
-                    last_pos_update_time = time.time()
+            # if time.time() - last_pos_update_time > 0.1:
+            #     try:
+            # osc_sender.send_positions(
+            #     param_processor.target_tsoo_param["person_pos"]
+            # )
+            # except Exception as e:
+            #     print(f"Error sending position update: {e}")
+            # finally:
+            #     last_pos_update_time = time.time()
             # effect
             if time.time() - last_matrix_update_time > 0.03:
                 try:
@@ -211,7 +211,7 @@ def effect_process(
                             "tsoo_param_target", param_processor.target_tsoo_param
                         )
                         last_param_update_time = time.time()
-                        osc_sender.send_parameters(param_processor)
+                        # osc_sender.send_parameters(param_processor)
                     # osc_sender.send_message("/whyixd/light/dmx", matrix)
 
                     # count += 1
@@ -224,7 +224,7 @@ def effect_process(
                     # matrixB = flask_app.artnet2.packet_remap(matrix)
                     # matrix_all = matrixA + matrixB
 
-                    osc_sender.send_message("/whyixd/light/dmx", matrixA)
+                    # osc_sender.send_message("/whyixd/light/dmx", matrixA)
 
                     flask_app.artnet.set_packet(matrix)
                     # flask_app.artnet2.set_packet(matrix)

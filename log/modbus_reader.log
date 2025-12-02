@@ -127,3 +127,21 @@
 2025-11-21 19:19:50 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
 2025-11-21 19:20:50 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 3 retries, continue with next request
 2025-11-21 19:23:20 - ModbusReader - ERROR - 讀取 Modbus 失敗: Modbus Error: [Input/Output] No response received after 5 retries, continue with next request
+2025-12-02 11:12:29 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:30 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:31 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:32 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:33 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:34 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:35 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:36 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:37 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:38 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:39 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:40 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:41 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:42 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:43 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:12:44 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 65.2%, 溫度: 25.0°C
+2025-12-02 11:13:11 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 64.8%, 溫度: 25.0°C
+2025-12-02 11:13:21 - ModbusReader - INFO - 風速: 0.0 m/s, 風級: 0, 風向角度: 0, 風向: N, 濕度: 64.8%, 溫度: 25.0°C
